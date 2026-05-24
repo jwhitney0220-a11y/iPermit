@@ -1,0 +1,7 @@
+# Worktree storage used by the Agent tool when running with isolation: "worktree".
+# Branches created in worktrees still live in this repo's .git/refs and are pushable
+# directly; the worktree directories themselves are ephemeral and never tracked.
+.claude/worktrees/
+
+# Local-only Claude Code settings (also covered by global ignore).
+.claude/settings.local.json
