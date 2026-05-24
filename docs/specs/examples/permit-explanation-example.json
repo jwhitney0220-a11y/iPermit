@@ -1,0 +1,188 @@
+{
+  "schema_version": "1.0.0",
+  "record_kind": "fired",
+  "evaluation_date": "2026-05-24",
+  "ruleset_version": {
+    "content_hash": "sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "commit_sha": "c00e404",
+    "snapshot_label": "2026-05-24-effective"
+  },
+  "rule_refs": [
+    {
+      "rule_id": "us-federal-cwa-section-404-usace-permit",
+      "rule_version": "1.0.0",
+      "rule_status_at_evaluation": "effective"
+    }
+  ],
+  "jurisdiction_chain": [
+    {
+      "jurisdiction_id": "us-federal",
+      "jurisdiction_level": "federal",
+      "canonical_name": "United States Federal",
+      "detection_source": "user_input"
+    },
+    {
+      "jurisdiction_id": "us-tx",
+      "jurisdiction_level": "state",
+      "canonical_name": "State of Texas",
+      "detection_source": "gis_auto_detect"
+    },
+    {
+      "jurisdiction_id": "us-tx-travis-county",
+      "jurisdiction_level": "county",
+      "canonical_name": "Travis County, Texas",
+      "detection_source": "user_confirmed"
+    }
+  ],
+  "trigger_path": {
+    "root": {
+      "all": [
+        {
+          "field": "project.federal_nexus",
+          "operator": "=",
+          "expected_value": true,
+          "actual_value": true,
+          "matched": true
+        },
+        {
+          "any": [
+            {
+              "field": "project.stream_crossings_count",
+              "operator": ">",
+              "expected_value": 0,
+              "actual_value": 1,
+              "matched": true
+            },
+            {
+              "field": "project.has_wetlands",
+              "operator": "=",
+              "expected_value": true,
+              "actual_value": false,
+              "matched": false
+            },
+            {
+              "field": "geometry.intersects_usace_district",
+              "operator": "exists",
+              "actual_value": "fort-worth-district",
+              "matched": true,
+              "evaluation_notes": "GIS overlay returned USACE Fort Worth District; partial polygon overlap below 100%."
+            }
+          ],
+          "matched": true
+        }
+      ],
+      "matched": true
+    },
+    "matched_summary": "Federal nexus asserted by consultant; one stream crossing observed; project geometry intersects USACE Fort Worth District. Section 404 jurisdiction applies."
+  },
+  "applicable_thresholds": [
+    {
+      "field": "project.stream_crossings_count",
+      "operator": ">",
+      "threshold_value": 0,
+      "actual_value": 1,
+      "units": "count"
+    }
+  ],
+  "citations": [
+    {
+      "citation_type": "agency_guidance",
+      "reference": "USACE Regulatory Program Standard Operating Procedures",
+      "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/",
+      "retrieved_at": "2026-05-20"
+    },
+    {
+      "citation_type": "regulation",
+      "reference": "33 C.F.R. Parts 320-332"
+    },
+    {
+      "citation_type": "statute",
+      "reference": "33 U.S.C. § 1344",
+      "url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title33-section1344",
+      "retrieved_at": "2026-05-20"
+    }
+  ],
+  "confidence": {
+    "tier": 1,
+    "tier_rationale": "Statutory and fully verified. Stable requirement. Clean Water Act Section 404 is a federal statute with long-standing USACE implementing regulations.",
+    "freshness": {
+      "last_verified": "2026-05-20",
+      "days_since_verified": 4,
+      "stale": false
+    }
+  },
+  "known_unknowns": [
+    {
+      "text": "Final delineation of waters of the U.S. requires a jurisdictional determination from USACE.",
+      "origin": "rule"
+    },
+    {
+      "text": "Nationwide Permit eligibility depends on impact thresholds that vary by NWP number.",
+      "origin": "rule"
+    },
+    {
+      "text": "USACE district polygon overlap is partial (37% of project ROW); confirm district assignment with USACE.",
+      "origin": "engine",
+      "engine_signal": "partial_gis_overlap"
+    }
+  ],
+  "advisories": [
+    {
+      "text": "Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.",
+      "origin": "platform",
+      "category": "advisory_disclaimer"
+    },
+    {
+      "text": "Coordinate early with the appropriate USACE district office; processing times vary by district workload.",
+      "origin": "rule",
+      "category": "agency_coordination"
+    },
+    {
+      "text": "Consultant verification recommended before relying on this permit identification.",
+      "origin": "engine",
+      "category": "professional_review_required"
+    },
+    {
+      "text": "This is an advisory identification. A jurisdictional determination from USACE is required to confirm Section 404 applicability and permit type.",
+      "origin": "rule",
+      "category": "professional_review_required"
+    }
+  ],
+  "evaluation_trace": [
+    {
+      "step": "jurisdiction",
+      "outcome": "passed",
+      "detail": "Rule jurisdiction us-federal is present in project jurisdiction_chain."
+    },
+    {
+      "step": "temporal_validity",
+      "outcome": "passed",
+      "detail": "Rule effective_from 2026-01-01 <= evaluation_date 2026-05-24; not superseded."
+    },
+    {
+      "step": "project_type",
+      "outcome": "passed",
+      "detail": "Project type transmission_line present in applicable_project_types."
+    },
+    {
+      "step": "trigger_conditions",
+      "outcome": "passed",
+      "detail": "Root all-condition matched: federal_nexus = true AND any-branch (stream_crossings_count > 0)."
+    },
+    {
+      "step": "spatial_overlays",
+      "outcome": "passed",
+      "detail": "geometry.intersects_usace_district resolved to fort-worth-district."
+    },
+    {
+      "step": "dependencies",
+      "outcome": "passed",
+      "detail": "No unresolved prerequisites; parallel_with us-federal-esa-section-7-consultation noted."
+    }
+  ],
+  "reproducibility": {
+    "inputs_hash": "sha256:2c624232cdd221771294dfbb310aca000a0df6ac8b66b696d90ef06fdefb64a3",
+    "deterministic": true,
+    "regeneration_note": "GIS overlay dataset version 2026.04 (USACE district polygons) must be available for byte-identical replay."
+  }
+}
