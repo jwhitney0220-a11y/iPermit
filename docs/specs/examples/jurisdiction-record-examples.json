@@ -1,0 +1,112 @@
+[
+  {
+    "jurisdiction_id": "us-tx-county-travis",
+    "canonical_name": "Travis County",
+    "jurisdiction_level": "county",
+    "parent_jurisdiction_id": "us-tx",
+    "aliases": [
+      {
+        "value": "Travis Co.",
+        "alias_type": "abbreviation",
+        "source": "TxDOT permit forms"
+      },
+      {
+        "value": "Travis County, TX",
+        "alias_type": "colloquial",
+        "source": "USACE Galveston District correspondence"
+      },
+      {
+        "value": "Travis Cnty",
+        "alias_type": "misspelling",
+        "source": "Consultant intake form, 2024-11",
+        "notes": "Observed twice in scanned PDFs from one engineering firm."
+      }
+    ],
+    "fips": {
+      "fips_state": "48",
+      "fips_county": "48453"
+    },
+    "geometry_ref": "geom:tx-county-travis:tiger-2024",
+    "active_from": "1840-01-25",
+    "active_to": null,
+    "notes": "Created by act of the Republic of Texas Congress on 1840-01-25. 254 Texas counties total."
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-austin",
+    "canonical_name": "City of Austin",
+    "jurisdiction_level": "municipality",
+    "parent_jurisdiction_id": "us-tx-county-travis",
+    "aliases": [
+      {
+        "value": "Austin",
+        "alias_type": "colloquial",
+        "source": "City of Austin website"
+      },
+      {
+        "value": "City of Austin, Texas",
+        "alias_type": "colloquial",
+        "source": "Texas Local Government Code citations"
+      },
+      {
+        "value": "Waterloo",
+        "alias_type": "historical",
+        "source": "Republic of Texas archives",
+        "date_from": "1837-01-01",
+        "date_to": "1839-12-31",
+        "notes": "Original settlement name prior to incorporation as Austin."
+      }
+    ],
+    "fips": {
+      "fips_state": "48",
+      "fips_place": "4805000"
+    },
+    "geometry_ref": "geom:tx-municipality-austin:cityofaustin-2025-q1",
+    "active_from": "1839-01-01",
+    "active_to": null,
+    "notes": "Austin spans Travis (primary), Hays, and Williamson counties. Per T00-08 §4, parent is recorded as the primary county; cross-county overlap is captured in the geometry record, not via multi-parent."
+  },
+  {
+    "jurisdiction_id": "us-tx-etj-austin",
+    "canonical_name": "City of Austin Extraterritorial Jurisdiction",
+    "jurisdiction_level": "etj",
+    "parent_jurisdiction_id": "us-tx-municipality-austin",
+    "aliases": [
+      {
+        "value": "Austin ETJ",
+        "alias_type": "abbreviation",
+        "source": "City of Austin Development Services Department"
+      },
+      {
+        "value": "COA ETJ",
+        "alias_type": "abbreviation",
+        "source": "Consultant correspondence"
+      }
+    ],
+    "geometry_ref": "geom:tx-etj-austin:cityofaustin-2025-q1",
+    "active_from": "1963-01-01",
+    "active_to": null,
+    "notes": "Texas ETJ governance is set by Texas Local Government Code Chapter 42. Austin ETJ scope was materially affected by S.B. 2038 (88th Legislature, 2023), which allows landowner-initiated release. Per T00-08, ETJ records are single-parent — a tract released from this ETJ is modeled as a change to the geometry record, not as multi-parent on the jurisdiction record."
+  },
+  {
+    "jurisdiction_id": "us-tx-river-authority-lcra",
+    "canonical_name": "Lower Colorado River Authority",
+    "jurisdiction_level": "river_authority",
+    "parent_jurisdiction_id": "us-tx",
+    "aliases": [
+      {
+        "value": "LCRA",
+        "alias_type": "abbreviation",
+        "source": "LCRA.org and statute"
+      },
+      {
+        "value": "Lower Colorado River Authority of Texas",
+        "alias_type": "colloquial",
+        "source": "Texas Water Code references"
+      }
+    ],
+    "geometry_ref": "geom:tx-river-authority-lcra:service-area-2024",
+    "active_from": "1934-11-13",
+    "active_to": null,
+    "notes": "Created by the 43rd Texas Legislature, 1934. Conservation and reclamation district covering the lower Colorado River basin in Texas. Parent is the state because river authorities are creatures of state statute, not of any single county."
+  }
+]
