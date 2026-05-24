@@ -1,0 +1,282 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ipermit.dev/schemas/2026-05-24/rule-object.schema.json",
+  "title": "iPermit Rule Object",
+  "description": "Canonical declarative shape of a single regulatory rule. See docs/specs/rule-object.md (T00-01).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "rule_id",
+    "version",
+    "title",
+    "permit_name",
+    "jurisdiction_level",
+    "jurisdiction_id",
+    "source_agency",
+    "applicable_project_types",
+    "confidence_tier",
+    "provenance",
+    "status",
+    "triggers",
+    "outputs",
+    "explanations"
+  ],
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+$",
+      "description": "Stable kebab-case ID, never reused."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver MAJOR.MINOR.PATCH for this rule version."
+    },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "permit_name": { "type": "string", "minLength": 1 },
+    "permit_code": { "type": "string" },
+
+    "jurisdiction_level": {
+      "enum": [
+        "federal",
+        "state",
+        "county",
+        "municipality",
+        "etj",
+        "utility_district",
+        "drainage_district",
+        "river_authority",
+        "special"
+      ]
+    },
+    "jurisdiction_id": { "type": "string", "minLength": 1 },
+    "source_agency": { "type": "string", "minLength": 1 },
+    "applicable_project_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+      "uniqueItems": true
+    },
+
+    "confidence_tier": { "type": "integer", "enum": [1, 2, 3] },
+
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_citations", "last_verified"],
+      "properties": {
+        "source_citations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["citation_type", "reference"],
+            "properties": {
+              "citation_type": {
+                "enum": [
+                  "statute",
+                  "regulation",
+                  "ordinance",
+                  "agency_guidance",
+                  "form",
+                  "website"
+                ]
+              },
+              "reference": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" },
+              "retrieved_at": { "type": "string", "format": "date" }
+            }
+          }
+        },
+        "last_verified": { "type": "string", "format": "date" },
+        "reviewer": { "type": "string" },
+        "reviewer_notes": { "type": "string" }
+      }
+    },
+
+    "status": { "enum": ["draft", "published", "effective", "archived"] },
+    "effective_from": { "type": "string", "format": "date" },
+    "effective_to": { "type": "string", "format": "date" },
+    "supersedes": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+@\\d+\\.\\d+\\.\\d+$" },
+      "uniqueItems": true
+    },
+    "superseded_by": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+@\\d+\\.\\d+\\.\\d+$"
+    },
+
+    "triggers": { "$ref": "#/$defs/condition" },
+
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permits"],
+      "properties": {
+        "permits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "agency"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "code": { "type": "string" },
+              "agency": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "form_number": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        },
+        "submission": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "submission_url": { "type": "string", "format": "uri" },
+            "submission_email": { "type": "string", "format": "email" },
+            "submission_method": { "type": "string" }
+          }
+        },
+        "agencies": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+
+    "sequencing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+$" },
+          "uniqueItems": true
+        },
+        "parallel_with": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+$" },
+          "uniqueItems": true
+        },
+        "typical_lead_time_days": { "type": "integer", "minimum": 0 },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "explanations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger_explanation"],
+      "properties": {
+        "trigger_explanation": { "type": "string", "minLength": 1, "maxLength": 280 },
+        "threshold_summary": { "type": "string" },
+        "jurisdiction_summary": { "type": "string" }
+      }
+    },
+
+    "known_unknowns": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "advisories": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "notes": { "type": "string" }
+  },
+
+  "allOf": [
+    {
+      "description": "effective_from is required when status is effective or archived",
+      "if": { "properties": { "status": { "enum": ["effective", "archived"] } } },
+      "then": { "required": ["effective_from"] }
+    }
+  ],
+
+  "$defs": {
+    "condition": {
+      "oneOf": [
+        { "$ref": "#/$defs/leafCondition" },
+        { "$ref": "#/$defs/allCondition" },
+        { "$ref": "#/$defs/anyCondition" },
+        { "$ref": "#/$defs/notCondition" }
+      ]
+    },
+    "leafCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "operator"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "pattern": "^(project|geometry|derived)(\\.[a-z][a-z0-9_]*)+$",
+          "description": "Dotted snake_case path rooted at project, geometry, or derived."
+        },
+        "operator": {
+          "enum": ["=", "!=", ">", ">=", "<", "<=", "contains", "intersects", "exists", "in", "not_in"]
+        },
+        "value": {}
+      },
+      "allOf": [
+        {
+          "description": "value is required for every operator except exists",
+          "if": { "properties": { "operator": { "not": { "const": "exists" } } } },
+          "then": { "required": ["value"] }
+        }
+      ]
+    },
+    "allCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["all"],
+      "properties": {
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/condition" }
+        }
+      }
+    },
+    "anyCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["any"],
+      "properties": {
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/condition" }
+        }
+      }
+    },
+    "notCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["not"],
+      "properties": {
+        "not": { "$ref": "#/$defs/condition" }
+      }
+    }
+  }
+}
