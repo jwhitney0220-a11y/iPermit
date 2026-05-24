@@ -1,0 +1,103 @@
+# Benchmark: federal nexus, Trinity River crossing.
+# Project crosses waters of the U.S. and triggers USACE Section 404 plus
+# associated federal coordination. See docs/specs/benchmarks.md (T00-06) §7.
+# Illustrative content only; not authoritative.
+
+benchmark_id: federal-nexus-trinity-river-crossing
+benchmark_version: 1.0.0
+category: federal_nexus
+description: >
+  138 kV transmission rebuild spanning the Trinity River with associated
+  riparian wetlands. Federal nexus is declared and the project intersects the
+  USACE Fort Worth District. Triggers federal-tier rules and Section 7 ESA
+  coordination.
+
+project_inputs:
+  project_type: transmission_line
+  state: TX
+  counties:
+    - Henderson County
+    - Anderson County
+  municipalities: []
+  etjs: []
+  linear: true
+  length_miles: 12.0
+  acreage: 38.5
+  stream_crossings_count: 2
+  has_wetlands: true
+  txdot_involvement: false
+  federal_nexus: true
+  row_type: private_easement
+  shapefile_uploaded: true
+  gis_overlays:
+    intersects_fema_floodplain: true
+    intersects_usace_district: true
+    usace_district: Fort Worth District
+    intersects_municipality: false
+    waters_of_us_segments: 2
+
+ruleset_version:
+  content_hash: placeholder:tx-baseline-v0
+  snapshot_label: tx-baseline-pre-seeding
+
+evaluation_date: 2026-08-12
+
+expected_outputs:
+  permits:
+    - name: Clean Water Act Section 404 Permit
+      code: CWA-404
+      agency: U.S. Army Corps of Engineers
+      rule_id: us-federal-cwa-section-404-usace-permit
+    - name: Endangered Species Act Section 7 Consultation
+      agency: U.S. Fish and Wildlife Service
+    - name: Texas PUC CCN Amendment
+      agency: Public Utility Commission of Texas
+    - name: County Floodplain Development Permit
+      agency: Henderson County
+  sequencing_notes:
+    - Section 7 consultation must be initiated before USACE issues the Section 404 authorization.
+
+expected_confidence:
+  - permit_name: Clean Water Act Section 404 Permit
+    tier: 1
+  - permit_name: Endangered Species Act Section 7 Consultation
+    tier: 1
+  - permit_name: Texas PUC CCN Amendment
+    tier: 1
+  - permit_name: County Floodplain Development Permit
+    tier: 2
+
+expected_known_unknowns:
+  - Final delineation of waters of the U.S. requires a jurisdictional determination from USACE.
+  - Nationwide Permit eligibility depends on impact thresholds that vary by NWP number.
+
+expected_explanations:
+  - permit_name: Clean Water Act Section 404 Permit
+    trigger_summary: Federal nexus and waters-of-U.S. stream crossings plus wetlands trigger Section 404.
+    expected_rule_id: us-federal-cwa-section-404-usace-permit
+    expected_jurisdiction_levels:
+      - federal
+  - permit_name: Endangered Species Act Section 7 Consultation
+    trigger_summary: Federal nexus combined with riparian habitat triggers Section 7 coordination.
+    expected_jurisdiction_levels:
+      - federal
+
+expected_advisories:
+  - This is an advisory identification. A jurisdictional determination from USACE is required to confirm Section 404 applicability and permit type.
+
+provenance:
+  author: regulatory-architecture
+  created_at: 2026-05-24
+  source_project_reference: anonymized Trinity Basin rebuild scenario
+
+immutable: true
+
+notes: >
+  Exercises federal-tier rule firing and the jurisdiction hierarchy ordering
+  (federal -> state -> county). The CWA-404 expected_rule_id pin lets T04-02
+  verify the correct rule object fires rather than a similarly-named one.
+
+tags:
+  - federal
+  - waters-of-us
+  - esa

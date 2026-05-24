@@ -1,0 +1,88 @@
+# Benchmark: temporal versioning, fictional 2025 stormwater rule change.
+# Same project evaluated on a date AFTER a fictional rule update. A sibling
+# benchmark (not yet authored) should evaluate the SAME project_inputs on a
+# pre-change date and pin the prior rule version, demonstrating divergent
+# expected_outputs across the cutover. See docs/specs/benchmarks.md (T00-06)
+# §6.3 and §7. Illustrative content only; not authoritative.
+
+benchmark_id: temporal-versioning-stormwater-2025-change-post
+benchmark_version: 1.0.0
+category: temporal_versioning
+description: >
+  Linear transmission project evaluated after a fictional 2025-10-01 change to
+  the Texas Construction General Permit lowering the disturbed-acreage trigger
+  from 5.0 to 2.0 acres. The project disturbs 3.4 acres and triggers the new
+  rule but would NOT have triggered the old rule.
+
+project_inputs:
+  project_type: transmission_line
+  state: TX
+  counties:
+    - Bastrop County
+  municipalities: []
+  etjs: []
+  linear: true
+  length_miles: 6.8
+  acreage: 3.4
+  stream_crossings_count: 0
+  has_wetlands: false
+  txdot_involvement: false
+  federal_nexus: false
+  row_type: private_easement
+  shapefile_uploaded: true
+  gis_overlays:
+    intersects_fema_floodplain: false
+    intersects_usace_district: false
+
+ruleset_version:
+  content_hash: placeholder:tx-baseline-v0-post-2025-change
+  snapshot_label: tx-baseline-post-2025-stormwater-change
+
+evaluation_date: 2026-01-15
+
+historical_rule_version:
+  rules:
+    - tx-state-tceq-construction-general-permit@2.0.0
+  scenario_label: post-2025-stormwater-change
+
+expected_outputs:
+  permits:
+    - name: TCEQ Construction General Permit
+      code: TXR150000
+      agency: Texas Commission on Environmental Quality
+      rule_id: tx-state-tceq-construction-general-permit
+    - name: County ROW Use Permit
+      agency: Bastrop County
+
+expected_confidence:
+  - permit_name: TCEQ Construction General Permit
+    tier: 1
+  - permit_name: County ROW Use Permit
+    tier: 2
+
+expected_known_unknowns: []
+
+expected_explanations:
+  - permit_name: TCEQ Construction General Permit
+    trigger_summary: Disturbed acreage 3.4 exceeds the 2.0 acre threshold under the post-2025 TCEQ rule.
+    expected_rule_id: tx-state-tceq-construction-general-permit
+    expected_jurisdiction_levels:
+      - state
+
+provenance:
+  author: regulatory-architecture
+  created_at: 2026-05-24
+  reviewer_notes: Sibling pre-change benchmark to be authored once rule@1.x is pinned via T02-06.
+
+immutable: true
+
+notes: >
+  The historical_rule_version pin is the load-bearing field. If rule
+  tx-state-tceq-construction-general-permit is later republished as 2.1.0, this
+  benchmark must continue to assert 2.0.0 behavior via historical replay
+  (T00-03). A regression here means temporal selection is broken.
+
+tags:
+  - temporal
+  - stormwater
+  - tceq

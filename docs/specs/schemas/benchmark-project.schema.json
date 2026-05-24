@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ipermit.dev/schemas/2026-05-24/benchmark-project.schema.json",
+  "title": "iPermit Benchmark Project",
+  "description": "Declarative benchmark project used for regression testing, edge-case validation, and audit replay of the deterministic rules engine. See docs/specs/benchmarks.md (T00-06). Defers rule object shape to T00-01, explanation record shape to T00-05, temporal selection to T00-03, regression framework to T04-02, and real Texas regulatory data to T02-06.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "benchmark_id",
+    "benchmark_version",
+    "category",
+    "description",
+    "project_inputs",
+    "ruleset_version",
+    "evaluation_date",
+    "expected_outputs",
+    "expected_confidence",
+    "expected_explanations",
+    "expected_known_unknowns",
+    "provenance",
+    "immutable"
+  ],
+  "properties": {
+    "benchmark_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+$",
+      "description": "Stable kebab-case ID, globally unique, never reused or renamed."
+    },
+    "benchmark_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver of the benchmark definition itself. Distinct from ruleset_version. MAJOR bump on any expected-output change."
+    },
+    "category": {
+      "enum": [
+        "simple_linear",
+        "multi_county",
+        "federal_nexus",
+        "conflicting_jurisdiction",
+        "temporal_versioning",
+        "known_unknown"
+      ],
+      "description": "One of the six required benchmark categories from AGENTS.md."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "One to two sentence summary of what edge case this benchmark exercises."
+    },
+    "project_inputs": {
+      "type": "object",
+      "description": "Mirror of the consultant intake form (T06-02) plus GIS auto-detection results (T05-03/T05-04). Field registry is owned by T02-02; this schema allows additional properties so benchmarks can exercise future inputs without a schema bump.",
+      "required": [
+        "project_type",
+        "state"
+      ],
+      "properties": {
+        "project_type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Project type token. Registry owned by T02-02."
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Two-letter state code. MVP scope is TX only."
+        },
+        "counties": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "municipalities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "etjs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "linear": {
+          "type": "boolean"
+        },
+        "length_miles": {
+          "type": "number",
+          "minimum": 0
+        },
+        "acreage": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stream_crossings_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "has_wetlands": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "txdot_involvement": {
+          "type": "boolean"
+        },
+        "federal_nexus": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "row_type": {
+          "type": "string",
+          "description": "Right-of-way type token, e.g. private_easement, public_row, txdot_row."
+        },
+        "shapefile_uploaded": {
+          "type": "boolean"
+        },
+        "gis_overlays": {
+          "type": "object",
+          "description": "Detected geometry.* values. Shape owned by T05-04; allows additional properties.",
+          "additionalProperties": true
+        },
+        "partial_data_flags": {
+          "type": "array",
+          "description": "Inputs known to be missing or incomplete at evaluation time.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "ruleset_version": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_hash"
+      ],
+      "properties": {
+        "content_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$|^placeholder:[a-z0-9-]+$",
+          "description": "Hash of the effective ruleset snapshot used. Real hashes are sha256:... per T00-05; pre-T02-06 stubs use placeholder:... so design-time benchmarks remain schema-valid."
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$"
+        },
+        "snapshot_label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evaluation_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the engine should treat as 'today' when evaluating this benchmark. Drives temporal rule selection (T00-03)."
+    },
+    "expected_outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "permits"
+      ],
+      "properties": {
+        "permits": {
+          "type": "array",
+          "minItems": 0,
+          "description": "Permits the engine is expected to emit. Empty array is valid when the benchmark asserts that no permits should fire.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "agency"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "code": {
+                "type": "string"
+              },
+              "agency": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rule_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+$",
+                "description": "Optional reference to the rule_id expected to fire. Becomes resolvable post-T02-06."
+              }
+            }
+          }
+        },
+        "sequencing_notes": {
+          "type": "array",
+          "description": "Free-text sequencing assertions. Detailed sequencing checks are owned by T00-04 / T03-04.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "expected_confidence": {
+      "type": "array",
+      "description": "Expected confidence tier per permit. Order should match expected_outputs.permits.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "permit_name",
+          "tier"
+        ],
+        "properties": {
+          "permit_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tier": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      }
+    },
+    "expected_known_unknowns": {
+      "type": "array",
+      "description": "Known unknowns the engine should surface. Compared as a set (order-independent) at regression time by T04-02.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "expected_explanations": {
+      "type": "array",
+      "description": "High-level expected explanation assertions, one per fired permit. Detailed explanation record shape is owned by T00-05 (see permit-explanation.schema.json); benchmarks assert only the load-bearing fields here.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "permit_name",
+          "trigger_summary"
+        ],
+        "properties": {
+          "permit_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trigger_summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Plain-language assertion of WHY this permit is expected to fire. Compared semantically by analysts during review; T04-02 does keyword-presence checks."
+          },
+          "expected_rule_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+$"
+          },
+          "expected_jurisdiction_levels": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "federal",
+                "state",
+                "county",
+                "municipality",
+                "etj",
+                "utility_district",
+                "drainage_district",
+                "river_authority",
+                "special"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "expected_advisories": {
+      "type": "array",
+      "description": "Mandatory advisory strings expected to appear. Used to verify AGENTS.md Liability Strategy compliance.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "historical_rule_version": {
+      "type": "object",
+      "description": "Required for temporal_versioning benchmarks. Captures the specific rule version(s) the benchmark asserts behavior against, so that future rule edits do not silently change historical replay results.",
+      "additionalProperties": false,
+      "required": [
+        "rules"
+      ],
+      "properties": {
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+@\\d+\\.\\d+\\.\\d+$",
+            "description": "rule_id@version pin."
+          },
+          "uniqueItems": true
+        },
+        "scenario_label": {
+          "type": "string",
+          "description": "Free-text label, e.g. 'pre-2025-rule-change' or 'post-2025-rule-change'."
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "author",
+        "created_at"
+      ],
+      "properties": {
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "reviewer": {
+          "type": "string"
+        },
+        "reviewer_notes": {
+          "type": "string"
+        },
+        "source_project_reference": {
+          "type": "string",
+          "description": "Optional pointer to the real or anonymized historical project that inspired this benchmark."
+        }
+      }
+    },
+    "immutable": {
+      "type": "boolean",
+      "const": true,
+      "description": "Benchmarks are immutable by definition (AGENTS.md). The only acceptable value is true. Material changes require a NEW benchmark_id, not an edit."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text commentary on what this benchmark is intended to exercise."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "description": "historical_rule_version is required when category is temporal_versioning.",
+      "if": {
+        "properties": {
+          "category": {
+            "const": "temporal_versioning"
+          }
+        },
+        "required": [
+          "category"
+        ]
+      },
+      "then": {
+        "required": [
+          "historical_rule_version"
+        ]
+      }
+    },
+    {
+      "description": "known_unknown benchmarks must populate at least one entry in expected_known_unknowns.",
+      "if": {
+        "properties": {
+          "category": {
+            "const": "known_unknown"
+          }
+        },
+        "required": [
+          "category"
+        ]
+      },
+      "then": {
+        "properties": {
+          "expected_known_unknowns": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "multi_county benchmarks must list at least two counties.",
+      "if": {
+        "properties": {
+          "category": {
+            "const": "multi_county"
+          }
+        },
+        "required": [
+          "category"
+        ]
+      },
+      "then": {
+        "properties": {
+          "project_inputs": {
+            "properties": {
+              "counties": {
+                "minItems": 2
+              }
+            },
+            "required": [
+              "counties"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "federal_nexus benchmarks must set project_inputs.federal_nexus = true.",
+      "if": {
+        "properties": {
+          "category": {
+            "const": "federal_nexus"
+          }
+        },
+        "required": [
+          "category"
+        ]
+      },
+      "then": {
+        "properties": {
+          "project_inputs": {
+            "properties": {
+              "federal_nexus": {
+                "const": true
+              }
+            },
+            "required": [
+              "federal_nexus"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

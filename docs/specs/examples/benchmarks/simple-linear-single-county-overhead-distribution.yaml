@@ -1,0 +1,86 @@
+# Benchmark: simple linear, single county, overhead distribution.
+# Baseline regression case. The minimum-trigger scenario that should produce a
+# short, stable permit list dominated by county and state utility rules. See
+# docs/specs/benchmarks.md (T00-06) §7. Illustrative content only; not authoritative.
+
+benchmark_id: simple-linear-single-county-overhead-distribution
+benchmark_version: 1.0.0
+category: simple_linear
+description: >
+  Overhead 12.47 kV distribution rebuild along an existing private easement in
+  one rural Texas county with no stream crossings, no wetlands, and no TxDOT or
+  federal involvement. Exercises the baseline rule set with minimal triggers.
+
+project_inputs:
+  project_type: distribution_line
+  state: TX
+  counties:
+    - Lampasas County
+  municipalities: []
+  etjs: []
+  linear: true
+  length_miles: 4.2
+  acreage: 3.1
+  stream_crossings_count: 0
+  has_wetlands: false
+  txdot_involvement: false
+  federal_nexus: false
+  row_type: private_easement
+  shapefile_uploaded: true
+  gis_overlays:
+    intersects_fema_floodplain: false
+    intersects_usace_district: false
+    intersects_municipality: false
+    intersects_etj: false
+
+ruleset_version:
+  content_hash: placeholder:tx-baseline-v0
+  snapshot_label: tx-baseline-pre-seeding
+
+evaluation_date: 2026-06-15
+
+expected_outputs:
+  permits:
+    - name: Texas PUC Distribution Notice
+      agency: Public Utility Commission of Texas
+    - name: County ROW Use Permit
+      agency: Lampasas County
+  sequencing_notes:
+    - PUC notice may proceed in parallel with county ROW coordination.
+
+expected_confidence:
+  - permit_name: Texas PUC Distribution Notice
+    tier: 1
+  - permit_name: County ROW Use Permit
+    tier: 2
+
+expected_known_unknowns: []
+
+expected_explanations:
+  - permit_name: Texas PUC Distribution Notice
+    trigger_summary: Linear distribution project in Texas triggers state PUC notice.
+    expected_jurisdiction_levels:
+      - state
+  - permit_name: County ROW Use Permit
+    trigger_summary: Project occupies a private easement crossing county-maintained ROW segments.
+    expected_jurisdiction_levels:
+      - county
+
+expected_advisories:
+  - This is an advisory identification. Confirm permit applicability with the issuing agency.
+
+provenance:
+  author: regulatory-architecture
+  created_at: 2026-05-24
+  reviewer_notes: Baseline benchmark; expectations are illustrative pending T02-06 seeding.
+
+immutable: true
+
+notes: >
+  This benchmark anchors the simple-linear category. It must remain small enough
+  that any rule churn affecting it is immediately obvious in diffs.
+
+tags:
+  - distribution
+  - rural
+  - baseline

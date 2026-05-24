@@ -1,0 +1,95 @@
+# Benchmark: known unknown, partial GIS data.
+# Project submitted with manual county entry only; no shapefile uploaded, so
+# wetland, floodplain, and USACE district detection are unavailable. The engine
+# must surface known unknowns rather than defaulting to false. See
+# docs/specs/benchmarks.md (T00-06) §7 and AGENTS.md GIS Intake Strategy.
+# Illustrative content only; not authoritative.
+
+benchmark_id: known-unknown-partial-gis-data
+benchmark_version: 1.0.0
+category: known_unknown
+description: >
+  Early-stage proposal phase: consultant has entered project type, county, and
+  rough acreage but has not uploaded a route file. Several GIS-derived
+  triggers cannot be evaluated. Engine should fire the deterministic county
+  and state permits and surface explicit known unknowns for every unevaluable
+  trigger rather than silently treating them as false.
+
+project_inputs:
+  project_type: transmission_line
+  state: TX
+  counties:
+    - Hardin County
+  municipalities: []
+  etjs: []
+  linear: true
+  length_miles: 9.5
+  acreage: 24.0
+  stream_crossings_count: null
+  has_wetlands: null
+  txdot_involvement: false
+  federal_nexus: null
+  row_type: private_easement
+  shapefile_uploaded: false
+  gis_overlays: {}
+  partial_data_flags:
+    - stream_crossings_count
+    - has_wetlands
+    - federal_nexus
+    - intersects_fema_floodplain
+    - intersects_usace_district
+
+ruleset_version:
+  content_hash: placeholder:tx-baseline-v0
+  snapshot_label: tx-baseline-pre-seeding
+
+evaluation_date: 2026-10-22
+
+expected_outputs:
+  permits:
+    - name: Texas PUC CCN Amendment
+      agency: Public Utility Commission of Texas
+    - name: County ROW Use Permit
+      agency: Hardin County
+
+expected_confidence:
+  - permit_name: Texas PUC CCN Amendment
+    tier: 1
+  - permit_name: County ROW Use Permit
+    tier: 2
+
+expected_known_unknowns:
+  - Stream crossing count not provided; upload route file to confirm CWA Section 404 applicability.
+  - Wetland presence not confirmed; manual confirmation or shapefile upload required.
+  - Federal nexus not declared; verify before assuming no USACE involvement.
+  - FEMA floodplain overlap not evaluated without a route file.
+  - USACE district overlap not evaluated without a route file.
+
+expected_explanations:
+  - permit_name: Texas PUC CCN Amendment
+    trigger_summary: Transmission project in Texas triggers PUC notice regardless of GIS completeness.
+    expected_jurisdiction_levels:
+      - state
+  - permit_name: County ROW Use Permit
+    trigger_summary: Single-county linear project triggers county ROW coordination.
+    expected_jurisdiction_levels:
+      - county
+
+expected_advisories:
+  - Multiple GIS-derived triggers could not be evaluated; additional permits may apply once a route file is uploaded.
+
+provenance:
+  author: regulatory-architecture
+  created_at: 2026-05-24
+
+immutable: true
+
+notes: >
+  This benchmark protects the AGENTS.md guarantee that uncertainty surfaces as
+  known unknowns rather than as silent false-negatives. A regression where the
+  engine emits NO known_unknowns for this input should fail.
+
+tags:
+  - known-unknown
+  - partial-data
+  - gis
