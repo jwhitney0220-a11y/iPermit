@@ -1,0 +1,97 @@
+# Benchmark: conflicting jurisdiction, ETJ overlap.
+# A project in an ETJ where the municipal ordinance imposes a stricter setback
+# than the parent county. Verifies that lower-jurisdiction overrides ADD
+# requirements without silently deleting the parent county requirement. See
+# docs/specs/benchmarks.md (T00-06) §7 and AGENTS.md Rules Engine Architecture.
+# Illustrative content only; not authoritative.
+
+benchmark_id: conflicting-jurisdiction-etj-overlap
+benchmark_version: 1.0.0
+category: conflicting_jurisdiction
+description: >
+  New substation tap and short distribution feeder located inside the City of
+  Georgetown ETJ within Williamson County. City ordinance specifies a tighter
+  vegetation-management setback than the county; both must surface in the
+  output rather than the city silently superseding the county.
+
+project_inputs:
+  project_type: substation
+  state: TX
+  counties:
+    - Williamson County
+  municipalities: []
+  etjs:
+    - City of Georgetown ETJ
+  linear: false
+  acreage: 2.4
+  stream_crossings_count: 0
+  has_wetlands: false
+  txdot_involvement: false
+  federal_nexus: false
+  row_type: private_easement
+  shapefile_uploaded: true
+  gis_overlays:
+    intersects_etj: true
+    etj_name: City of Georgetown ETJ
+    intersects_municipality: false
+    intersects_fema_floodplain: false
+    intersects_usace_district: false
+
+ruleset_version:
+  content_hash: placeholder:tx-baseline-v0
+  snapshot_label: tx-baseline-pre-seeding
+
+evaluation_date: 2026-09-03
+
+expected_outputs:
+  permits:
+    - name: County Site Development Permit
+      agency: Williamson County
+    - name: ETJ Subdivision Review
+      agency: City of Georgetown
+    - name: Texas PUC Substation Notice
+      agency: Public Utility Commission of Texas
+  sequencing_notes:
+    - County and ETJ reviews proceed in parallel; both required.
+    - Engine must not drop the county permit when the ETJ permit fires.
+
+expected_confidence:
+  - permit_name: County Site Development Permit
+    tier: 2
+  - permit_name: ETJ Subdivision Review
+    tier: 2
+  - permit_name: Texas PUC Substation Notice
+    tier: 1
+
+expected_known_unknowns:
+  - City of Georgetown ETJ vegetation setback may exceed Williamson County minimum; confirm governing value with city planning staff.
+
+expected_explanations:
+  - permit_name: County Site Development Permit
+    trigger_summary: Substation acreage triggers county site development review; not deleted by ETJ overlap.
+    expected_jurisdiction_levels:
+      - county
+  - permit_name: ETJ Subdivision Review
+    trigger_summary: Project located in City of Georgetown ETJ triggers additional municipal subdivision review.
+    expected_jurisdiction_levels:
+      - etj
+
+expected_advisories:
+  - Where county and ETJ requirements differ, the stricter requirement should be treated as governing pending agency confirmation.
+
+provenance:
+  author: regulatory-architecture
+  created_at: 2026-05-24
+
+immutable: true
+
+notes: >
+  Primary assertion: the County Site Development Permit MUST appear alongside
+  the ETJ Subdivision Review. A regression that silently drops the county
+  requirement when an ETJ is detected would violate AGENTS.md Rules Engine
+  Architecture and must fail this benchmark.
+
+tags:
+  - etj
+  - conflict
+  - hierarchy

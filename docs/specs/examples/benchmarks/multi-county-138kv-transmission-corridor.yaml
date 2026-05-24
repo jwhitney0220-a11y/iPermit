@@ -1,0 +1,98 @@
+# Benchmark: multi-county 138 kV transmission corridor.
+# Verifies jurisdiction iteration across multiple counties, deduplication of
+# state-level permits, and per-county delta handling. See docs/specs/benchmarks.md
+# (T00-06) §7. Illustrative content only; not authoritative.
+
+benchmark_id: multi-county-138kv-transmission-corridor
+benchmark_version: 1.0.0
+category: multi_county
+description: >
+  New 138 kV overhead transmission line crossing three contiguous Texas
+  counties along a private easement with one stream crossing in the middle
+  county. No federal nexus declared by the consultant; no TxDOT ROW use.
+
+project_inputs:
+  project_type: transmission_line
+  state: TX
+  counties:
+    - Williamson County
+    - Milam County
+    - Burleson County
+  municipalities: []
+  etjs: []
+  linear: true
+  length_miles: 31.7
+  acreage: 96.4
+  stream_crossings_count: 1
+  has_wetlands: false
+  txdot_involvement: false
+  federal_nexus: false
+  row_type: private_easement
+  shapefile_uploaded: true
+  gis_overlays:
+    intersects_fema_floodplain: true
+    floodplain_counties:
+      - Milam County
+    intersects_usace_district: false
+    intersects_municipality: false
+
+ruleset_version:
+  content_hash: placeholder:tx-baseline-v0
+  snapshot_label: tx-baseline-pre-seeding
+
+evaluation_date: 2026-07-01
+
+expected_outputs:
+  permits:
+    - name: Texas PUC CCN Amendment
+      agency: Public Utility Commission of Texas
+    - name: County ROW Use Permit
+      agency: Williamson County
+    - name: County ROW Use Permit
+      agency: Milam County
+    - name: County ROW Use Permit
+      agency: Burleson County
+    - name: County Floodplain Development Permit
+      agency: Milam County
+  sequencing_notes:
+    - State CCN amendment should precede county filings.
+    - Floodplain permit is required only in the county with FEMA overlap.
+
+expected_confidence:
+  - permit_name: Texas PUC CCN Amendment
+    tier: 1
+  - permit_name: County ROW Use Permit
+    tier: 2
+  - permit_name: County ROW Use Permit
+    tier: 2
+  - permit_name: County ROW Use Permit
+    tier: 2
+  - permit_name: County Floodplain Development Permit
+    tier: 2
+
+expected_known_unknowns:
+  - Confirm county-by-county ROW use ordinance variations before filing.
+
+expected_explanations:
+  - permit_name: Texas PUC CCN Amendment
+    trigger_summary: New transmission corridor crossing multiple counties triggers a statewide CCN amendment.
+    expected_jurisdiction_levels:
+      - state
+  - permit_name: County Floodplain Development Permit
+    trigger_summary: FEMA floodplain overlap detected in Milam County triggers local floodplain permit.
+    expected_jurisdiction_levels:
+      - county
+
+provenance:
+  author: regulatory-architecture
+  created_at: 2026-05-24
+
+immutable: true
+
+notes: >
+  Verifies that one state-level permit fires once (not per county) while county
+  permits fire per-county and only when local triggers apply.
+
+tags:
+  - transmission
+  - multi-jurisdiction
