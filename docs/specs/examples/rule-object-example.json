@@ -1,0 +1,120 @@
+{
+  "rule_id": "us-federal-cwa-section-404-usace-permit",
+  "version": "1.0.0",
+  "title": "Section 404 — Discharge of Dredged or Fill Material",
+  "permit_name": "Clean Water Act Section 404 Permit",
+  "permit_code": "CWA-404",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us-federal",
+  "source_agency": "U.S. Army Corps of Engineers",
+  "applicable_project_types": [
+    "transmission_line",
+    "distribution_line",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "statute",
+        "reference": "33 U.S.C. § 1344",
+        "url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title33-section1344",
+        "retrieved_at": "2026-05-20"
+      },
+      {
+        "citation_type": "regulation",
+        "reference": "33 C.F.R. Parts 320-332"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "USACE Regulatory Program Standard Operating Procedures",
+        "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/",
+        "retrieved_at": "2026-05-20"
+      }
+    ],
+    "last_verified": "2026-05-20",
+    "reviewer": "jw",
+    "reviewer_notes": "Verified statutory text and confirmed USACE district contacts for Texas."
+  },
+  "status": "effective",
+  "effective_from": "2026-01-01",
+  "supersedes": [],
+  "triggers": {
+    "all": [
+      {
+        "field": "project.federal_nexus",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "any": [
+          {
+            "field": "project.stream_crossings_count",
+            "operator": ">",
+            "value": 0
+          },
+          {
+            "field": "project.has_wetlands",
+            "operator": "=",
+            "value": true
+          },
+          {
+            "field": "geometry.intersects_usace_district",
+            "operator": "exists"
+          }
+        ]
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Clean Water Act Section 404 Permit",
+        "code": "CWA-404",
+        "agency": "U.S. Army Corps of Engineers"
+      }
+    ],
+    "forms": [
+      {
+        "name": "ENG Form 4345 (Application for Department of the Army Permit)",
+        "form_number": "ENG-4345",
+        "url": "https://www.usace.army.mil/Portals/2/docs/civilworks/regulatory/eng4345.pdf"
+      }
+    ],
+    "submission": {
+      "submission_url": "https://rrs.usace.army.mil/",
+      "submission_method": "online_portal"
+    },
+    "agencies": [
+      "U.S. Environmental Protection Agency",
+      "U.S. Fish and Wildlife Service"
+    ]
+  },
+  "sequencing": {
+    "prerequisites": [],
+    "parallel_with": [
+      "us-federal-esa-section-7-consultation"
+    ],
+    "typical_lead_time_days": 120,
+    "notes": "Pre-Application Meeting recommended for impacts > 0.5 acres. Nationwide Permit eligibility should be evaluated before applying for an Individual Permit.\n"
+  },
+  "explanations": {
+    "trigger_explanation": "Project involves federal nexus and crosses or impacts waters of the U.S. (streams, wetlands, or a USACE-regulated district), which triggers Section 404 jurisdiction.\n",
+    "threshold_summary": "Any discharge of dredged or fill material into waters of the U.S. requires authorization; Nationwide vs Individual Permit determined by impact magnitude.\n",
+    "jurisdiction_summary": "Federal jurisdiction under the Clean Water Act; administered by USACE in coordination with EPA.\n"
+  },
+  "known_unknowns": [
+    "Final delineation of waters of the U.S. requires a jurisdictional determination from USACE.",
+    "Nationwide Permit eligibility depends on impact thresholds that vary by NWP number."
+  ],
+  "advisories": [
+    "This is an advisory identification. A jurisdictional determination from USACE is required to confirm Section 404 applicability and permit type.",
+    "Coordinate early with the appropriate USACE district office; processing times vary by district workload."
+  ],
+  "tags": [
+    "federal",
+    "water-resources",
+    "cwa"
+  ],
+  "notes": "Example rule for T00-01 spec validation. Not for production use."
+}
