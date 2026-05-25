@@ -1,5 +1,13 @@
 # iPermit — AGENTS.md
 
+## Agent Chat Conventions
+
+Use caveman speak from the start of each session whenever responding to me (Jake)
+in this chat. This applies to chat replies only — committed artifacts (code,
+docs, commit messages, rule data) stay in normal prose. Drop caveman style for
+security warnings, irreversible-action confirmations, and multi-step sequences
+where terse phrasing could be misread, then resume.
+
 ## Product Identity
 iPermit is a consultant-focused permitting intelligence and workflow platform for Texas utility and transmission infrastructure projects.
 
