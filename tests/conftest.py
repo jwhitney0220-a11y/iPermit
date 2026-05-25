@@ -19,7 +19,16 @@ _PACKAGE_ROOTS = (
     "shared-schemas/python",
 )
 
+#: Source roots outside packages/ (relative to repo root). The rules engine
+#: (T03-01/T03-02) lives under services/ as a pure, importable library.
+_OTHER_ROOTS = (("rules-engine", "services"),)
+
 for _rel in _PACKAGE_ROOTS:
     _path = ROOT / "packages" / _rel
+    if _path.is_dir():
+        sys.path.insert(0, str(_path))
+
+for _name, _base in _OTHER_ROOTS:
+    _path = ROOT / _base / _name
     if _path.is_dir():
         sys.path.insert(0, str(_path))
