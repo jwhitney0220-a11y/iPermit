@@ -19,6 +19,9 @@ from typing import Any
 
 from _common import GENERATED_HEADER, to_pascal_case
 
+# Pinned json2ts version (see _try_json2ts). Bump deliberately + regenerate.
+_JSON2TS_VERSION = "15.0.4"
+
 _TS_BANNER = f"// {GENERATED_HEADER}\n"
 
 
@@ -44,7 +47,15 @@ def _try_json2ts(schema: dict, root_name: str) -> str | None:
         return None
     try:
         result = subprocess.run(
-            ["npx", "--yes", "json-schema-to-typescript", "--no-additionalProperties"],
+            # Pin the json2ts version so generated output is deterministic across
+            # local + CI runs (an unpinned npx fetches latest and causes spurious
+            # codegen-drift failures). Bump deliberately + regenerate when needed.
+            [
+                "npx",
+                "--yes",
+                f"json-schema-to-typescript@{_JSON2TS_VERSION}",
+                "--no-additionalProperties",
+            ],
             input=json.dumps({**schema, "title": root_name}),
             capture_output=True,
             text=True,
