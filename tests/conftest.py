@@ -21,8 +21,12 @@ _PACKAGE_ROOTS = (
 )
 
 #: Source roots outside packages/ (relative to repo root). The rules engine
-#: (T03-01/T03-02) lives under services/ as a pure, importable library.
-_OTHER_ROOTS = (("rules-engine", "services"),)
+#: (T03-01/T03-02) and the GIS engine (T05-01/T05-02) live under services/ as
+#: pure, importable libraries.
+_OTHER_ROOTS = (
+    ("rules-engine", "services"),
+    ("gis-engine", "services"),
+)
 
 for _rel in _PACKAGE_ROOTS:
     _path = ROOT / "packages" / _rel
