@@ -5,3 +5,16 @@
 
 # Local-only Claude Code settings (also covered by global ignore).
 .claude/settings.local.json
+
+# Local environment files — never commit (T01-08 standard). The committed
+# template is .env.example.
+.env
+.env.*
+!.env.example
+
+# Terraform local state and caches (T01-09).
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
