@@ -1,0 +1,77 @@
+{
+  "rule_id": "us-tx-usace-section-408-permission",
+  "version": "1.0.0",
+  "title": "USACE Section 408 Permission",
+  "permit_name": "Section 408 Permission to Alter a Civil Works Project",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us",
+  "source_agency": "United States Army Corps of Engineers",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "United States Army Corps of Engineers Section 408",
+        "url": "https://www.usace.army.mil/Missions/Civil-Works/Section408/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Section 408 program overview",
+        "url": "https://www.nap.usace.army.mil/408/",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.intersects_usace_civil_works_project",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.alters_usace_civil_works_project",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Section 408 Permission to Alter a Civil Works Project",
+        "agency": "United States Army Corps of Engineers"
+      }
+    ],
+    "agencies": [
+      "United States Army Corps of Engineers"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Building on, altering, improving, moving, occupying, or otherwise affecting an authorized United States Army Corps of Engineers Civil Works project commonly triggers a Section 408 permission review."
+  },
+  "known_unknowns": [
+    "The same action may also require separate Section 404 or Section 10 authorization."
+  ],
+  "advisories": [
+    "A pre-application meeting is commonly recommended before preparing a full Section 408 submittal."
+  ],
+  "tags": [
+    "levee",
+    "dam",
+    "civil_works",
+    "federal"
+  ],
+  "notes": "Confidence tier 1 because the requirement is directly described on official United States Army Corps of Engineers Section 408 materials."
+}

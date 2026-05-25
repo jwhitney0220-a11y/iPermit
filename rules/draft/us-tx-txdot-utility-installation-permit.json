@@ -1,0 +1,95 @@
+{
+  "rule_id": "us-tx-txdot-utility-installation-permit",
+  "version": "1.0.0",
+  "title": "TxDOT Utility Installation Permit",
+  "permit_name": "Utility Installation Permit",
+  "jurisdiction_level": "state",
+  "jurisdiction_id": "us-tx",
+  "source_agency": "Texas Department of Transportation",
+  "applicable_project_types": [
+    "transmission_line",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Utility Accommodations Toolkit",
+        "url": "https://www.txdot.gov/business/resources/utility-accommodations.html",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Utility Accommodation Rules",
+        "url": "https://www.txdot.gov/manuals/row/utl/chapter-5--utility-considerations-during-highway-d/section-6--compliance-with-the-rules-and-policies/utility-accommodation-rules--uar-.html",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "form",
+        "reference": "Utility Installation Request Form 1082",
+        "url": "https://www.txdot.gov/content/dam/formsanddocuments/txdot-gov/xdp/1082/1082.xdp/jcr%3Acontent?profile=&source=fp&submitUrl=",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "Use of Right of Way by Others Manual",
+        "url": "https://www.txdot.gov/content/dam/txdotoms/mnt/use/use.pdf",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "project.txdot_right_of_way_involved",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_installation",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Utility Installation Permit",
+        "agency": "Texas Department of Transportation"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Utility Installation Request",
+        "form_number": "Form 1082",
+        "url": "https://www.txdot.gov/content/dam/formsanddocuments/txdot-gov/xdp/1082/1082.xdp/jcr%3Acontent?profile=&source=fp&submitUrl="
+      }
+    ],
+    "agencies": [
+      "Texas Department of Transportation"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Utility installations in state highway right of way commonly require Texas Department of Transportation utility accommodation review and a utility installation permit."
+  },
+  "known_unknowns": [
+    "Active highway projects may also require joint use, clearance, agreement, reimbursement, or exception documentation depending on property rights and project context."
+  ],
+  "advisories": [
+    "Additional review recommended for nonstandard placements, longitudinal occupancy, or any installation that may require an exception to the Utility Accommodation Rules."
+  ],
+  "tags": [
+    "state_row",
+    "txdot",
+    "roadside_utility",
+    "crossing"
+  ],
+  "notes": "Confidence tier 1 because Texas Department of Transportation rules, manuals, and the active permit form are directly published."
+}

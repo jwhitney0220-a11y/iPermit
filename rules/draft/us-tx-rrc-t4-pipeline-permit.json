@@ -1,0 +1,89 @@
+{
+  "rule_id": "us-tx-rrc-t4-pipeline-permit",
+  "version": "1.0.0",
+  "title": "RRC T-4 Pipeline Permit",
+  "permit_name": "Permit to Operate a Pipeline in Texas",
+  "permit_code": "T-4",
+  "jurisdiction_level": "state",
+  "jurisdiction_id": "us-tx",
+  "source_agency": "Railroad Commission of Texas",
+  "applicable_project_types": [
+    "utility_corridor",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Pipeline Safety Permitting and Mapping",
+        "url": "https://www.rrc.texas.gov/pipeline-safety/permitting-and-mapping/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Instructions for Filing a Form T-4 Online",
+        "url": "https://www.rrc.texas.gov/pipeline-safety/permitting-and-mapping/permitting/instructions-for-filing-a-form-t-4-online/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "A Guide to Pipeline Permit Submissions",
+        "url": "https://www.rrc.texas.gov/media/awscllog/a-guide-to-pipeline-permit-submissions.pdf",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "derived.rrc_regulated_pipeline",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.new_or_modified_pipeline",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Permit to Operate a Pipeline in Texas",
+        "agency": "Railroad Commission of Texas",
+        "code": "T-4"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Application for Permit to Operate a Pipeline in Texas",
+        "form_number": "Form T-4",
+        "url": "https://www.rrc.texas.gov/pipeline-safety/permitting-and-mapping/permitting/instructions-for-filing-a-form-t-4-online/"
+      }
+    ],
+    "agencies": [
+      "Railroad Commission of Texas"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "New or modified intrastate transmission, gathering, or other Railroad Commission of Texas-regulated pipeline facilities commonly require a T-4 permit to operate in Texas."
+  },
+  "known_unknowns": [
+    "Distribution lines and some production or flow lines are excluded from the T-4 pathway and should be confirmed with the Railroad Commission of Texas."
+  ],
+  "advisories": [
+    "Additional review recommended to confirm whether the facility is intrastate, gathering, transmission, production, flow, or distribution before assigning a T-4 requirement."
+  ],
+  "tags": [
+    "pipeline",
+    "intrastate",
+    "rrc",
+    "linear"
+  ],
+  "notes": "Confidence tier 2 because official Railroad Commission of Texas pages clearly support the permit process, but project applicability depends on line classification and exclusions."
+}

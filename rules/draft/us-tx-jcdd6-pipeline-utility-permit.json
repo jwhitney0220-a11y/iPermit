@@ -1,0 +1,87 @@
+{
+  "rule_id": "us-tx-jcdd6-pipeline-utility-permit",
+  "version": "1.0.0",
+  "title": "JCDD6 Pipeline Utility Permit",
+  "permit_name": "Application and Agreement for Pipeline/Utility Permit",
+  "jurisdiction_level": "drainage_district",
+  "jurisdiction_id": "us-tx-drainage-district-jefferson-county-drainage-district-no-6",
+  "source_agency": "Jefferson County Drainage District No. 6",
+  "applicable_project_types": [
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "General Applications",
+        "url": "https://dd6.org/board_of_directors/general-applications/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "form",
+        "reference": "Application and Agreement for Pipeline/Utility Permit",
+        "url": "https://dd6.org/wp-content/uploads/2022/04/PIPELINE-Utility-Permit-Application-4-2022.pdf",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Forms",
+        "url": "https://dd6.org/forms/",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.intersects_drainage_district_facility",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_crossing",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Application and Agreement for Pipeline/Utility Permit",
+        "agency": "Jefferson County Drainage District No. 6"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Application and Agreement for Pipeline/Utility Permit",
+        "url": "https://dd6.org/wp-content/uploads/2022/04/PIPELINE-Utility-Permit-Application-4-2022.pdf"
+      }
+    ],
+    "agencies": [
+      "Jefferson County Drainage District No. 6"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "A pipeline or utility crossing across Jefferson County Drainage District No. 6 ditches, easements, or other district facilities commonly triggers the district pipeline/utility permit process."
+  },
+  "known_unknowns": [
+    "Board approval, fees, insurance, and engineering review are project-specific and should be confirmed during intake."
+  ],
+  "advisories": [
+    "Additional review recommended for horizontal directional drilling, open-cut crossings, and maintenance actions because amendments can be required."
+  ],
+  "tags": [
+    "drainage_district",
+    "ditch_crossing",
+    "utility_crossing",
+    "local"
+  ],
+  "notes": "Confidence tier 2 because the district publishes an active permit application and forms portal, but exact approval conditions are district- and project-specific."
+}

@@ -6,7 +6,6 @@ name: CI
 # validation and codegen-drift checks the engineering standards require.
 #
 # Deliberately NOT yet wired (each lands with the work it depends on):
-#   - Benchmark regression testing  -> T04-02 (needs the rules engine, EPIC-03)
 #   - Terraform validate/plan        -> T01-09 implementation / T05-01
 #     (the infrastructure/terraform skeleton references modules that do not
 #      exist yet; `terraform validate` would fail by design until then)
@@ -66,6 +65,11 @@ jobs:
 
       - name: Rule validation
         run: python scripts/rules/validate_rules.py
+
+      - name: Benchmark regression (T04-02)
+        # Runs the benchmark corpus through the simulation engine. Placeholder
+        # (design-time) benchmarks are skipped; any real regression fails CI.
+        run: python scripts/checks/run_regression.py
 
       - name: Unit tests (pytest)
         # No tests exist yet; exit code 5 means "no tests collected" and is OK.

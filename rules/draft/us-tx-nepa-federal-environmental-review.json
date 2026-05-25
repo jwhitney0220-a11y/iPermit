@@ -1,0 +1,82 @@
+{
+  "rule_id": "us-tx-nepa-federal-environmental-review",
+  "version": "1.0.0",
+  "title": "NEPA Federal Environmental Review",
+  "permit_name": "National Environmental Policy Act Environmental Review",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us",
+  "source_agency": "Council on Environmental Quality",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "statute",
+        "reference": "42 U.S.C. 4336 - Procedure for determination of level of review",
+        "url": "https://uscode.house.gov/view.xhtml?edition=prelim&num=0&req=granuleid%3AUSC-prelim-title42-section4336",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "statute",
+        "reference": "42 U.S.C. 4336e - Definitions",
+        "url": "https://uscode.house.gov/view.xhtml?req=%28title%3A42+section%3A4336e+edition%3Aprelim%29",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Council on Environmental Quality NEPA overview",
+        "url": "https://ceq.doe.gov/",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "project.federal_nexus",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "derived.major_federal_action",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "National Environmental Policy Act Environmental Review",
+        "agency": "Lead federal agency"
+      }
+    ],
+    "agencies": [
+      "Council on Environmental Quality"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "A project with substantial federal control and responsibility commonly enters the National Environmental Policy Act process when there is a federal permit, approval, funding, or other discretionary federal action."
+  },
+  "known_unknowns": [
+    "Agency-specific categorical exclusions, environmental assessment procedures, and environmental impact statement thresholds vary by lead federal agency."
+  ],
+  "advisories": [
+    "Additional review recommended to determine whether the project is categorically excluded, needs an environmental assessment, or needs an environmental impact statement."
+  ],
+  "tags": [
+    "federal_nexus",
+    "major_federal_action",
+    "environmental_review"
+  ],
+  "notes": "Confidence tier 1 because the trigger framework is directly supported by federal statute and official Council on Environmental Quality materials."
+}

@@ -1,0 +1,83 @@
+{
+  "rule_id": "us-tx-usfws-esa-section-7-consultation",
+  "version": "1.0.0",
+  "title": "USFWS ESA Section 7 Consultation",
+  "permit_name": "Endangered Species Act Section 7 Consultation",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us",
+  "source_agency": "United States Fish and Wildlife Service",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "United States Fish and Wildlife Service ESA Section 7 Consultation",
+        "url": "https://www.fws.gov/service/esa-section-7-consultation",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "regulation",
+        "reference": "50 CFR 402.14 - Formal consultation",
+        "url": "https://www.ecfr.gov/current/title-50/chapter-IV/subchapter-A/part-402/subpart-B/section-402.14",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "United States Fish and Wildlife Service Section 7 law summary",
+        "url": "https://www.fws.gov/laws/endangered-species-act/section-7",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "project.federal_nexus",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "derived.may_affect_listed_species",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Endangered Species Act Section 7 Consultation",
+        "agency": "United States Fish and Wildlife Service"
+      }
+    ],
+    "agencies": [
+      "United States Fish and Wildlife Service"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "When a federally funded, permitted, authorized, or carried-out action may affect listed species or critical habitat, Section 7 consultation with the United States Fish and Wildlife Service is commonly required."
+  },
+  "known_unknowns": [
+    "For some species or marine resources, National Marine Fisheries Service consultation may also be required."
+  ],
+  "advisories": [
+    "Additional review recommended where listed species, critical habitat, or other federal trust resources may overlap the project area."
+  ],
+  "tags": [
+    "esa",
+    "listed_species",
+    "critical_habitat",
+    "federal_nexus"
+  ],
+  "notes": "Confidence tier 1 because the consultation trigger is directly supported by federal regulation and official United States Fish and Wildlife Service guidance."
+}

@@ -1,0 +1,62 @@
+# Executable regression benchmark (T04-02). See the federal-nexus benchmark
+# header for the engine_context / applicable_jurisdiction_ids convention.
+benchmark_id: known-unknown-tpwd-rare-species-overlap
+benchmark_version: 1.0.0
+category: known_unknown
+description: >-
+  Transmission line overlapping rare wildlife resources, triggering only the
+  Tier 3 wildlife project review. Exercises the low-confidence and authored
+  known-unknown surfacing path.
+project_inputs:
+  project_type: transmission_line
+  state: TX
+  counties:
+    - Travis County
+  linear: true
+  federal_nexus: false
+  partial_data_flags:
+    - gis_overlay_unconfirmed
+  applicable_jurisdiction_ids:
+    - us-tx
+  engine_context:
+    project:
+      federal_nexus: false
+      stormwater_discharge_to_surface_water: false
+      public_land: false
+      federal_water_permit_or_license: false
+      txdot_right_of_way_involved: false
+    geometry:
+      state_parks_or_wildlife_land_intersects: false
+    derived:
+      tpwd_rare_species_overlap: true
+ruleset_version:
+  content_hash: sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6
+  snapshot_label: seed-2026-05-25-draft
+evaluation_date: "2026-05-25"
+expected_outputs:
+  permits:
+    - name: Project Review Request
+      agency: Texas Parks and Wildlife Department
+      rule_id: us-tx-tpwd-project-review-for-wildlife-resources
+expected_confidence:
+  - permit_name: Project Review Request
+    tier: 3
+expected_explanations:
+  - permit_name: Project Review Request
+    trigger_summary: Overlap with rare wildlife resources triggers a project review request.
+    expected_rule_id: us-tx-tpwd-project-review-for-wildlife-resources
+    expected_jurisdiction_levels: [state]
+expected_known_unknowns:
+  - Texas Parks and Wildlife Department environmental review is coordination-based, and a mandatory submission pathway depends on the lead permit, funding source, land ownership, or another agency process.
+  - This permit identification is informational only. Additional review recommended — consultant confirmation required before relying on this result.
+expected_advisories:
+  - Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.
+provenance:
+  author: iPermit engineering (T04-02 seed benchmark)
+  created_at: "2026-05-25"
+  reviewer_notes: >-
+    Authored against the T02-06 seeded draft ruleset. Expected outputs derived
+    from the deterministic engine, not from an authoritative permit determination.
+immutable: true
+notes: Regression coverage for a Tier 3 known-unknown / low-confidence scenario.
+tags: [seed, known-unknown, wildlife, tier3]

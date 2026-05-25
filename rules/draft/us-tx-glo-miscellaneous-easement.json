@@ -1,0 +1,94 @@
+{
+  "rule_id": "us-tx-glo-miscellaneous-easement",
+  "version": "1.0.0",
+  "title": "GLO Miscellaneous Easement",
+  "permit_name": "Miscellaneous Easement for State-Owned Land",
+  "jurisdiction_level": "state",
+  "jurisdiction_id": "us-tx",
+  "source_agency": "Texas General Land Office",
+  "applicable_project_types": [
+    "transmission_line",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Easements and Permits",
+        "url": "https://www.glo.texas.gov/energy/easements-and-permits",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Surface Leasing and Easements",
+        "url": "https://www.glo.texas.gov/land/surface-leasing-and-easements",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "form",
+        "reference": "Application for Miscellaneous Easement",
+        "url": "https://www.glo.texas.gov/sites/default/files/resources/glo/land/land-management/forms/_documents/App_Renew_Amend_Assign_Misc_Easement_ROW.pdf",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "Instructions for Preparing Exhibits for Right-of-Way Easements",
+        "url": "https://www.glo.texas.gov/sites/default/files/2025-03/Ins_Exhibits_ROW_Surface_Subsurface_Misc_Easement_ROW.pdf",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.state_owned_land_intersects",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.right_of_way_across_state_land",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Miscellaneous Easement for State-Owned Land",
+        "agency": "Texas General Land Office"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Application for Miscellaneous Easement",
+        "url": "https://www.glo.texas.gov/sites/default/files/resources/glo/land/land-management/forms/_documents/App_Renew_Amend_Assign_Misc_Easement_ROW.pdf"
+      }
+    ],
+    "agencies": [
+      "Texas General Land Office"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "A utility right of way on, across, under, or over state-owned land, including submerged land and some uplands, commonly triggers a Texas General Land Office miscellaneous easement."
+  },
+  "known_unknowns": [
+    "Coastal public land projects may follow a coastal easement or lease path instead of a standard miscellaneous easement depending on site conditions and adjacent ownership."
+  ],
+  "advisories": [
+    "Additional review recommended for state-owned submerged lands, navigable waterways, and Permanent School Fund tracts because exhibit standards and land-status confirmation can control completeness."
+  ],
+  "tags": [
+    "state_land",
+    "submerged_land",
+    "easement",
+    "row"
+  ],
+  "notes": "Confidence tier 1 because the Texas General Land Office directly publishes both the state-land easement authority and active application materials."
+}

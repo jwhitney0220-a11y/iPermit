@@ -1,0 +1,73 @@
+# Executable regression benchmark (T04-02). See the federal-nexus benchmark
+# header for the engine_context / applicable_jurisdiction_ids convention.
+benchmark_id: simple-linear-roadside-utility-txdot-row
+benchmark_version: 1.0.0
+category: simple_linear
+description: >-
+  Roadside utility installation in TxDOT right of way with construction stormwater
+  discharge and no federal nexus. Exercises the state highway-utility and
+  stormwater pathways only.
+project_inputs:
+  project_type: roadside_utility
+  state: TX
+  counties:
+    - Travis County
+  linear: true
+  length_miles: 1.2
+  has_wetlands: false
+  federal_nexus: false
+  txdot_involvement: true
+  row_type: txdot_row
+  applicable_jurisdiction_ids:
+    - us-tx
+  engine_context:
+    project:
+      txdot_right_of_way_involved: true
+      utility_installation: true
+      stormwater_discharge_to_surface_water: true
+      disturbed_acres: 2
+      federal_nexus: false
+      dredge_or_fill_in_waters: false
+      federal_water_permit_or_license: false
+    geometry: {}
+    derived: {}
+ruleset_version:
+  content_hash: sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6
+  snapshot_label: seed-2026-05-25-draft
+evaluation_date: "2026-05-25"
+expected_outputs:
+  permits:
+    - name: Utility Installation Permit
+      agency: Texas Department of Transportation
+      rule_id: us-tx-txdot-utility-installation-permit
+    - name: Texas Pollutant Discharge Elimination System Construction General Permit
+      agency: Texas Commission on Environmental Quality
+      rule_id: us-tx-tceq-construction-stormwater-cgp
+expected_confidence:
+  - permit_name: Utility Installation Permit
+    tier: 1
+  - permit_name: Texas Pollutant Discharge Elimination System Construction General Permit
+    tier: 1
+expected_explanations:
+  - permit_name: Utility Installation Permit
+    trigger_summary: Utility installation in state highway right of way triggers a utility installation permit.
+    expected_rule_id: us-tx-txdot-utility-installation-permit
+    expected_jurisdiction_levels: [state]
+  - permit_name: Texas Pollutant Discharge Elimination System Construction General Permit
+    trigger_summary: Construction stormwater discharge disturbing at least one acre triggers the construction general permit.
+    expected_rule_id: us-tx-tceq-construction-stormwater-cgp
+    expected_jurisdiction_levels: [state]
+expected_known_unknowns:
+  - Local erosion and sediment controls may apply in addition to the state general permit.
+  - Active highway projects may also require joint use, clearance, agreement, reimbursement, or exception documentation depending on property rights and project context.
+expected_advisories:
+  - Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.
+provenance:
+  author: iPermit engineering (T04-02 seed benchmark)
+  created_at: "2026-05-25"
+  reviewer_notes: >-
+    Authored against the T02-06 seeded draft ruleset. Expected outputs derived
+    from the deterministic engine, not from an authoritative permit determination.
+immutable: true
+notes: Regression coverage for a simple single-state linear project over the seeded ruleset.
+tags: [seed, simple-linear, roadside-utility, txdot]

@@ -1,0 +1,81 @@
+{
+  "rule_id": "us-tx-travis-county-utility-installation-permit",
+  "version": "1.0.0",
+  "title": "Travis County Utility Install Permit",
+  "permit_name": "Work in Right-of-Way / Utility Installation Permit",
+  "jurisdiction_level": "county",
+  "jurisdiction_id": "us-tx-county-travis",
+  "source_agency": "Travis County Transportation and Natural Resources Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Work in Right-of-Way / Utility Installation Permit",
+        "url": "https://www.traviscountytx.gov/tnr/development-services/apply-for-a-permit/utility-installation-permit",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Apply for a Permit",
+        "url": "https://www.traviscountytx.gov/tnr/development-services/apply-for-a-permit",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "project.county_right_of_way_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.in_unincorporated_county",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_installation",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Work in Right-of-Way / Utility Installation Permit",
+        "agency": "Travis County Transportation and Natural Resources Department"
+      }
+    ],
+    "agencies": [
+      "Travis County Transportation and Natural Resources Department"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Installing water, sewer, electric, gas, or similar facilities in the public right of way of unincorporated Travis County commonly triggers the county utility installation permit path."
+  },
+  "known_unknowns": [
+    "The published permit page is marked expired, so the current intake workflow and current forms should be confirmed with Travis County before filing."
+  ],
+  "advisories": [
+    "Additional review recommended for county road crossings and roadside utility work in unincorporated Travis County."
+  ],
+  "tags": [
+    "county_row",
+    "road_crossing",
+    "utility_installation",
+    "local"
+  ],
+  "notes": "Confidence tier 2 because Travis County still publishes the permit type and the county permit portal, but the department page is flagged expired and should be reconfirmed before use."
+}

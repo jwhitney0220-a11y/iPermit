@@ -1,0 +1,77 @@
+{
+  "rule_id": "us-tx-lcra-hlwo-general-utility-permit",
+  "version": "1.0.0",
+  "title": "LCRA HLWO Utility Permit",
+  "permit_name": "Highland Lakes Watershed Ordinance General Utility Permit",
+  "jurisdiction_level": "river_authority",
+  "jurisdiction_id": "us-tx-river-authority-lower-colorado-river-authority",
+  "source_agency": "Lower Colorado River Authority",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Highland Lakes Watershed Ordinance",
+        "url": "https://www.lcra.org/water/permits-contracts/watershed-management-ordinance/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "HLWO Technical Manual and Construction Standard Details",
+        "url": "https://www.lcra.org/water/permits-contracts/watershed-management-ordinance/hlwo-technical-manual-and-construction-standard-details/",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.within_lcra_hlwo_jurisdiction",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_construction",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Highland Lakes Watershed Ordinance General Utility Permit",
+        "agency": "Lower Colorado River Authority"
+      }
+    ],
+    "agencies": [
+      "Lower Colorado River Authority"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Utility construction within the Lower Colorado River Authority Highland Lakes Watershed Ordinance jurisdiction commonly requires notification and can require the ordinance's general utility permit."
+  },
+  "known_unknowns": [
+    "The Lower Colorado River Authority requires notification before work begins, and permit necessity depends on ordinance thresholds and jurisdictional location."
+  ],
+  "advisories": [
+    "Additional review recommended to verify the site is inside the watershed ordinance jurisdiction and whether separate dredge and fill or stormwater reviews also apply."
+  ],
+  "tags": [
+    "river_authority",
+    "watershed",
+    "utility_permit",
+    "lcra"
+  ],
+  "notes": "Confidence tier 2 because the Lower Colorado River Authority directly publishes the ordinance program, but project-level permit need depends on jurisdictional mapping and ordinance thresholds."
+}

@@ -1,0 +1,77 @@
+{
+  "rule_id": "us-tx-harris-county-floodplain-development-permit",
+  "version": "1.0.0",
+  "title": "Harris County Floodplain Permit",
+  "permit_name": "Floodplain Development Permit",
+  "jurisdiction_level": "county",
+  "jurisdiction_id": "us-tx-county-harris",
+  "source_agency": "Harris County Office of the County Engineer",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Floodplain Management Permits",
+        "url": "https://oce.harriscountytx.gov/Services/Permits/Floodplain-Management",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Harris County permit FAQ for floodplain management",
+        "url": "https://oce.harriscountytx.gov/Services/Permits/FAQ",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.in_unincorporated_county",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Floodplain Development Permit",
+        "agency": "Harris County Office of the County Engineer"
+      }
+    ],
+    "agencies": [
+      "Harris County Office of the County Engineer"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Development in the unincorporated Harris County floodplain commonly requires a floodplain development permit before work proceeds."
+  },
+  "known_unknowns": [
+    "Exact plan submittals vary by the type of development and whether the work is within or adjacent to a special flood hazard area."
+  ],
+  "advisories": [
+    "Additional review recommended for substation pads, access roads, culverts, crossings, and fill in mapped floodplains."
+  ],
+  "tags": [
+    "county",
+    "floodplain",
+    "unincorporated",
+    "local"
+  ],
+  "notes": "Confidence tier 2 because the permit requirement is clearly published by Harris County, but implementation details vary by project type and floodplain setting."
+}

@@ -1,0 +1,75 @@
+{
+  "rule_id": "us-tx-hcfcd-land-use-easement-for-utility-crossings",
+  "version": "1.0.0",
+  "title": "HCFCD Utility Crossing Land Use",
+  "permit_name": "Land Use Request or Easement Sale for Utility Crossing",
+  "jurisdiction_level": "special",
+  "jurisdiction_id": "us-tx-special-harris-county-flood-control-district",
+  "source_agency": "Harris County Flood Control District",
+  "applicable_project_types": [
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Land Use Request",
+        "url": "https://www.hcfcd.org/Community/Contact-Us/Land-Use-Request",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Property Rights Program",
+        "url": "https://www.hcfcd.org/Activity/Additional-Programs/Property-Acquisition-Program/Property-Rights-Program",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.intersects_hcfcd_property",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_crossing",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Land Use Request or Easement Sale for Utility Crossing",
+        "agency": "Harris County Flood Control District"
+      }
+    ],
+    "agencies": [
+      "Harris County Flood Control District"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Using Harris County Flood Control District property for a utility crossing commonly triggers a land use request and, where the district owns fee title, an easement sale pathway."
+  },
+  "known_unknowns": [
+    "The district uses different property-rights instruments depending on whether the request is temporary access, an agreement, an easement sale, or an abandonment."
+  ],
+  "advisories": [
+    "Additional review recommended early because district property-rights path selection can affect schedule, legal documents, and survey requirements."
+  ],
+  "tags": [
+    "special_jurisdiction",
+    "flood_control",
+    "utility_crossing",
+    "property_rights"
+  ],
+  "notes": "Confidence tier 2 because the district clearly publishes the property-rights pathways, but the exact instrument depends on ownership status and the permanent or temporary nature of the utility use."
+}

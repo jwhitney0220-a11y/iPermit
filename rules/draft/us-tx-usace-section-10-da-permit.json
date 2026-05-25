@@ -1,0 +1,82 @@
+{
+  "rule_id": "us-tx-usace-section-10-da-permit",
+  "version": "1.0.0",
+  "title": "USACE Section 10 DA Permit",
+  "permit_name": "Department of the Army Permit under Rivers and Harbors Act Section 10",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us",
+  "source_agency": "United States Army Corps of Engineers",
+  "applicable_project_types": [
+    "transmission_line",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "regulation",
+        "reference": "33 CFR Part 322",
+        "url": "https://www.ecfr.gov/current/title-33/chapter-II/part-322",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "United States Army Corps of Engineers Regulatory Program and Permits",
+        "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.navigable_waters_present",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.work_in_navigable_waters",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Department of the Army Permit under Rivers and Harbors Act Section 10",
+        "agency": "United States Army Corps of Engineers"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Application for Department of the Army Permit",
+        "form_number": "ENG Form 4345",
+        "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/Regulatory-Program-Forms/"
+      }
+    ],
+    "agencies": [
+      "United States Army Corps of Engineers"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Structures or work in, over, under, or affecting navigable waters of the United States commonly trigger a Section 10 Department of the Army permit for utility crossings and similar linear work."
+  },
+  "known_unknowns": [
+    "Whether a specific waterbody is a navigable water of the United States should be confirmed with the district office."
+  ],
+  "advisories": [
+    "Additional review recommended where the crossing is in or affects a traditionally navigable river, channel, or other Section 10 water."
+  ],
+  "tags": [
+    "navigable_waters",
+    "water_crossing",
+    "federal"
+  ],
+  "notes": "Confidence tier 1 because the permit requirement is directly stated in federal regulation; project-specific navigability determinations still need confirmation."
+}
