@@ -6,6 +6,18 @@
 # Local-only Claude Code settings (also covered by global ignore).
 .claude/settings.local.json
 
+# Python build/runtime artifacts.
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Node.
+node_modules/
+
 # Local environment files — never commit (T01-08 standard). The committed
 # template is .env.example.
 .env

@@ -1,0 +1,80 @@
+# Root tooling configuration for the iPermit monorepo (T01-02).
+#
+# This file configures Ruff (lint + format) for ALL Python code across
+# services/* and packages/* and scripts/*. It intentionally declares NO
+# application dependencies — it is developer tooling config only. Per
+# ADR-0001 the backend targets Python 3.11+.
+#
+# Individual Python services/packages may add their own pyproject.toml for
+# dependencies; Ruff will discover this root config and apply it repo-wide
+# unless a child explicitly overrides it.
+
+[tool.ruff]
+# Match the deployment target from ADR-0001 (Python 3.11+).
+target-version = "py311"
+
+# 88 is Ruff/Black's default and is comfortably under one screen width.
+line-length = 88
+indent-width = 4
+
+# Directories that never contain source we own or want to lint.
+extend-exclude = [
+    ".venv",
+    "venv",
+    "node_modules",
+    "build",
+    "dist",
+    "__pycache__",
+    ".git",
+    ".claude",
+]
+
+[tool.ruff.lint]
+# Sensible, broadly-applicable rule sets. Kept deliberately mainstream so the
+# 60-line function rule (enforced separately by scripts/checks/check_function_length.py
+# and by E/PL pressure) stays the headline constraint rather than rule noise.
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes (undefined names, unused imports, etc.)
+    "I",    # isort (import ordering)
+    "UP",   # pyupgrade (modernize syntax for the target version)
+    "B",    # flake8-bugbear (likely bugs)
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify (readability over cleverness)
+    "PL",   # Pylint (a curated subset enabled by Ruff)
+    "RUF",  # Ruff-specific rules
+]
+
+ignore = [
+    # Formatting concerns owned by `ruff format`, not the linter.
+    "E501",   # line-too-long (the formatter wraps; do not double-flag)
+    # Allow a slightly looser complexity budget — the 60-line checker is the
+    # authoritative size constraint and gives a clearer message.
+    "PLR0913", # too-many-arguments (case-by-case in review)
+]
+
+[tool.ruff.lint.pylint]
+# Backstop limits aligned with the 60-line philosophy. The AST checker in
+# scripts/checks/check_function_length.py is authoritative for the body-line
+# count; these keep functions from sprawling in other dimensions.
+max-statements = 50
+max-branches = 12
+max-returns = 6
+
+[tool.ruff.lint.isort]
+# Treat first-party namespaces consistently across the monorepo.
+known-first-party = ["ipermit"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests may use assert, magic values, and slightly looser structure.
+"**/tests/**" = ["PLR2004", "S101"]
+"tests/**" = ["PLR2004", "S101"]
+
+[tool.ruff.format]
+# Explicit, boring defaults. Double quotes and spaces match the wider Python
+# ecosystem and keep diffs predictable.
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
