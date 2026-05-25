@@ -1,0 +1,113 @@
+# Executable regression benchmark (T04-02). Runs against the seeded rule
+# snapshot via scripts/checks/run_regression.py and tests/benchmark/.
+# The engine-facing inputs live under project_inputs.engine_context and
+# project_inputs.applicable_jurisdiction_ids (stand-ins for the GIS/intake
+# layer of EPIC-05/06, which will populate them from raw inputs later).
+benchmark_id: federal-nexus-transmission-stream-crossing
+benchmark_version: 1.0.0
+category: federal_nexus
+description: >-
+  Transmission line with a federal nexus crossing a stream and wetlands. Exercises
+  the federal water, environmental review, and species pathways alongside the
+  state stormwater and water-quality certifications.
+project_inputs:
+  project_type: transmission_line
+  state: TX
+  counties:
+    - Travis County
+  linear: true
+  length_miles: 8.5
+  stream_crossings_count: 2
+  has_wetlands: true
+  federal_nexus: true
+  txdot_involvement: false
+  applicable_jurisdiction_ids:
+    - us
+    - us-tx
+  engine_context:
+    project:
+      federal_nexus: true
+      dredge_or_fill_in_waters: true
+      stream_crossings_count: 2
+      stormwater_discharge_to_surface_water: true
+      disturbed_acres: 5
+      work_in_navigable_waters: false
+      structure_height_ft_agl: 150
+      federal_water_permit_or_license: true
+      usace_permit_required: true
+      txdot_right_of_way_involved: false
+      public_land: false
+    geometry:
+      wetlands_present: true
+      waters_of_us_present: true
+      navigable_waters_present: false
+    derived:
+      major_federal_action: true
+      may_affect_listed_species: true
+ruleset_version:
+  content_hash: sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6
+  snapshot_label: seed-2026-05-25-draft
+evaluation_date: "2026-05-25"
+expected_outputs:
+  permits:
+    - name: Department of the Army Permit under Clean Water Act Section 404
+      agency: United States Army Corps of Engineers
+      rule_id: us-tx-usace-section-404-da-permit
+    - name: National Environmental Policy Act Environmental Review
+      agency: Lead federal agency
+      rule_id: us-tx-nepa-federal-environmental-review
+    - name: Endangered Species Act Section 7 Consultation
+      agency: United States Fish and Wildlife Service
+      rule_id: us-tx-usfws-esa-section-7-consultation
+    - name: Texas Pollutant Discharge Elimination System Construction General Permit
+      agency: Texas Commission on Environmental Quality
+      rule_id: us-tx-tceq-construction-stormwater-cgp
+    - name: Section 401 Water Quality Certification
+      agency: Texas Commission on Environmental Quality
+      rule_id: us-tx-tceq-section-401-water-quality-certification
+expected_confidence:
+  - permit_name: Department of the Army Permit under Clean Water Act Section 404
+    tier: 1
+  - permit_name: National Environmental Policy Act Environmental Review
+    tier: 1
+  - permit_name: Endangered Species Act Section 7 Consultation
+    tier: 1
+  - permit_name: Texas Pollutant Discharge Elimination System Construction General Permit
+    tier: 1
+  - permit_name: Section 401 Water Quality Certification
+    tier: 1
+expected_explanations:
+  - permit_name: Department of the Army Permit under Clean Water Act Section 404
+    trigger_summary: Discharging dredged or fill material into wetlands and waters triggers a Section 404 permit.
+    expected_rule_id: us-tx-usace-section-404-da-permit
+    expected_jurisdiction_levels: [federal]
+  - permit_name: National Environmental Policy Act Environmental Review
+    trigger_summary: A federal action with a federal nexus enters the environmental review process.
+    expected_rule_id: us-tx-nepa-federal-environmental-review
+    expected_jurisdiction_levels: [federal]
+  - permit_name: Endangered Species Act Section 7 Consultation
+    trigger_summary: A federal action that may affect listed species requires consultation.
+    expected_rule_id: us-tx-usfws-esa-section-7-consultation
+    expected_jurisdiction_levels: [federal]
+  - permit_name: Texas Pollutant Discharge Elimination System Construction General Permit
+    trigger_summary: Construction stormwater discharge disturbing at least one acre triggers the construction general permit.
+    expected_rule_id: us-tx-tceq-construction-stormwater-cgp
+    expected_jurisdiction_levels: [state]
+  - permit_name: Section 401 Water Quality Certification
+    trigger_summary: A federal water permit that may discharge to waters triggers a state water quality certification.
+    expected_rule_id: us-tx-tceq-section-401-water-quality-certification
+    expected_jurisdiction_levels: [state]
+expected_known_unknowns:
+  - Project-level confirmation is still needed to determine whether coverage is through a nationwide permit, regional permit, or individual permit.
+  - Some projects may be covered by statewide certifications for nationwide permits, while others follow Tier 1 or Tier 2 review pathways.
+expected_advisories:
+  - Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.
+provenance:
+  author: iPermit engineering (T04-02 seed benchmark)
+  created_at: "2026-05-25"
+  reviewer_notes: >-
+    Authored against the T02-06 seeded draft ruleset. Expected outputs derived
+    from the deterministic engine, not from an authoritative permit determination.
+immutable: true
+notes: Regression coverage for the federal-nexus pathway over the seeded Texas ruleset.
+tags: [seed, federal-nexus, transmission, water-crossing]

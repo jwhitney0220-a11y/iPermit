@@ -16,6 +16,8 @@ Public surface:
 - sequencing     — permit dependency graph + staged sequencing (T03-04).
 - explain        — permit-explanation record assembly (T03-05).
 - known_unknowns — uncertainty / known-unknown detection (T03-06).
+- simulation     — project simulation orchestration (active / historical /
+  hypothetical) bundling the full pipeline (T04-01).
 """
 
 from .conflict import (
@@ -53,6 +55,13 @@ from .sequencing import (
     StagePermit,
     sequence_rules,
 )
+from .simulation import (
+    SimulationResult,
+    apply_overlay,
+    ruleset_content_hash,
+    select_governing,
+    simulate_project,
+)
 from .triggers import TriggerError, evaluate_trigger, matched
 
 __all__ = [
@@ -71,10 +80,12 @@ __all__ = [
     "ResolvedRequirement",
     "RuleEvaluation",
     "SequencerResult",
+    "SimulationResult",
     "Stage",
     "StagePermit",
     "TriggerError",
     "apply_operator",
+    "apply_overlay",
     "build_explanation",
     "collect_known_unknowns",
     "comparison_operators",
@@ -87,6 +98,9 @@ __all__ = [
     "matched",
     "precedence_rank",
     "resolve_conflicts",
+    "ruleset_content_hash",
+    "select_governing",
     "sequence_rules",
+    "simulate_project",
     "validate_explanation",
 ]
