@@ -45,7 +45,7 @@ jobs:
       - name: Install tooling
         run: |
           python -m pip install --upgrade pip
-          pip install "ruff==${RUFF_VERSION}" jsonschema pyyaml pydantic pytest
+          pip install -r requirements-dev.txt
 
       - name: Ruff lint
         run: ruff check .
@@ -54,9 +54,11 @@ jobs:
         run: ruff format --check .
 
       - name: Function-length rule (<= 60 body lines)
-        # Exclude vendored (tools/) and generated (shared-schemas/python) code.
+        # Exclude vendored (tools/), generated (shared-schemas/python), and
+        # auto-generated Alembic migration scripts.
         run: |
           git ls-files '*.py' ':!:tools/**' ':!:packages/shared-schemas/python/**' \
+            ':!:migrations/versions/**' \
             | xargs -r python scripts/checks/check_function_length.py
 
       - name: Schema & example validation
@@ -94,7 +96,7 @@ jobs:
       - name: Install tooling
         run: |
           python -m pip install --upgrade pip
-          pip install jsonschema pyyaml pydantic
+          pip install -r requirements-dev.txt
 
       - name: Check generated types match the canonical schemas
         # generate.py --check regenerates in memory and fails on any drift.
