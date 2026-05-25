@@ -1,0 +1,45 @@
+# CODEOWNERS — review routing (T01-13).
+#
+# CODEOWNERS assigns required reviewers per path. The last matching pattern wins,
+# so more specific rules are listed AFTER more general ones.
+#
+# The team handles below are PLACEHOLDERS. Real GitHub team handles are created
+# and wired up under T01-14 (Auth, RBAC & Tenant Isolation) once teams exist.
+# Until then these names document review *intent*; reviewers enforce it manually
+# (see docs/operations/branching-and-release.md §7, §8).
+#
+#   @iPermit/engineering           — engineering owners (services, apps, infra, CI)
+#   @iPermit/regulatory-analysts   — regulatory analyst group (rules and specs)
+
+# Default: anything not matched below needs an engineering review.
+*                                   @iPermit/engineering
+
+# Engine and service code — engineering owners.
+/services/                          @iPermit/engineering
+/apps/                              @iPermit/engineering
+/packages/                          @iPermit/engineering
+/infrastructure/                    @iPermit/engineering
+/scripts/                           @iPermit/engineering
+/tests/                             @iPermit/engineering
+/.github/                           @iPermit/engineering
+
+# Regulatory rules — analyst group owns ALL rule data. Rule changes need an
+# analyst reviewer who is not the drafting analyst (T00-09 §7).
+/rules/                             @iPermit/regulatory-analysts
+
+# Published and effective rules are writable only through the publication
+# workflow (T08-04) and must not be edited by hand. Routing them to the analyst
+# group makes any direct change require explicit analyst sign-off
+# (AGENTS.md *Repository Strategy*; branching-and-release.md §8.3).
+/rules/published/                   @iPermit/regulatory-analysts
+/rules/effective/                   @iPermit/regulatory-analysts
+
+# Regulatory specifications — analyst group owns the rule-object, jurisdiction,
+# temporal, and SOP specs that govern how rules are authored.
+/docs/specs/                        @iPermit/regulatory-analysts
+
+# Strategic guardrails and roadmap — co-owned. Both groups must agree on changes
+# to the locked decisions and the roadmap.
+/AGENTS.md                          @iPermit/engineering @iPermit/regulatory-analysts
+/docs/roadmap.json                  @iPermit/engineering @iPermit/regulatory-analysts
+/docs/roadmap.md                    @iPermit/engineering @iPermit/regulatory-analysts

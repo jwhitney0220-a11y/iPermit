@@ -1,0 +1,19 @@
+# Issue template chooser configuration (T01-13).
+# blank_issues_enabled is false so every issue starts from a structured template;
+# this keeps bug, feature, and regulatory-rule requests on their correct paths.
+blank_issues_enabled: false
+contact_links:
+  - name: Regulatory rule add/change
+    url: https://github.com/iPermit/iPermit/issues/new?template=rule_update.md
+    about: >-
+      New or changed permit rule, outdated form/link, or a field-observed
+      regulatory change. Routes to the analyst review queue (T00-09, T08-06) and
+      does not auto-publish.
+  - name: Strategic guardrails (AGENTS.md)
+    url: https://github.com/iPermit/iPermit/blob/main/AGENTS.md
+    about: >-
+      Read the locked strategic decisions, confidence tiers, liability/advisory
+      rules, and engineering standards before filing.
+  - name: Contribution guide
+    url: https://github.com/iPermit/iPermit/blob/main/CONTRIBUTING.md
+    about: How to propose a change, run validation locally, and the PR flow.
