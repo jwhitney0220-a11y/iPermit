@@ -12,9 +12,11 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "rule-definitions"))
+sys.path.insert(
+    0, str(Path(__file__).resolve().parents[2] / "packages" / "rule-definitions")
+)
 
-from ipermit_rules import RuleValidationError, load_rules  # noqa: E402
+from ipermit_rules import RuleValidationError, load_rules
 
 
 def main() -> int:

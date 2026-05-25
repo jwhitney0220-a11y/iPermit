@@ -20,7 +20,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from _common import SCHEMA_NAMES, load_schema, repo_root
+from _common import GENERATED_HEADER, SCHEMA_NAMES, load_schema, repo_root
 from _pydantic_emitter import emit_module as emit_python
 from _ts_emitter import emit_module as emit_ts
 from _ts_emitter import npx_available
@@ -47,8 +47,6 @@ def build_targets() -> dict[str, str]:
 
 def _py_init(exports: list[tuple[str, str]]) -> str:
     """Build the package __init__ that re-exports every generated model."""
-    from _common import GENERATED_HEADER
-
     lines = [f'"""{GENERATED_HEADER}"""', "", "from __future__ import annotations", ""]
     for module, type_name in sorted(exports):
         lines.append(f"from .{module} import {type_name}")
@@ -59,8 +57,6 @@ def _py_init(exports: list[tuple[str, str]]) -> str:
 
 def _ts_index(stems: list[str]) -> str:
     """Build the TS barrel that re-exports every generated module."""
-    from _common import GENERATED_HEADER
-
     lines = [f"// {GENERATED_HEADER}", ""]
     for stem in sorted(stems):
         lines.append(f'export * from "./{stem}";')
@@ -98,7 +94,9 @@ def main(argv: list[str]) -> int:
         return 0
     write_targets(targets, root)
     emitter = "json2ts" if npx_available() else "built-in fallback"
-    print(f"Generated {len(targets)} files (TS via {emitter}) under packages/shared-schemas/.")
+    print(
+        f"Generated {len(targets)} files (TS via {emitter}) under packages/shared-schemas/."
+    )
     return 0
 
 

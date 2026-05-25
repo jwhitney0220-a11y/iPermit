@@ -27,6 +27,10 @@ extend-exclude = [
     "__pycache__",
     ".git",
     ".claude",
+    # Vendored third-party agent plugins — not ours to lint (see tools/agents/VENDOR.md).
+    "tools",
+    # Generated code — owned by the codegen (scripts/schema/generate.py), not hand-edited.
+    "packages/shared-schemas/python",
 ]
 
 [tool.ruff.lint]
@@ -78,3 +82,17 @@ quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
 docstring-code-format = true
+
+[tool.pytest.ini_options]
+# Discover tests only in our own code (T01-07). The vendored agent plugins
+# under tools/ ship their own test suites; those are not part of iPermit CI.
+testpaths = ["tests", "services", "packages", "scripts"]
+norecursedirs = [
+    "tools",
+    ".venv",
+    "venv",
+    "node_modules",
+    "build",
+    "dist",
+    "*.egg-info",
+]
