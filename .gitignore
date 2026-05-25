@@ -17,3 +17,16 @@ __pycache__/
 
 # Node.
 node_modules/
+
+# Local environment files — never commit (T01-08 standard). The committed
+# template is .env.example.
+.env
+.env.*
+!.env.example
+
+# Terraform local state and caches (T01-09).
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
