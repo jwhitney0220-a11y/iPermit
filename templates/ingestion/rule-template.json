@@ -1,0 +1,57 @@
+{
+  "_template_notice": "NON-AUTHORITATIVE SAMPLE ONLY. This file exists to exercise the T02-06 ingestion pipeline in tests. It does NOT represent real Texas regulatory requirements. Real rules must be authored by a licensed regulatory analyst per the analyst SOP (docs/specs/analyst-sop.md / T00-09) using primary sources. Do NOT use this file as a regulatory reference.",
+  "rule_id": "sample-state-pipeline-demo-permit",
+  "version": "1.0.0",
+  "title": "Sample Pipeline Demo Permit",
+  "permit_name": "Sample Environmental Demo Permit",
+  "permit_code": "SAMPLE-DEMO-01",
+  "jurisdiction_level": "state",
+  "jurisdiction_id": "us-tx",
+  "source_agency": "Sample State Agency — Not Real",
+  "applicable_project_types": [
+    "transmission_line",
+    "linear_general"
+  ],
+  "confidence_tier": 3,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "SAMPLE NON-AUTHORITATIVE REFERENCE — DO NOT CITE",
+        "url": "https://example.invalid/sample",
+        "retrieved_at": "2026-01-01"
+      }
+    ],
+    "last_verified": "2026-01-01",
+    "reviewer": "analyst-sample",
+    "reviewer_notes": "NON-AUTHORITATIVE SAMPLE created for ingestion pipeline tests (T02-06). Not a real regulatory reference."
+  },
+  "status": "draft",
+  "triggers": {
+    "field": "project.linear",
+    "operator": "=",
+    "value": true
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Sample Demo Permit",
+        "agency": "Sample State Agency — Not Real"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "SAMPLE ONLY — This permit may be required for linear projects. Analyst verification required before relying on this rule."
+  },
+  "known_unknowns": [
+    "SAMPLE RULE: All thresholds and requirements are illustrative only. Do not use for actual permit determination."
+  ],
+  "advisories": [
+    "SAMPLE ONLY — analyst verification required"
+  ],
+  "tags": [
+    "sample",
+    "do-not-use"
+  ],
+  "notes": "NON-AUTHORITATIVE SAMPLE ONLY. Created to exercise the ingestion pipeline (T02-06). Real rules require analyst-authored primary-source citations per T00-09."
+}
