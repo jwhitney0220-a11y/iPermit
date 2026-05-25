@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+  "name": "iPermit Dev (Python 3.11 + Node 20 + PostGIS client)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+
+  // After the container is created, bootstrap the developer environment.
+  // setup.sh is idempotent and safe-fail (see scripts/dev/setup.sh).
+  "postCreateCommand": "bash scripts/dev/setup.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "ms-python.python",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "editorconfig.editorconfig"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
+      }
+    }
+  },
+
+  // Forward common dev ports: FastAPI services (8000) and a Vite/React app (5173).
+  "forwardPorts": [8000, 5173],
+
+  // Run as the non-root user provided by the base image.
+  "remoteUser": "vscode"
+}

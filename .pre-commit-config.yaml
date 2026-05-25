@@ -1,0 +1,64 @@
+# Pre-commit hooks for the iPermit monorepo (T01-02 / T01-12).
+#
+# Install once per clone:   pre-commit install
+# Run against everything:   pre-commit run --all-files
+#
+# These hooks enforce iPermit's engineering standards locally before code ever
+# reaches CI (CI wiring itself is T01-07, owned separately). The headline
+# constraint — the 60-line function rule — is enforced by the local AST checker
+# below.
+minimum_pre_commit_version: "3.5.0"
+
+repos:
+  # --- Python lint + format (Ruff) -------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.8
+    hooks:
+      - id: ruff            # lint
+        args: ["--fix"]
+      - id: ruff-format     # format
+
+  # --- iPermit 60-line function rule (headline engineering constraint) -------
+  - repo: local
+    hooks:
+      - id: function-length
+        name: function length (<= 60 body lines)
+        entry: python scripts/checks/check_function_length.py
+        language: system
+        types: [python]
+        # Excludes generated code, vendored code, and virtualenvs.
+        exclude: '^(\.venv/|venv/|node_modules/|build/|dist/)'
+
+  # --- JSON Schema validity (stub) -------------------------------------------
+  # Asserts that the canonical schema files in docs/specs/schemas/ are
+  # themselves valid JSON. A fuller meta-schema / draft-2020-12 validation is
+  # wired under the schema-package ticket (T01-11) and CI (T01-07); this stub
+  # keeps the schemas at least parseable on every commit.
+  - repo: local
+    hooks:
+      - id: json-schema-valid
+        name: json schema files are valid JSON (stub)
+        entry: python -c "import json,sys; [json.load(open(p)) for p in sys.argv[1:]]; print('json schemas ok')"
+        language: system
+        files: '^docs/specs/schemas/.*\.schema\.json$'
+
+  # --- Generic hygiene -------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '\.md$'        # trailing space in markdown can be a hard break
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+
+  # --- Prettier for TS/JS/Markdown -------------------------------------------
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types_or: [ts, tsx, javascript, jsx, json, css, scss, markdown, yaml]
+        exclude: '^(node_modules/|build/|dist/)'
