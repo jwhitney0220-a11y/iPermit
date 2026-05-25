@@ -27,7 +27,9 @@ def emit_module(schema: dict, root_name: str) -> str:
     rendered = _try_json2ts(schema, root_name)
     if rendered is not None:
         return _TS_BANNER + "\n" + rendered
-    note = "// NOTE: emitted by the minimal built-in fallback (npx json2ts unavailable).\n"
+    note = (
+        "// NOTE: emitted by the minimal built-in fallback (npx json2ts unavailable).\n"
+    )
     return _TS_BANNER + note + "\n" + _fallback_module(schema, root_name)
 
 
@@ -47,6 +49,7 @@ def _try_json2ts(schema: dict, root_name: str) -> str | None:
             capture_output=True,
             text=True,
             timeout=120,
+            check=False,
         )
     except (subprocess.SubprocessError, OSError):
         return None
@@ -58,8 +61,12 @@ def _try_json2ts(schema: dict, root_name: str) -> str | None:
 def _strip_tool_banner(text: str) -> str:
     """Drop json2ts's own 'do not modify' banner so ours is authoritative."""
     lines = text.splitlines()
-    while lines and (lines[0].startswith("/*") or lines[0].startswith("*")
-                     or lines[0].startswith("*/") or not lines[0].strip()):
+    while lines and (
+        lines[0].startswith("/*")
+        or lines[0].startswith("*")
+        or lines[0].startswith("*/")
+        or not lines[0].strip()
+    ):
         lines.pop(0)
     return "\n".join(lines).strip() + "\n"
 

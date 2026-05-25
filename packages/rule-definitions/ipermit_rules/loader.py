@@ -13,9 +13,10 @@ This module loads, parses, and validates those files. It does not evaluate them
 from __future__ import annotations
 
 import json
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import jsonschema
 import yaml
@@ -57,7 +58,9 @@ def load_schema(root: Path | None = None) -> dict[str, Any]:
 def _parse_file(path: Path) -> dict[str, Any]:
     """Parse a single .yaml/.yml/.json rule file into a dict."""
     text = path.read_text()
-    data = yaml.safe_load(text) if path.suffix in (".yaml", ".yml") else json.loads(text)
+    data = (
+        yaml.safe_load(text) if path.suffix in (".yaml", ".yml") else json.loads(text)
+    )
     if not isinstance(data, dict):
         raise RuleValidationError(f"{path}: rule file must contain a single object")
     return data
@@ -86,7 +89,9 @@ def _validate(data: dict[str, Any], path: Path, status: str, validator) -> Rule:
     return Rule(data["rule_id"], data["version"], status, path, data)
 
 
-def load_rules(root: Path | None = None, statuses: Iterable[str] = STATUSES) -> list[Rule]:
+def load_rules(
+    root: Path | None = None, statuses: Iterable[str] = STATUSES
+) -> list[Rule]:
     """Load and validate every rule under the given status directories."""
     root = root or repo_root()
     validator = jsonschema.Draft202012Validator(load_schema(root))
