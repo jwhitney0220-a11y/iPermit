@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 _PACKAGE_ROOTS = (
     "persistence",
     "jurisdiction-models",
+    "regulatory-models",
     "rule-definitions",
     "shared-schemas/python",
 )
