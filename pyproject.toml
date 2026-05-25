@@ -31,6 +31,8 @@ extend-exclude = [
     "tools",
     # Generated code — owned by the codegen (scripts/schema/generate.py), not hand-edited.
     "packages/shared-schemas/python",
+    # Auto-generated Alembic migration scripts (T02-01). env.py is still linted.
+    "migrations/versions",
 ]
 
 [tool.ruff.lint]

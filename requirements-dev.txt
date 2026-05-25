@@ -1,0 +1,14 @@
+# Development and CI dependencies for the iPermit monorepo.
+#
+# Application/runtime dependencies belong to each service/package; this file is
+# the shared tooling + test stack used by pre-commit (T01-02/T01-12) and CI
+# (T01-07). Pinned where version drift would change check results.
+ruff==0.15.8
+pytest>=8,<9
+
+# Schema, rules, and persistence tooling (EPIC-00 specs -> EPIC-02 data layer).
+jsonschema>=4.20
+pyyaml>=6
+pydantic>=2.6
+sqlalchemy>=2.0
+alembic>=1.13
