@@ -1,0 +1,73 @@
+{
+  "rule_id": "us-tx-ferc-natural-gas-section-7-certificate",
+  "version": "1.0.0",
+  "title": "FERC Section 7 Gas Certificate",
+  "permit_name": "Certificate of Public Convenience and Necessity",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us",
+  "source_agency": "Federal Energy Regulatory Commission",
+  "applicable_project_types": [
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Federal Energy Regulatory Commission Natural Gas Pipelines",
+        "url": "https://www.ferc.gov/natural-gas/natural-gas-pipelines",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "regulation",
+        "reference": "18 CFR Part 157",
+        "url": "https://www.ecfr.gov/current/title-18/chapter-I/subchapter-E/part-157",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "derived.interstate_natural_gas_facility",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.new_or_expanded_pipeline",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Certificate of Public Convenience and Necessity",
+        "agency": "Federal Energy Regulatory Commission"
+      }
+    ],
+    "agencies": [
+      "Federal Energy Regulatory Commission"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "New or expanded interstate natural gas pipeline facilities commonly require Federal Energy Regulatory Commission authorization under Section 7 of the Natural Gas Act."
+  },
+  "known_unknowns": [
+    "Some limited facility work may be handled under blanket certificate authority rather than a full case-specific certificate filing."
+  ],
+  "advisories": [
+    "Additional review recommended to confirm whether the facility is interstate and whether blanket certificate provisions could apply."
+  ],
+  "tags": [
+    "interstate_pipeline",
+    "natural_gas",
+    "ferc",
+    "federal"
+  ],
+  "notes": "Confidence tier 1 because Federal Energy Regulatory Commission authority and its implementing regulations are directly cited; this rule is intentionally limited to interstate natural gas facilities."
+}

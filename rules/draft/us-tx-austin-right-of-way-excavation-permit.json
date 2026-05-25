@@ -1,0 +1,85 @@
+{
+  "rule_id": "us-tx-austin-right-of-way-excavation-permit",
+  "version": "1.0.0",
+  "title": "Austin ROW Excavation Permit",
+  "permit_name": "Right-of-Way Excavation Permit",
+  "permit_code": "EX",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-austin",
+  "source_agency": "Austin Transportation and Public Works Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Austin Transportation and Public Works Right-of-Way Permits",
+        "url": "https://www.austintexas.gov/transportation-public-works/right-way-row-permits",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Right-of-Way Management",
+        "url": "https://www.austintexas.gov/transportation-public-works/divisions/right-way-management",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "Guide to Case Types and Codes",
+        "url": "https://services.austintexas.gov/edims/document.cfm?id=265119",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.within_municipal_right_of_way",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.excavation_in_right_of_way",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Right-of-Way Excavation Permit",
+        "agency": "Austin Transportation and Public Works Department",
+        "code": "EX"
+      }
+    ],
+    "agencies": [
+      "Austin Transportation and Public Works Department"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Excavation or utility cut work in Austin public right of way commonly triggers a city right-of-way excavation permit and related right-of-way management controls."
+  },
+  "known_unknowns": [
+    "Some projects also need contractor licensing, bonding, insurance, traffic control approvals, and Austin Utility Location and Coordination Committee review."
+  ],
+  "advisories": [
+    "Additional review recommended for staging, traffic control, bonding, and dry-utility repair work because those implementation details are handled within Austin's right-of-way permit system."
+  ],
+  "tags": [
+    "municipal_row",
+    "excavation",
+    "utility_cut",
+    "austin"
+  ],
+  "notes": "Confidence tier 2 because the permit path is clearly published by the City of Austin, but permit packaging can vary with work type and right-of-way conditions."
+}

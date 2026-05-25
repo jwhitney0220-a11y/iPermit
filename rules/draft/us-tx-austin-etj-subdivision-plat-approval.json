@@ -1,0 +1,75 @@
+{
+  "rule_id": "us-tx-austin-etj-subdivision-plat-approval",
+  "version": "1.0.0",
+  "title": "Austin ETJ Plat Approval",
+  "permit_name": "Subdivision Plat Approval in Extraterritorial Jurisdiction",
+  "jurisdiction_level": "etj",
+  "jurisdiction_id": "us-tx-etj-austin",
+  "source_agency": "City of Austin Development Services Department",
+  "applicable_project_types": [
+    "substation",
+    "utility_corridor",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Subdivision Application Process",
+        "url": "https://www.austintexas.gov/development-services/subdivision-application-process",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Glossary of Terms - Extra-Territorial Jurisdiction",
+        "url": "https://www.austintexas.gov/development-services/glossary-terms",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.in_municipal_etj",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.requires_subdivision_plat",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Subdivision Plat Approval in Extraterritorial Jurisdiction",
+        "agency": "City of Austin Development Services Department"
+      }
+    ],
+    "agencies": [
+      "City of Austin Development Services Department"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "If a project in the City of Austin extraterritorial jurisdiction requires subdivision platting, the City of Austin subdivision application process commonly applies."
+  },
+  "known_unknowns": [
+    "Many linear utility projects do not require platting unless they create or reconfigure lots, public easements, or subdivision improvements."
+  ],
+  "advisories": [
+    "Additional review recommended before assigning this rule because ETJ jurisdiction and platting need depend on the land transaction and subdivision structure, not just the utility work itself."
+  ],
+  "tags": [
+    "etj",
+    "platting",
+    "subdivision",
+    "austin"
+  ],
+  "notes": "Confidence tier 2 because the City of Austin clearly publishes ETJ subdivision procedures, but applicability to utility corridors is project-structure dependent."
+}

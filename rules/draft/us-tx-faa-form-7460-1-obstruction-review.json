@@ -1,0 +1,92 @@
+{
+  "rule_id": "us-tx-faa-form-7460-1-obstruction-review",
+  "version": "1.0.0",
+  "title": "FAA Form 7460-1 Obstruction Review",
+  "permit_name": "Notice of Proposed Construction or Alteration",
+  "permit_code": "FAA 7460-1",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us",
+  "source_agency": "Federal Aviation Administration",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "form",
+        "reference": "FAA Form 7460-1 - Notice of Proposed Construction or Alteration",
+        "url": "https://www.faa.gov/forms/index.cfm/go/document.information/documentID/186273",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Obstruction Evaluation / Airport Airspace Analysis",
+        "url": "https://oeaaa.faa.gov/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "FAA Part 77 notice overview",
+        "url": "https://www.faa.gov/airports/central/engineering/part77",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.structure_height_ft_agl",
+        "operator": ">",
+        "value": 200
+      },
+      {
+        "field": "derived.near_airport_notice_surface",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Notice of Proposed Construction or Alteration",
+        "agency": "Federal Aviation Administration",
+        "code": "FAA 7460-1"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Notice of Proposed Construction or Alteration",
+        "form_number": "FAA 7460-1",
+        "url": "https://www.faa.gov/forms/index.cfm/go/document.information/documentID/186273"
+      }
+    ],
+    "agencies": [
+      "Federal Aviation Administration"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Tall structures and some shorter structures near airports or heliports commonly require advance notice to the Federal Aviation Administration through Form 7460-1."
+  },
+  "known_unknowns": [
+    "Notice can be required below 200 feet depending on airport proximity and obstruction surfaces."
+  ],
+  "advisories": [
+    "Additional review recommended for poles, towers, transmission structures, and substation equipment with notable height near airports or heliports."
+  ],
+  "tags": [
+    "height",
+    "airspace",
+    "aviation",
+    "tall_structure"
+  ],
+  "notes": "Confidence tier 1 because the notice pathways and active form are directly supported by current Federal Aviation Administration materials."
+}

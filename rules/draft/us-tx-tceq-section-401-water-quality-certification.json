@@ -1,0 +1,93 @@
+{
+  "rule_id": "us-tx-tceq-section-401-water-quality-certification",
+  "version": "1.0.0",
+  "title": "TCEQ Section 401 Certification",
+  "permit_name": "Section 401 Water Quality Certification",
+  "jurisdiction_level": "state",
+  "jurisdiction_id": "us-tx",
+  "source_agency": "Texas Commission on Environmental Quality",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "401 Certification Reviews",
+        "url": "https://www.tceq.texas.gov/permitting/401certification",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "Tier 1 401 Certifications",
+        "url": "https://www.tceq.texas.gov/permitting/401certification/401certification_tier1.html",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "agency_guidance",
+        "reference": "Nationwide Permits for 401 Certification",
+        "url": "https://www.tceq.texas.gov/permitting/401certification/401certification_nationwide.html",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "project.federal_water_permit_or_license",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "any": [
+          {
+            "field": "project.usace_permit_required",
+            "operator": "=",
+            "value": true
+          },
+          {
+            "field": "project.discharge_to_waters_of_us",
+            "operator": "=",
+            "value": true
+          }
+        ]
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Section 401 Water Quality Certification",
+        "agency": "Texas Commission on Environmental Quality"
+      }
+    ],
+    "agencies": [
+      "Texas Commission on Environmental Quality"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "A federal water-related permit or license that may result in a discharge to waters commonly triggers a Texas Section 401 water quality certification review."
+  },
+  "known_unknowns": [
+    "Some projects may be covered by statewide certifications for nationwide permits, while others follow Tier 1 or Tier 2 review pathways.",
+    "Oil and gas exploration Section 401 reviews are administered by the Railroad Commission of Texas rather than the Texas Commission on Environmental Quality."
+  ],
+  "advisories": [
+    "Additional review recommended to determine whether the project falls under statewide nationwide permit conditions, Tier 1, or Tier 2 review."
+  ],
+  "tags": [
+    "401_certification",
+    "federal_nexus",
+    "water_quality",
+    "state"
+  ],
+  "notes": "Confidence tier 1 because the Texas Commission on Environmental Quality directly publishes the state Section 401 program and review pathways."
+}

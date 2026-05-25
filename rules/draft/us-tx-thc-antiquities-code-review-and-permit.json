@@ -1,0 +1,92 @@
+{
+  "rule_id": "us-tx-thc-antiquities-code-review-and-permit",
+  "version": "1.0.0",
+  "title": "THC Antiquities Code Review",
+  "permit_name": "Antiquities Code Project Review and Antiquities Permit Pathway",
+  "jurisdiction_level": "state",
+  "jurisdiction_id": "us-tx",
+  "source_agency": "Texas Historical Commission",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Antiquities Code of Texas",
+        "url": "https://thc.texas.gov/review/state-project-review/antiquities-code-texas",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "What to Send In for Project Review",
+        "url": "https://thc.texas.gov/review/consultation-process/what-send-project-review",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Consultation Process and eTRAC",
+        "url": "https://thc.texas.gov/review/consultation-process",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.public_land",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.political_subdivision_land",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.state_owned_historic_building_affected",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Antiquities Code Project Review",
+        "agency": "Texas Historical Commission"
+      },
+      {
+        "name": "Antiquities Permit",
+        "agency": "Texas Historical Commission"
+      }
+    ],
+    "agencies": [
+      "Texas Historical Commission"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Ground-disturbing work on public land, work by political subdivisions on public land, or work affecting state-owned historic resources commonly triggers Texas Historical Commission Antiquities Code review and can lead to an Antiquities Permit requirement."
+  },
+  "known_unknowns": [
+    "A separate Antiquities Permit is not universal; it depends on whether archaeological investigations or work on a State Antiquities Landmark is needed."
+  ],
+  "advisories": [
+    "Additional review recommended early for public-land utility corridors, substations, and water or wastewater infrastructure because archaeological scope can affect sequencing."
+  ],
+  "tags": [
+    "cultural_resources",
+    "public_land",
+    "antiquities_code",
+    "state"
+  ],
+  "notes": "Confidence tier 2 because the review requirement is clearly published by the Texas Historical Commission, but the exact permit pathway varies with land status and scope of archaeological work."
+}

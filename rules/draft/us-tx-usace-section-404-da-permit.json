@@ -1,0 +1,104 @@
+{
+  "rule_id": "us-tx-usace-section-404-da-permit",
+  "version": "1.0.0",
+  "title": "USACE Section 404 DA Permit",
+  "permit_name": "Department of the Army Permit under Clean Water Act Section 404",
+  "jurisdiction_level": "federal",
+  "jurisdiction_id": "us",
+  "source_agency": "United States Army Corps of Engineers",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 1,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "regulation",
+        "reference": "33 CFR Part 323",
+        "url": "https://www.ecfr.gov/current/title-33/chapter-II/part-323",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "United States Army Corps of Engineers Regulatory Program and Permits",
+        "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "form",
+        "reference": "ENG Form 4345 - Application for Department of the Army Permit",
+        "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/Regulatory-Program-Forms/",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "project.dredge_or_fill_in_waters",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "any": [
+          {
+            "field": "project.stream_crossings_count",
+            "operator": ">",
+            "value": 0
+          },
+          {
+            "field": "geometry.wetlands_present",
+            "operator": "=",
+            "value": true
+          },
+          {
+            "field": "geometry.waters_of_us_present",
+            "operator": "=",
+            "value": true
+          }
+        ]
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Department of the Army Permit under Clean Water Act Section 404",
+        "agency": "United States Army Corps of Engineers"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Application for Department of the Army Permit",
+        "form_number": "ENG Form 4345",
+        "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/Regulatory-Program-Forms/"
+      }
+    ],
+    "agencies": [
+      "United States Army Corps of Engineers"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Discharging dredged or fill material into wetlands, streams, or other waters of the United States for crossings, pads, access, or structures commonly triggers a Department of the Army permit under Section 404."
+  },
+  "known_unknowns": [
+    "Project-level confirmation is still needed to determine whether coverage is through a nationwide permit, regional permit, or individual permit."
+  ],
+  "advisories": [
+    "Additional review recommended to confirm jurisdictional waters, wetland limits, and whether pre-construction notification is likely required."
+  ],
+  "tags": [
+    "waters_of_us",
+    "wetlands",
+    "stream_crossing",
+    "federal"
+  ],
+  "notes": "Confidence tier 1 because the requirement is directly supported by federal regulation and official United States Army Corps of Engineers permitting materials."
+}

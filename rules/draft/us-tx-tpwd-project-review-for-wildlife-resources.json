@@ -1,0 +1,89 @@
+{
+  "rule_id": "us-tx-tpwd-project-review-for-wildlife-resources",
+  "version": "1.0.0",
+  "title": "TPWD Wildlife Project Review",
+  "permit_name": "Project Review Request",
+  "jurisdiction_level": "state",
+  "jurisdiction_id": "us-tx",
+  "source_agency": "Texas Parks and Wildlife Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 3,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Environmental Review Team Project Review Requests",
+        "url": "https://tpwd.texas.gov/huntwild/wild/wildlife_diversity/habitat_assessment/review.phtml",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Environmental Review Team Pre-project Planning",
+        "url": "https://tpwd.texas.gov/huntwild/wild/wildlife_diversity/habitat_assessment/preproject.phtml",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "form",
+        "reference": "Rare Resources Review Request",
+        "url": "https://tpwd.texas.gov/publications/pwdforms/media/pwd_1059_w7000_rare_resources_review_requests.pdf",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "derived.tpwd_rare_species_overlap",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.state_parks_or_wildlife_land_intersects",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Project Review Request",
+        "agency": "Texas Parks and Wildlife Department"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Rare Resources Review Request",
+        "url": "https://tpwd.texas.gov/publications/pwdforms/media/pwd_1059_w7000_rare_resources_review_requests.pdf"
+      }
+    ],
+    "agencies": [
+      "Texas Parks and Wildlife Department"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Projects that overlap sensitive wildlife resources or Texas Parks and Wildlife Department-managed lands commonly receive a project review request to identify avoidance, minimization, and mitigation recommendations."
+  },
+  "known_unknowns": [
+    "Texas Parks and Wildlife Department environmental review is coordination-based, and a mandatory submission pathway depends on the lead permit, funding source, land ownership, or another agency process."
+  ],
+  "advisories": [
+    "Additional review recommended whenever rare species, significant habitats, or Texas Parks and Wildlife Department-managed lands may be affected."
+  ],
+  "tags": [
+    "wildlife",
+    "rare_species",
+    "coordination",
+    "state"
+  ],
+  "notes": "Confidence tier 3 because official Texas Parks and Wildlife Department materials clearly support the review process, but project-specific mandatory pathways are variable and should be confirmed."
+}

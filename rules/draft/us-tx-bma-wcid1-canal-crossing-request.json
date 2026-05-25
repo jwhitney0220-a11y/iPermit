@@ -1,0 +1,75 @@
+{
+  "rule_id": "us-tx-bma-wcid1-canal-crossing-request",
+  "version": "1.0.0",
+  "title": "BMA WCID1 Canal Crossing Request",
+  "permit_name": "Canal Crossing Request",
+  "jurisdiction_level": "utility_district",
+  "jurisdiction_id": "us-tx-utility-district-bexar-medina-atascosa-counties-water-control-and-improvement-district-no-1",
+  "source_agency": "Bexar-Medina-Atascosa Counties Water Control and Improvement District No. 1",
+  "applicable_project_types": [
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Canal Crossing Policy",
+        "url": "https://bmawater.org/about-us/policies/canal-crossing-policy/",
+        "retrieved_at": "2026-05-25"
+      },
+      {
+        "citation_type": "ordinance",
+        "reference": "BMA Canal Crossing Policy PDF",
+        "url": "https://bmawater.org/wp-content/uploads/2020/10/BMA-CANAL-CROSSING-POLICY.pdf",
+        "retrieved_at": "2026-05-25"
+      }
+    ],
+    "last_verified": "2026-05-25",
+    "reviewer": "OpenAI Deep Research"
+  },
+  "status": "draft",
+  "triggers": {
+    "all": [
+      {
+        "field": "geometry.intersects_bma_canal_or_easement",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_crossing",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Canal Crossing Request",
+        "agency": "Bexar-Medina-Atascosa Counties Water Control and Improvement District No. 1"
+      }
+    ],
+    "agencies": [
+      "Bexar-Medina-Atascosa Counties Water Control and Improvement District No. 1"
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Crossing district canals, siphons, ditches, pipes, or easements with a utility line commonly triggers the district canal crossing request and district technical conditions."
+  },
+  "known_unknowns": [
+    "Board-approved terms and technical conditions vary by crossing type and, for pipelines, the conveyed substance."
+  ],
+  "advisories": [
+    "Additional review recommended for any project that touches district-owned canals or easements because district-specific protective conditions can be stricter than general utility practice."
+  ],
+  "tags": [
+    "utility_district",
+    "canal_crossing",
+    "district_easement",
+    "bma"
+  ],
+  "notes": "Confidence tier 2 because the district publishes an official canal crossing policy and request form, but final conditions are district-specific and case-based."
+}
