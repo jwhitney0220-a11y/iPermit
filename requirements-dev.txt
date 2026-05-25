@@ -12,3 +12,10 @@ pyyaml>=6
 pydantic>=2.6
 sqlalchemy>=2.0
 alembic>=1.13
+
+# GIS spatial foundation + shapefile/KMZ ingestion (EPIC-05, T05-01/T05-02).
+# Pure-pip only: shapely bundles GEOS and pyshp is pure Python, so detection and
+# ingestion are unit-testable in CI without system GDAL/PostGIS. PostGIS is the
+# production store (see services/gis-engine/README.md), not a test dependency.
+shapely>=2.0
+pyshp>=2.3
