@@ -12,6 +12,10 @@ The ``RegulatoryCitation`` child table mirrors ``provenance.source_citations``
 from the canonical rule object. It is a real table (not JSON) because
 source-tracking (T02-05) and freshness (T02-07) need to query it directly.
 
+The ``SourceCheck`` table (T02-05) records a point-in-time verification event
+against a specific citation reference. Multiple checks may exist per citation.
+Freshness scoring (T02-07) reads these records independently of confidence tier.
+
 Both tables use ``Enum(native_enum=False)`` (VARCHAR + CHECK) and portable
 ``JSON`` column types so the identical schema works on SQLite (unit tests) and
 PostgreSQL (production), per ADR-0005.
@@ -22,7 +26,7 @@ from __future__ import annotations
 import datetime
 
 from ipermit_persistence import Base
-from sqlalchemy import Date, Enum, ForeignKeyConstraint, Integer, String
+from sqlalchemy import Boolean, Date, Enum, ForeignKeyConstraint, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
 
@@ -149,3 +153,48 @@ class RegulatoryCitation(Base):
     )
 
     rule: Mapped[RegulatoryRule] = relationship(back_populates="citations")
+
+
+class SourceCheck(Base):
+    """A point-in-time verification event against a citation reference (T02-05).
+
+    Records the outcome of checking whether a citation's URL is still reachable
+    and whether the underlying source has changed. Multiple checks may exist per
+    (rule_id, version, reference) triple, ordered by ``checked_at``.
+
+    The composite FK ``(rule_id, version)`` references ``RegulatoryRule`` — the
+    same pattern used by ``RegulatoryCitation`` — so checks are automatically
+    cascaded when a rule version is deleted.
+
+    Freshness scoring (T02-07) reads these records independently of
+    ``confidence_tier``; a Tier-1 rule that has not been checked for 365+ days
+    is stale regardless of its tier.
+    """
+
+    __tablename__ = "source_check"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    rule_id: Mapped[str] = mapped_column(String(200), nullable=False)
+    version: Mapped[str] = mapped_column(String(20), nullable=False)
+
+    # The citation reference string this check was performed against.
+    reference: Mapped[str] = mapped_column(String, nullable=False)
+
+    checked_at: Mapped[datetime.date] = mapped_column(Date, nullable=False)
+
+    # None means the check did not attempt an HTTP request (e.g. manual check).
+    url_reachable: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    http_status: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    # True if the analyst observed the form or submission process changed.
+    form_changed: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+
+    notes: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["rule_id", "version"],
+            ["regulatory_rule.rule_id", "regulatory_rule.version"],
+            name="fk_source_check_rule",
+        ),
+    )
