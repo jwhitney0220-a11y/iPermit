@@ -1,0 +1,31 @@
+# EditorConfig — consistent whitespace defaults across the iPermit monorepo.
+# https://editorconfig.org  (T01-12 developer tooling)
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Web/TS/JS land conventionally uses 2-space indentation.
+[*.{ts,tsx,js,jsx,cjs,mjs,json,jsonc,css,scss,html,yml,yaml}]
+indent_size = 2
+
+# Python explicitly follows PEP 8 / Ruff (4 spaces). Stated for clarity.
+[*.py]
+indent_size = 4
+
+# Markdown: trailing whitespace can be a hard line break, so leave it alone.
+[*.md]
+trim_trailing_whitespace = false
+
+# Makefiles require real tabs.
+[Makefile]
+indent_style = tab
+
+# Shell scripts.
+[*.sh]
+indent_size = 2
