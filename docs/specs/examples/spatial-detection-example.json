@@ -1,0 +1,44 @@
+{
+  "footprint_ref": "upload/2026-05-26/travis-corridor.kmz",
+  "detected_at": "2026-05-26",
+  "jurisdictions": [
+    {
+      "jurisdiction_id": "us",
+      "jurisdiction_level": "federal",
+      "canonical_name": "United States",
+      "detection_source": "gis_auto_detect"
+    },
+    {
+      "jurisdiction_id": "us-tx",
+      "jurisdiction_level": "state",
+      "canonical_name": "Texas",
+      "detection_source": "gis_auto_detect"
+    },
+    {
+      "jurisdiction_id": "us-tx-county-travis",
+      "jurisdiction_level": "county",
+      "canonical_name": "Travis County, Texas",
+      "detection_source": "gis_auto_detect"
+    },
+    {
+      "jurisdiction_id": "us-tx-municipality-austin",
+      "jurisdiction_level": "municipality",
+      "canonical_name": "City of Austin, Texas",
+      "detection_source": "gis_auto_detect"
+    },
+    {
+      "jurisdiction_id": "us-tx-etj-austin",
+      "jurisdiction_level": "etj",
+      "canonical_name": "City of Austin Extraterritorial Jurisdiction",
+      "detection_source": "gis_auto_detect"
+    }
+  ],
+  "overlays": {
+    "fema_floodplain": true,
+    "wetlands_present": true,
+    "waters_of_us_present": true,
+    "navigable_waters_present": false,
+    "usace_district": "Fort Worth District"
+  },
+  "notes": "Illustrative detection result; not authoritative spatial data."
+}
