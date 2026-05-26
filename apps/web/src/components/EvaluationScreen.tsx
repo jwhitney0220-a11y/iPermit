@@ -75,7 +75,7 @@ export function EvaluationScreen({ token, identity }: { token: string; identity:
         <IntakeForm busy={busy} onEvaluate={runEvaluation} />
       </section>
       {error && <p className="error">{error}</p>}
-      {result && <PermitMatrixView envelope={result} />}
+      {result && <PermitMatrixView envelope={result} token={token} />}
     </div>
   );
 }
