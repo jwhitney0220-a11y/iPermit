@@ -1,0 +1,28 @@
+{
+  "project": "iPermit — SaaS productization roadmap",
+  "version": "saas-v1",
+  "updated": "2026-05-26",
+  "clone_now": [
+    "code-review",
+    "saas-multitenancy",
+    "saas-auth",
+    "saas-api",
+    "saas-audit",
+    "saas-frontend",
+    "security-review",
+    "run",
+    "verify"
+  ],
+  "defer_until_epic": {
+    "SAAS-03": ["saas-payments"],
+    "SAAS-04": ["saas-file-upload"],
+    "SAAS-05": ["saas-admin-portal", "saas-analytics"],
+    "SAAS-07": ["saas-email", "saas-deploy", "saas-observability"],
+    "SAAS-08": ["claude-api"]
+  },
+  "rules": {
+    "research_first": "Use Explore then Plan before non-trivial build tickets.",
+    "security_gated": "Run security-review on auth, tenancy, payments, uploads, and webhooks.",
+    "engine_authority": "Deterministic rules engine is source of truth; AI/UI must not override outputs."
+  }
+}
