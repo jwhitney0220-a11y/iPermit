@@ -8,6 +8,23 @@ docs, commit messages, rule data) stay in normal prose. Drop caveman style for
 security warnings, irreversible-action confirmations, and multi-step sequences
 where terse phrasing could be misread, then resume.
 
+## Session Handoff
+
+Whenever tokens are about to run out of the five-hour session while working on
+the next task, write a handoff summary JSON for the next agent at
+`docs/handoff/session-handoff.json` (commit and push it). It MUST include:
+
+- `completed`: brief summary of what was finished this session (and the
+  roadmap tickets/epics it maps to).
+- `in_progress`: anything started but not finished, with file paths.
+- `next_pickup`: exactly where the next agent should resume — the next task and
+  the first concrete step.
+- `branch` and `last_commit`: so the next agent lands in the right place.
+- `verification`: the commands that must stay green (lint, tests, regression).
+- `loose_ends`: known follow-ups or blockers.
+
+Keep it short and factual — it is a baton pass, not a report.
+
 ## Product Identity
 iPermit is a consultant-focused permitting intelligence and workflow platform for Texas utility and transmission infrastructure projects.
 
