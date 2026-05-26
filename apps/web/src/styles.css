@@ -118,6 +118,17 @@ fieldset {
   margin-bottom: 0.75rem;
 }
 
+.matrix__export {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.matrix__export span {
+  color: var(--muted);
+}
+
 .permit {
   background: var(--panel);
   border: 1px solid #e2e8f0;

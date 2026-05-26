@@ -1,4 +1,47 @@
+import { useState } from 'react';
+import { ApiError, exportMatrix, type ExportFormat } from '../api';
 import type { Advisory, Envelope, Permit, PermitMatrix as Matrix } from '../types';
+
+const FORMATS: ExportFormat[] = ['json', 'xlsx', 'pdf'];
+
+function triggerDownload(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function ExportBar({ token, projectId }: { token: string; projectId: string }) {
+  const [busy, setBusy] = useState<ExportFormat | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function download(format: ExportFormat) {
+    setBusy(format);
+    setError(null);
+    try {
+      const { blob, filename } = await exportMatrix(token, projectId, format);
+      triggerDownload(blob, filename);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Export failed');
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return (
+    <div className="matrix__export">
+      <span>Export:</span>
+      {FORMATS.map((format) => (
+        <button key={format} type="button" disabled={busy !== null} onClick={() => download(format)}>
+          {busy === format ? '…' : format.toUpperCase()}
+        </button>
+      ))}
+      {error && <span className="error">{error}</span>}
+    </div>
+  );
+}
 
 function AdvisoryList({ title, items }: { title: string; items: Advisory[] }) {
   if (items.length === 0) return null;
@@ -57,7 +100,13 @@ function PermitCard({ permit }: { permit: Permit }) {
   );
 }
 
-export function PermitMatrixView({ envelope }: { envelope: Envelope<Matrix> }) {
+export function PermitMatrixView({
+  envelope,
+  token,
+}: {
+  envelope: Envelope<Matrix>;
+  token: string;
+}) {
   const matrix = envelope.data;
   return (
     <section className="matrix">
@@ -66,6 +115,7 @@ export function PermitMatrixView({ envelope }: { envelope: Envelope<Matrix> }) {
         <span>evaluated {matrix.evaluation_date}</span>
         <code>{matrix.ruleset_version.content_hash.slice(0, 19)}…</code>
       </div>
+      <ExportBar token={token} projectId={matrix.project_id} />
       <AdvisoryList title="Platform advisories" items={envelope.advisories} />
       <AdvisoryList title="Warnings" items={envelope.warnings} />
       <div className="matrix__permits">

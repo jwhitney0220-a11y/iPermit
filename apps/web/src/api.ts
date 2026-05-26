@@ -69,3 +69,22 @@ export function evaluate(
     token,
   );
 }
+
+export type ExportFormat = 'json' | 'xlsx' | 'pdf';
+
+export async function exportMatrix(
+  token: string,
+  projectId: string,
+  format: ExportFormat,
+): Promise<{ blob: Blob; filename: string }> {
+  const resp = await fetch(`${BASE}/api/v1/projects/${projectId}/matrix/export?format=${format}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!resp.ok) {
+    const body = await resp.text();
+    throw new ApiError(resp.status, body || resp.statusText);
+  }
+  const match = /filename="([^"]+)"/.exec(resp.headers.get('Content-Disposition') ?? '');
+  return { blob: await resp.blob(), filename: match?.[1] ?? `permit-matrix.${format}` };
+}
+
