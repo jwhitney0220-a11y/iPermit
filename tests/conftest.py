@@ -17,7 +17,7 @@ _PACKAGE_ROOTS = (
     "regulatory-models",
     "rule-definitions",
     "benchmark-projects",
-    "tenancy",
+    "tenancy-models",
     "shared-schemas/python",
 )
 
@@ -27,6 +27,7 @@ _PACKAGE_ROOTS = (
 _OTHER_ROOTS = (
     ("rules-engine", "services"),
     ("gis-engine", "services"),
+    ("api", "services"),
 )
 
 for _rel in _PACKAGE_ROOTS:

@@ -1,0 +1,168 @@
+:root {
+  --bg: #0f172a;
+  --panel: #ffffff;
+  --ink: #1e293b;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --tier1: #16a34a;
+  --tier2: #d97706;
+  --tier3: #dc2626;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f1f5f9;
+  color: var(--ink);
+}
+
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.app__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app__user {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.login {
+  max-width: 360px;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  padding: 0.45rem;
+  margin-top: 0.25rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox input {
+  width: auto;
+  margin: 0;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: 0;
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+fieldset {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin: 0.75rem 0;
+}
+
+.intake__bar,
+.project-picker {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.error {
+  color: var(--tier3);
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.matrix__meta {
+  display: flex;
+  gap: 1rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.permit {
+  background: var(--panel);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.permit header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.tier {
+  color: white;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.tier--1 {
+  background: var(--tier1);
+}
+.tier--2 {
+  background: var(--tier2);
+}
+.tier--3 {
+  background: var(--tier3);
+}
+
+.permit__agency {
+  color: var(--muted);
+  margin: 0.25rem 0;
+}
+
+.advisories {
+  background: #fff7ed;
+  border-left: 3px solid var(--tier2);
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.advisory--platform {
+  font-style: italic;
+}

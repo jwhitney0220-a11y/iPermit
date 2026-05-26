@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ipermit.dev/schemas/2026-05-26/spatial-detection.schema.json",
+  "title": "iPermit Spatial Detection Result",
+  "description": "Auto-detected jurisdictions and environmental overlays for an uploaded project footprint, before consultant review and confirmation. See AGENTS.md GIS Strategy / GIS Intake Strategy and EPIC-05. Boundary parsing is T05-02; the spatial store is T05-01; jurisdiction/overlay detection is T05-03/T05-04; the review-and-confirm workflow is T05-06.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["detected_at", "jurisdictions", "overlays"],
+  "properties": {
+    "footprint_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Opaque pointer to the uploaded geometry (shapefile/KMZ). Absent when the result is from manual entry with no route file (AGENTS.md fallback)."
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the detection was produced. Drives the evaluation_date used downstream."
+    },
+    "jurisdictions": {
+      "type": "array",
+      "description": "Detected applicable jurisdictions, Federal down to the most specific. Empty is valid for an early-stage project entered manually.",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "jurisdiction_id",
+          "jurisdiction_level",
+          "canonical_name",
+          "detection_source"
+        ],
+        "properties": {
+          "jurisdiction_id": {
+            "type": "string",
+            "description": "Canonical jurisdiction_id (T00-08 grammar), matching a registered jurisdiction.",
+            "pattern": "^[a-z]{2}(-[a-z]{2})?(-(federal|state|county|municipality|etj|utility-district|drainage-district|river-authority|special)-[a-z0-9]+(-[a-z0-9]+)*)?$"
+          },
+          "jurisdiction_level": {
+            "enum": [
+              "federal",
+              "state",
+              "county",
+              "municipality",
+              "etj",
+              "utility_district",
+              "drainage_district",
+              "river_authority",
+              "special"
+            ]
+          },
+          "canonical_name": { "type": "string", "minLength": 1 },
+          "detection_source": {
+            "enum": ["gis_auto_detect", "manual_entry"],
+            "description": "How this jurisdiction entered the detection. User edits at confirmation time (T05-06) are tracked separately in the override log."
+          }
+        }
+      }
+    },
+    "overlays": {
+      "type": "object",
+      "description": "Detected environmental overlays as geometry.* leaf name -> value (e.g. fema_floodplain: true). The field registry is owned by T05-04; additional properties are allowed so new overlays do not require a schema bump.",
+      "additionalProperties": {
+        "type": ["boolean", "string", "number", "null"]
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}

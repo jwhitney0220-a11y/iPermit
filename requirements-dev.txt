@@ -19,3 +19,8 @@ alembic>=1.13
 # production store (see services/gis-engine/README.md), not a test dependency.
 shapely>=2.0
 pyshp>=2.3
+
+# Public API service (SAAS-01). Pull its runtime deps so CI runs the API tests;
+# httpx backs the FastAPI TestClient.
+-r services/api/requirements.txt
+httpx>=0.26

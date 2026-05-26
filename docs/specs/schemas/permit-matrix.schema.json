@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ipermit.dev/schemas/2026-05-26/permit-matrix.schema.json",
+  "title": "iPermit Permit Matrix",
+  "description": "Consultant-facing aggregation of a deterministic evaluation: an ordered set of likely permits, each carrying — non-negotiably — its confidence tier, citations, advisories, and a reference to its explanation record. Sequencing data (T00-04) rides alongside. This is the `data` payload of the permit-matrix API response (ADR-0003 contract 3, roadmap T07-01). The mandatory advisory/citation/tier fields enforce the liability framework (AGENTS.md Liability Strategy, T07-03): every permit MUST carry at least one advisory.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evaluation_id",
+    "project_id",
+    "evaluation_date",
+    "ruleset_version",
+    "inputs_hash",
+    "permits",
+    "sequencing"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of this matrix schema."
+    },
+    "evaluation_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Audit cross-reference (T01-04) for the evaluation that produced this matrix."
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The tenant-owned project this matrix belongs to."
+    },
+    "evaluation_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Pinned evaluation date (T00-03 §4.1). The engine never reads wall-clock time."
+    },
+    "ruleset_version": {
+      "type": "object",
+      "required": ["content_hash"],
+      "additionalProperties": true,
+      "properties": {
+        "content_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Content hash of the ruleset that produced this matrix (T00-03)."
+        }
+      },
+      "description": "Identifies which regulations produced this result (reproducibility)."
+    },
+    "inputs_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Hash of the canonical project inputs (T00-05 §5.13)."
+    },
+    "permits": {
+      "type": "array",
+      "description": "Likely permits, deterministically ordered by sequencing stage then jurisdiction precedence then name.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "permit_name",
+          "agency",
+          "jurisdiction_level",
+          "confidence",
+          "citations",
+          "advisories",
+          "known_unknowns",
+          "sequencing",
+          "explanation_ref"
+        ],
+        "properties": {
+          "rule_id": { "type": "string", "minLength": 1 },
+          "permit_name": { "type": "string", "minLength": 1 },
+          "agency": { "type": "string", "minLength": 1 },
+          "jurisdiction_level": { "type": "string", "minLength": 1 },
+          "confidence": {
+            "type": "object",
+            "required": ["tier", "tier_rationale"],
+            "additionalProperties": true,
+            "properties": {
+              "tier": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3,
+                "description": "Permit confidence tier (AGENTS.md Permit Confidence Tiers)."
+              },
+              "tier_rationale": { "type": "string", "minLength": 1 },
+              "freshness": { "type": "object" }
+            }
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["reference"],
+              "additionalProperties": true,
+              "properties": {
+                "citation_type": { "type": "string" },
+                "reference": { "type": "string", "minLength": 1 },
+                "url": { "type": "string" }
+              }
+            }
+          },
+          "advisories": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Liability framework (T07-03): at least one advisory is mandatory; the standing platform disclaimer (T00-05 §4.4) is always present.",
+            "items": {
+              "type": "object",
+              "required": ["text", "origin", "category"],
+              "additionalProperties": true,
+              "properties": {
+                "text": { "type": "string", "minLength": 1 },
+                "origin": {
+                  "type": "string",
+                  "enum": ["rule", "engine", "platform"]
+                },
+                "category": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
+          "known_unknowns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["text", "origin"],
+              "additionalProperties": true,
+              "properties": {
+                "text": { "type": "string", "minLength": 1 },
+                "origin": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
+          "sequencing": {
+            "type": "object",
+            "required": ["stage_index", "on_critical_path"],
+            "additionalProperties": false,
+            "properties": {
+              "stage_index": { "type": "integer", "minimum": 0 },
+              "on_critical_path": { "type": "boolean" }
+            }
+          },
+          "explanation_ref": {
+            "type": "object",
+            "required": ["rule_id", "rule_version", "inputs_hash", "ruleset_content_hash"],
+            "additionalProperties": false,
+            "properties": {
+              "rule_id": { "type": "string", "minLength": 1 },
+              "rule_version": { "type": "string", "minLength": 1 },
+              "inputs_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+              "ruleset_content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+            }
+          }
+        }
+      }
+    },
+    "sequencing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stages", "critical_path", "critical_path_total_days"],
+      "properties": {
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stage_index", "permits"],
+            "properties": {
+              "stage_index": { "type": "integer", "minimum": 0 },
+              "permits": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "critical_path": { "type": "array", "items": { "type": "string" } },
+        "critical_path_total_days": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
