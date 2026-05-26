@@ -1,0 +1,10 @@
+# Runtime dependencies for the iPermit public API service (SAAS-01 / ADR-0006).
+#
+# The deterministic engine, GIS, persistence, and tenancy packages are imported
+# from the monorepo source tree (see services/api/README.md), not pinned here.
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.6
+pydantic-settings>=2.1
+PyJWT>=2.8
+bcrypt>=4.0

@@ -76,6 +76,9 @@ known-first-party = ["ipermit"]
 # Tests may use assert, magic values, and slightly looser structure.
 "**/tests/**" = ["PLR2004", "S101"]
 "tests/**" = ["PLR2004", "S101"]
+# FastAPI's dependency-injection idiom puts Depends(...) in argument defaults;
+# B008 (no function calls in defaults) is the wrong call for the API service.
+"services/api/**" = ["B008"]
 
 [tool.ruff.format]
 # Explicit, boring defaults. Double quotes and spaces match the wider Python

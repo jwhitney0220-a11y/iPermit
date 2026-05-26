@@ -21,8 +21,28 @@ Public surface:
   deterministic ``intersecting`` — T05-01.
 - ingest    — shapefile/KMZ/KML parsers and ``normalize_footprint`` ->
   ``ProjectFootprint`` — T05-02.
+- detection / confirmation — the auto-detection result model, the
+  ``DetectionBackend`` seam, and the review-and-confirm workflow that projects a
+  confirmed detection into rules-engine inputs (``confirm_detection`` /
+  ``to_engine_inputs``) — T05-06; consumed by the API evaluate flow (SAAS-01).
 """
 
+from .confirmation import (
+    ConfirmationResult,
+    EngineInputs,
+    JurisdictionOverride,
+    OverlayOverride,
+    OverrideLogEntry,
+    confirm_detection,
+    to_engine_inputs,
+)
+from .detection import (
+    AUTO,
+    MANUAL,
+    DetectedJurisdiction,
+    DetectionBackend,
+    SpatialDetection,
+)
 from .geometry import (
     ASSUMED_CRS,
     BBox,
@@ -44,17 +64,29 @@ from .store import GeometryStore
 
 __all__ = [
     "ASSUMED_CRS",
+    "AUTO",
+    "MANUAL",
     "BBox",
+    "ConfirmationResult",
+    "DetectedJurisdiction",
+    "DetectionBackend",
+    "EngineInputs",
     "GeometryError",
     "GeometryStore",
+    "JurisdictionOverride",
+    "OverlayOverride",
+    "OverrideLogEntry",
     "ProjectFootprint",
+    "SpatialDetection",
     "bbox",
+    "confirm_detection",
     "from_geojson",
     "load_valid",
     "normalize_footprint",
     "parse_kml",
     "parse_kmz",
     "parse_shapefile",
+    "to_engine_inputs",
     "to_geojson",
     "validate_geometry",
 ]

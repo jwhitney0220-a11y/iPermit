@@ -29,6 +29,8 @@ EXAMPLE_MAP = {
     "rule-object-example.json": "rule-object.schema.json",
     "permit-explanation-example.json": "permit-explanation.schema.json",
     "jurisdiction-record-examples.json": "jurisdiction-record.schema.json",
+    "spatial-detection-example.json": "spatial-detection.schema.json",
+    "permit-matrix-example.json": "permit-matrix.schema.json",
     "benchmarks/*.yaml": "benchmark-project.schema.json",
 }
 
