@@ -6,6 +6,11 @@
 # Local-only Claude Code settings (also covered by global ignore).
 .claude/settings.local.json
 
+# Vendored read-only reference checkouts (e.g. open-saas) — re-cloned on demand,
+# not committed. The environment may clone the full upstream repo here on top of
+# the curated subset that is tracked; ignore the rest so it never lands in a PR.
+.claude/references/*/
+
 # Python build/runtime artifacts.
 __pycache__/
 *.py[cod]
