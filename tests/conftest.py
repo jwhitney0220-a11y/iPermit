@@ -15,6 +15,7 @@ _PACKAGE_ROOTS = (
     "persistence",
     "jurisdiction-models",
     "regulatory-models",
+    "tenancy-models",
     "rule-definitions",
     "benchmark-projects",
     "shared-schemas/python",
