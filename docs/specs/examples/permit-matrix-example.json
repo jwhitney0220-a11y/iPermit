@@ -1,0 +1,378 @@
+{
+  "schema_version": "1.0.0",
+  "evaluation_id": "example-evaluation-0001",
+  "project_id": "example-project-0001",
+  "evaluation_date": "2026-05-25",
+  "ruleset_version": {
+    "content_hash": "sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6"
+  },
+  "inputs_hash": "sha256:c9a2145c5b41e2edc782d26c9e6dc4542f86893eb3f2fdfefe5a6e22ca542f3f",
+  "permits": [
+    {
+      "rule_id": "us-tx-usace-section-404-da-permit",
+      "permit_name": "Department of the Army Permit under Clean Water Act Section 404",
+      "agency": "United States Army Corps of Engineers",
+      "jurisdiction_level": "federal",
+      "confidence": {
+        "tier": 1,
+        "tier_rationale": "Statutory and fully verified. Stable requirement.",
+        "freshness": {
+          "last_verified": "2026-05-25",
+          "days_since_verified": 0,
+          "stale": false
+        }
+      },
+      "citations": [
+        {
+          "citation_type": "form",
+          "reference": "ENG Form 4345 - Application for Department of the Army Permit",
+          "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/Regulatory-Program-Forms/",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "regulation",
+          "reference": "33 CFR Part 323",
+          "url": "https://www.ecfr.gov/current/title-33/chapter-II/part-323",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "website",
+          "reference": "United States Army Corps of Engineers Regulatory Program and Permits",
+          "url": "https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/",
+          "retrieved_at": "2026-05-25"
+        }
+      ],
+      "advisories": [
+        {
+          "text": "Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.",
+          "origin": "platform",
+          "category": "advisory_disclaimer"
+        },
+        {
+          "text": "Consultant verification recommended before relying on this permit identification.",
+          "origin": "engine",
+          "category": "professional_review_required"
+        },
+        {
+          "text": "Additional review recommended to confirm jurisdictional waters, wetland limits, and whether pre-construction notification is likely required.",
+          "origin": "rule",
+          "category": "professional_review_required"
+        }
+      ],
+      "known_unknowns": [
+        {
+          "text": "Project-level confirmation is still needed to determine whether coverage is through a nationwide permit, regional permit, or individual permit.",
+          "origin": "rule"
+        }
+      ],
+      "sequencing": {
+        "stage_index": 0,
+        "on_critical_path": true
+      },
+      "explanation_ref": {
+        "rule_id": "us-tx-usace-section-404-da-permit",
+        "rule_version": "1.0.0",
+        "inputs_hash": "sha256:c9a2145c5b41e2edc782d26c9e6dc4542f86893eb3f2fdfefe5a6e22ca542f3f",
+        "ruleset_content_hash": "sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6"
+      }
+    },
+    {
+      "rule_id": "us-tx-usfws-esa-section-7-consultation",
+      "permit_name": "Endangered Species Act Section 7 Consultation",
+      "agency": "United States Fish and Wildlife Service",
+      "jurisdiction_level": "federal",
+      "confidence": {
+        "tier": 1,
+        "tier_rationale": "Statutory and fully verified. Stable requirement.",
+        "freshness": {
+          "last_verified": "2026-05-25",
+          "days_since_verified": 0,
+          "stale": false
+        }
+      },
+      "citations": [
+        {
+          "citation_type": "regulation",
+          "reference": "50 CFR 402.14 - Formal consultation",
+          "url": "https://www.ecfr.gov/current/title-50/chapter-IV/subchapter-A/part-402/subpart-B/section-402.14",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "website",
+          "reference": "United States Fish and Wildlife Service ESA Section 7 Consultation",
+          "url": "https://www.fws.gov/service/esa-section-7-consultation",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "website",
+          "reference": "United States Fish and Wildlife Service Section 7 law summary",
+          "url": "https://www.fws.gov/laws/endangered-species-act/section-7",
+          "retrieved_at": "2026-05-25"
+        }
+      ],
+      "advisories": [
+        {
+          "text": "Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.",
+          "origin": "platform",
+          "category": "advisory_disclaimer"
+        },
+        {
+          "text": "Consultant verification recommended before relying on this permit identification.",
+          "origin": "engine",
+          "category": "professional_review_required"
+        },
+        {
+          "text": "Additional review recommended where listed species, critical habitat, or other federal trust resources may overlap the project area.",
+          "origin": "rule",
+          "category": "professional_review_required"
+        }
+      ],
+      "known_unknowns": [
+        {
+          "text": "For some species or marine resources, National Marine Fisheries Service consultation may also be required.",
+          "origin": "rule"
+        }
+      ],
+      "sequencing": {
+        "stage_index": 0,
+        "on_critical_path": true
+      },
+      "explanation_ref": {
+        "rule_id": "us-tx-usfws-esa-section-7-consultation",
+        "rule_version": "1.0.0",
+        "inputs_hash": "sha256:c9a2145c5b41e2edc782d26c9e6dc4542f86893eb3f2fdfefe5a6e22ca542f3f",
+        "ruleset_content_hash": "sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6"
+      }
+    },
+    {
+      "rule_id": "us-tx-nepa-federal-environmental-review",
+      "permit_name": "National Environmental Policy Act Environmental Review",
+      "agency": "Lead federal agency",
+      "jurisdiction_level": "federal",
+      "confidence": {
+        "tier": 1,
+        "tier_rationale": "Statutory and fully verified. Stable requirement.",
+        "freshness": {
+          "last_verified": "2026-05-25",
+          "days_since_verified": 0,
+          "stale": false
+        }
+      },
+      "citations": [
+        {
+          "citation_type": "statute",
+          "reference": "42 U.S.C. 4336 - Procedure for determination of level of review",
+          "url": "https://uscode.house.gov/view.xhtml?edition=prelim&num=0&req=granuleid%3AUSC-prelim-title42-section4336",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "statute",
+          "reference": "42 U.S.C. 4336e - Definitions",
+          "url": "https://uscode.house.gov/view.xhtml?req=%28title%3A42+section%3A4336e+edition%3Aprelim%29",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "website",
+          "reference": "Council on Environmental Quality NEPA overview",
+          "url": "https://ceq.doe.gov/",
+          "retrieved_at": "2026-05-25"
+        }
+      ],
+      "advisories": [
+        {
+          "text": "Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.",
+          "origin": "platform",
+          "category": "advisory_disclaimer"
+        },
+        {
+          "text": "Consultant verification recommended before relying on this permit identification.",
+          "origin": "engine",
+          "category": "professional_review_required"
+        },
+        {
+          "text": "Additional review recommended to determine whether the project is categorically excluded, needs an environmental assessment, or needs an environmental impact statement.",
+          "origin": "rule",
+          "category": "professional_review_required"
+        }
+      ],
+      "known_unknowns": [
+        {
+          "text": "Agency-specific categorical exclusions, environmental assessment procedures, and environmental impact statement thresholds vary by lead federal agency.",
+          "origin": "rule"
+        }
+      ],
+      "sequencing": {
+        "stage_index": 0,
+        "on_critical_path": true
+      },
+      "explanation_ref": {
+        "rule_id": "us-tx-nepa-federal-environmental-review",
+        "rule_version": "1.0.0",
+        "inputs_hash": "sha256:c9a2145c5b41e2edc782d26c9e6dc4542f86893eb3f2fdfefe5a6e22ca542f3f",
+        "ruleset_content_hash": "sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6"
+      }
+    },
+    {
+      "rule_id": "us-tx-tceq-section-401-water-quality-certification",
+      "permit_name": "Section 401 Water Quality Certification",
+      "agency": "Texas Commission on Environmental Quality",
+      "jurisdiction_level": "state",
+      "confidence": {
+        "tier": 1,
+        "tier_rationale": "Statutory and fully verified. Stable requirement.",
+        "freshness": {
+          "last_verified": "2026-05-25",
+          "days_since_verified": 0,
+          "stale": false
+        }
+      },
+      "citations": [
+        {
+          "citation_type": "agency_guidance",
+          "reference": "Nationwide Permits for 401 Certification",
+          "url": "https://www.tceq.texas.gov/permitting/401certification/401certification_nationwide.html",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "agency_guidance",
+          "reference": "Tier 1 401 Certifications",
+          "url": "https://www.tceq.texas.gov/permitting/401certification/401certification_tier1.html",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "website",
+          "reference": "401 Certification Reviews",
+          "url": "https://www.tceq.texas.gov/permitting/401certification",
+          "retrieved_at": "2026-05-25"
+        }
+      ],
+      "advisories": [
+        {
+          "text": "Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.",
+          "origin": "platform",
+          "category": "advisory_disclaimer"
+        },
+        {
+          "text": "Consultant verification recommended before relying on this permit identification.",
+          "origin": "engine",
+          "category": "professional_review_required"
+        },
+        {
+          "text": "Additional review recommended to determine whether the project falls under statewide nationwide permit conditions, Tier 1, or Tier 2 review.",
+          "origin": "rule",
+          "category": "professional_review_required"
+        }
+      ],
+      "known_unknowns": [
+        {
+          "text": "Oil and gas exploration Section 401 reviews are administered by the Railroad Commission of Texas rather than the Texas Commission on Environmental Quality.",
+          "origin": "rule"
+        },
+        {
+          "text": "Some projects may be covered by statewide certifications for nationwide permits, while others follow Tier 1 or Tier 2 review pathways.",
+          "origin": "rule"
+        }
+      ],
+      "sequencing": {
+        "stage_index": 0,
+        "on_critical_path": true
+      },
+      "explanation_ref": {
+        "rule_id": "us-tx-tceq-section-401-water-quality-certification",
+        "rule_version": "1.0.0",
+        "inputs_hash": "sha256:c9a2145c5b41e2edc782d26c9e6dc4542f86893eb3f2fdfefe5a6e22ca542f3f",
+        "ruleset_content_hash": "sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6"
+      }
+    },
+    {
+      "rule_id": "us-tx-tceq-construction-stormwater-cgp",
+      "permit_name": "Texas Pollutant Discharge Elimination System Construction General Permit",
+      "agency": "Texas Commission on Environmental Quality",
+      "jurisdiction_level": "state",
+      "confidence": {
+        "tier": 1,
+        "tier_rationale": "Statutory and fully verified. Stable requirement.",
+        "freshness": {
+          "last_verified": "2026-05-25",
+          "days_since_verified": 0,
+          "stale": false
+        }
+      },
+      "citations": [
+        {
+          "citation_type": "agency_guidance",
+          "reference": "Stormwater Discharges from Construction Activities: Am I Regulated?",
+          "url": "https://www.tceq.texas.gov/permitting/stormwater/construction/TXR15_AIR.html",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "form",
+          "reference": "2023 Construction General Permit TXR150000",
+          "url": "https://www.tceq.texas.gov/downloads/permitting/stormwater/general/construction/2023-cgp-txr150000.pdf/%40%40download/file/2023-cgp-txr150000.pdf",
+          "retrieved_at": "2026-05-25"
+        },
+        {
+          "citation_type": "website",
+          "reference": "Stormwater General Permit for Construction Activities",
+          "url": "https://www.tceq.texas.gov/permitting/stormwater/construction",
+          "retrieved_at": "2026-05-25"
+        }
+      ],
+      "advisories": [
+        {
+          "text": "Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.",
+          "origin": "platform",
+          "category": "advisory_disclaimer"
+        },
+        {
+          "text": "Consultant verification recommended before relying on this permit identification.",
+          "origin": "engine",
+          "category": "professional_review_required"
+        },
+        {
+          "text": "Additional review recommended for linear projects that segment construction because a common plan can aggregate disturbed acreage.",
+          "origin": "rule",
+          "category": "professional_review_required"
+        }
+      ],
+      "known_unknowns": [
+        {
+          "text": "Local erosion and sediment controls may apply in addition to the state general permit.",
+          "origin": "rule"
+        }
+      ],
+      "sequencing": {
+        "stage_index": 0,
+        "on_critical_path": true
+      },
+      "explanation_ref": {
+        "rule_id": "us-tx-tceq-construction-stormwater-cgp",
+        "rule_version": "1.0.0",
+        "inputs_hash": "sha256:c9a2145c5b41e2edc782d26c9e6dc4542f86893eb3f2fdfefe5a6e22ca542f3f",
+        "ruleset_content_hash": "sha256:4625a0443efc12249f150bd6de477db635046d5a4e29c16088a7fc28b6611bb6"
+      }
+    }
+  ],
+  "sequencing": {
+    "stages": [
+      {
+        "stage_index": 0,
+        "permits": [
+          "us-tx-nepa-federal-environmental-review",
+          "us-tx-tceq-construction-stormwater-cgp",
+          "us-tx-tceq-section-401-water-quality-certification",
+          "us-tx-usace-section-404-da-permit",
+          "us-tx-usfws-esa-section-7-consultation"
+        ]
+      }
+    ],
+    "critical_path": [
+      "us-tx-nepa-federal-environmental-review",
+      "us-tx-tceq-construction-stormwater-cgp",
+      "us-tx-tceq-section-401-water-quality-certification",
+      "us-tx-usace-section-404-da-permit",
+      "us-tx-usfws-esa-section-7-consultation"
+    ],
+    "critical_path_total_days": 0
+  }
+}

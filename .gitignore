@@ -15,6 +15,9 @@ __pycache__/
 .ruff_cache/
 .pytest_cache/
 
+# Local SQLite dev/test database (default DATABASE_URL target; never committed).
+*.db
+
 # Node.
 node_modules/
 

@@ -24,7 +24,11 @@ _PACKAGE_ROOTS = (
 #: Source roots outside packages/ (relative to repo root). The rules engine
 #: (T03-01/T03-02) and GIS engine (EPIC-05) live under services/ as pure,
 #: importable libraries.
-_OTHER_ROOTS = (("rules-engine", "services"), ("gis-engine", "services"))
+_OTHER_ROOTS = (
+    ("rules-engine", "services"),
+    ("gis-engine", "services"),
+    ("api", "services"),
+)
 
 for _rel in _PACKAGE_ROOTS:
     _path = ROOT / "packages" / _rel
