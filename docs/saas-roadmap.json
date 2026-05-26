@@ -1,0 +1,133 @@
+{
+  "project": "iPermit — SaaS productization roadmap",
+  "version": "saas-v1",
+  "updated": "2026-05-26",
+  "description": "Re-sequences the remaining iPermit work to ship the proven deterministic core as a multi-tenant SaaS. Each ticket names the Claude Code agent and skill best suited to the job. Grounded in docs/roadmap.json, the architecture ADRs (docs/architecture/adr-0001..0005), and the open-saas reference (.claude/references/open-saas).",
+  "stack_note": "iPermit stack is FastAPI + React/TypeScript + Postgres/PostGIS (ADR-0001). open-saas (Wasp/Node/Prisma) is a PATTERN reference for SaaS feature surface only, not a tech match.",
+  "agents": {
+    "Explore": "Fast read-only search/locate across the codebase. Use for research and 'where is X' before building.",
+    "Plan": "Software-architect agent for designing an implementation approach before code.",
+    "general-purpose": "Multi-step build/refactor work that spans files; the default builder for a ticket.",
+    "claude": "Catch-all builder when no more specific agent fits.",
+    "claude-code-guide": "Questions about Claude Code / Agent SDK / Anthropic API usage."
+  },
+  "skills": {
+    "existing": {
+      "code-review": "Review the diff for correctness bugs. Run on every build ticket before commit.",
+      "security-review": "Security review of pending changes. MANDATORY on auth, tenancy, payments, file-upload, and webhook tickets.",
+      "verify": "Run the app and observe real behavior to confirm a change works.",
+      "run": "Launch/drive the app (boot FastAPI + Vite) to see a change working.",
+      "claude-api": "Build/tune Anthropic SDK features with prompt caching. Use for the constrained-AI epic.",
+      "init": "Generate/refresh CLAUDE.md codebase docs."
+    },
+    "to_author": {
+      "saas-api": "FastAPI REST surface: routers, OpenAPI contract, response envelope {data,meta,advisories,warnings}, RFC-9457 errors, versioning. Ref: ADR-0003; open-saas src/*/operations.ts.",
+      "saas-auth": "Identity, password hashing, JWT/session tokens, AuthenticatedIdentity, RBAC, OAuth/SSO path. Ref: ADR-0002; open-saas src/auth.",
+      "saas-multitenancy": "tenant_id columns + Postgres RLS (app.current_tenant_id) + app-layer scoping. Ref: ADR-0002.",
+      "saas-frontend": "React + TypeScript (Vite) SPA: auth-gated routing, forms, data fetching, generated API client from OpenAPI. Ref: open-saas template/app/src/client + ADR-0001.",
+      "saas-audit": "Append-only, hash-chained audit log (prev_hash+hash), INSERT-only role. Ref: ADR-0004.",
+      "saas-payments": "Stripe/Lemon Squeezy: plans, checkout, webhooks, subscription state, metering/quotas. Ref: open-saas src/payment.",
+      "saas-file-upload": "Validated uploads to object storage (S3). Maps to iPermit shapefile/KMZ intake. Ref: open-saas src/file-upload.",
+      "saas-admin-portal": "Internal admin/analyst dashboards and role-gated nav. Ref: open-saas src/admin.",
+      "saas-analytics": "Usage metrics and operational dashboards. Ref: open-saas src/analytics.",
+      "saas-email": "Transactional email: verification, password reset, notifications. Ref: open-saas emailSender config.",
+      "saas-deploy": "IaC, managed Postgres/PostGIS, CI/CD deploy, env/secrets. Ref: ADR-0001; infrastructure/terraform; docs/operations.",
+      "saas-observability": "Structured logging, metrics, error tracking, alerting."
+    }
+  },
+  "epics": [
+    {
+      "id": "SAAS-01",
+      "title": "SaaS spine — thin end-to-end vertical (intake -> permit matrix)",
+      "objective": "Stand up the multi-tenant web product over the existing deterministic engine: a consultant logs in, creates a tenant-scoped project, submits intake + confirmed GIS, and sees an explainable permit matrix.",
+      "tickets": [
+        {"id": "S01-01", "title": "Tenancy & project persistence models", "description": "Add packages/tenancy-models (Tenant, User, Membership, Project, Evaluation) on the shared ipermit_persistence Base + Alembic migration with Postgres RLS policies.", "agent": "general-purpose", "skill": "saas-multitenancy", "reference": "ADR-0002, ADR-0005", "depends_on": []},
+        {"id": "S01-02", "title": "Auth: AuthenticatedIdentity + email/password + JWT", "description": "auth.py with password hashing, JWT issue/verify, get_current_identity dependency, consultant_user role. Defer SSO behind the abstraction.", "agent": "general-purpose", "skill": "saas-auth", "reference": "ADR-0002; open-saas src/auth", "depends_on": ["S01-01"]},
+        {"id": "S01-03", "title": "FastAPI service scaffold + response envelope + errors", "description": "services/api/ipermit_api: app.py, settings (BaseSettings), db session dep (sets app.current_tenant_id), envelope {data,meta,advisories,warnings}, RFC-9457 handlers. Record ADR-0006 for the new service boundary.", "agent": "general-purpose", "skill": "saas-api", "reference": "ADR-0003", "depends_on": ["S01-01"]},
+        {"id": "S01-04", "title": "Permit-matrix contract + builder + evaluate endpoint", "description": "permit-matrix.schema.json (+example, register in validate_schemas); matrix.py build_permit_matrix(SimulationResult); endpoints POST /api/v1/projects, POST .../evaluate (wraps ipermit_gis.to_engine_inputs + simulate_project), GET .../matrix. Enforce liability advisories (T07-03).", "agent": "general-purpose", "skill": "saas-api", "reference": "ADR-0003; ipermit_engine.simulation; ipermit_gis.confirmation", "depends_on": ["S01-02", "S01-03"]},
+        {"id": "S01-05", "title": "Minimal audit on evaluation", "description": "AuditRecord model + hash-chained insert on each evaluation event (inputs hash, ruleset content_hash, output ids).", "agent": "general-purpose", "skill": "saas-audit", "reference": "ADR-0004", "depends_on": ["S01-04"]},
+        {"id": "S01-06", "title": "Consultant SPA: login + intake -> matrix", "description": "apps/web Vite+React+TS: login screen, evaluation screen (intake form + manual jurisdiction/overlay entry), PermitMatrix render (permits, tier, citations, advisories). Generated client from OpenAPI + shared-schemas TS types.", "agent": "general-purpose", "skill": "saas-frontend", "reference": "ADR-0001; open-saas template/app/src/client", "depends_on": ["S01-04"]},
+        {"id": "S01-07", "title": "Security review + end-to-end verify of the spine", "description": "Security review of auth + tenant isolation; boot API + SPA and walk the flow.", "agent": "general-purpose", "skill": "security-review", "secondary_skill": "verify", "reference": "", "depends_on": ["S01-05", "S01-06"]}
+      ]
+    },
+    {
+      "id": "SAAS-02",
+      "title": "Productization depth",
+      "objective": "Make the spine durable and complete for consultant use.",
+      "tickets": [
+        {"id": "S02-01", "title": "Full RBAC (analyst, admin) + capability flags", "description": "Add regulatory_analyst/platform_admin roles + analyst:draft/review/publish flags and require_role guards.", "agent": "general-purpose", "skill": "saas-auth", "reference": "ADR-0002", "depends_on": ["S01-02"]},
+        {"id": "S02-02", "title": "Audit hash-chain across all events", "description": "Extend audit to rule lifecycle, output corrections, feedback, and auth-significant events; INSERT-only DB role.", "agent": "general-purpose", "skill": "saas-audit", "reference": "ADR-0004", "depends_on": ["S01-05"]},
+        {"id": "S02-03", "title": "Project persistence & revision history", "description": "Snapshot evaluations, compare revisions, preserve audit history (roadmap T06-04).", "agent": "general-purpose", "skill": "saas-api", "reference": "docs/roadmap.json T06-04", "depends_on": ["S01-04"]},
+        {"id": "S02-04", "title": "Deliverable exports (xlsx/pdf/json)", "description": "Export engine for the permit matrix (roadmap T07-04).", "agent": "general-purpose", "skill": "saas-api", "reference": "docs/roadmap.json T07-04", "depends_on": ["S01-04"]},
+        {"id": "S02-05", "title": "User feedback queue", "description": "Analyst-gated consultant feedback intake (roadmap T08-06).", "agent": "general-purpose", "skill": "saas-api", "reference": "docs/roadmap.json T08-06", "depends_on": ["S02-01"]}
+      ]
+    },
+    {
+      "id": "SAAS-03",
+      "title": "Billing, plans & metering",
+      "objective": "Monetize: subscription plans, usage limits tied to plans.",
+      "tickets": [
+        {"id": "S03-01", "title": "Payment processor integration + webhooks", "description": "Stripe (or Lemon Squeezy) checkout, subscription state, signed webhooks.", "agent": "general-purpose", "skill": "saas-payments", "reference": "open-saas src/payment", "depends_on": ["S02-01"]},
+        {"id": "S03-02", "title": "Plans, pricing page & entitlement gating", "description": "Plan tiers, pricing UI, gate features/quotas by entitlement.", "agent": "general-purpose", "skill": "saas-payments", "secondary_skill": "saas-frontend", "reference": "open-saas src/payment/plans.ts", "depends_on": ["S03-01"]},
+        {"id": "S03-03", "title": "Usage metering (evaluations/exports per tenant)", "description": "Meter billable actions against plan limits.", "agent": "general-purpose", "skill": "saas-payments", "reference": "", "depends_on": ["S03-01"]},
+        {"id": "S03-04", "title": "Security review of payments + webhooks", "description": "Review webhook signature verification, idempotency, and tenant binding.", "agent": "general-purpose", "skill": "security-review", "reference": "", "depends_on": ["S03-01"]}
+      ]
+    },
+    {
+      "id": "SAAS-04",
+      "title": "Consultant app depth",
+      "objective": "Round out the consultant-facing application.",
+      "tickets": [
+        {"id": "S04-01", "title": "Frontend shell, navigation & dashboard", "description": "Project list/dashboard, responsive shell (roadmap T06-01).", "agent": "general-purpose", "skill": "saas-frontend", "reference": "open-saas template/app/src/client + roadmap T06-01", "depends_on": ["S01-06"]},
+        {"id": "S04-02", "title": "Account & team management", "description": "Account page, invite teammates to a tenant, role assignment UI.", "agent": "general-purpose", "skill": "saas-frontend", "secondary_skill": "saas-auth", "reference": "open-saas src/user", "depends_on": ["S04-01"]},
+        {"id": "S04-03", "title": "Shapefile/KMZ upload to object storage", "description": "Validated upload to S3, wired to the GIS detection seam (roadmap T05-02).", "agent": "general-purpose", "skill": "saas-file-upload", "reference": "open-saas src/file-upload + roadmap T05-02", "depends_on": ["S04-01"]}
+      ]
+    },
+    {
+      "id": "SAAS-05",
+      "title": "Analyst operations portal",
+      "objective": "Internal tooling to maintain regulatory quality and promote rules to effective.",
+      "tickets": [
+        {"id": "S05-01", "title": "Analyst portal + admin shell", "description": "Role-gated internal app (roadmap T08-01/T08-02).", "agent": "general-purpose", "skill": "saas-admin-portal", "reference": "open-saas src/admin + roadmap T08-02", "depends_on": ["S02-01"]},
+        {"id": "S05-02", "title": "Rule publication workflow (draft -> effective)", "description": "Approval chain, publication logs, rollback; promotes seeded draft rules to effective (roadmap T08-04). UNBLOCKS real governance.", "agent": "general-purpose", "skill": "saas-api", "secondary_skill": "saas-audit", "reference": "docs/roadmap.json T08-04", "depends_on": ["S05-01", "S02-02"]},
+        {"id": "S05-03", "title": "QA/QC dashboard web surface", "description": "Render the existing scripts/qa/qa_report.py data in the admin portal (roadmap T04-05 web).", "agent": "general-purpose", "skill": "saas-admin-portal", "reference": "scripts/qa/qa_report.py", "depends_on": ["S05-01"]},
+        {"id": "S05-04", "title": "Rule health & source-expiration monitoring", "description": "Track overridden rules, stale citations, broken source links (roadmap T08-03/T08-05).", "agent": "general-purpose", "skill": "saas-analytics", "reference": "docs/roadmap.json T08-03,T08-05", "depends_on": ["S05-01"]}
+      ]
+    },
+    {
+      "id": "SAAS-06",
+      "title": "Spatial depth (real GIS backends)",
+      "objective": "Replace manual entry behind the existing DetectionBackend seam with real spatial detection.",
+      "tickets": [
+        {"id": "S06-01", "title": "PostGIS spatial DB + GeoAlchemy2", "description": "Stand up PostGIS, overlay indexing (roadmap T05-01).", "agent": "general-purpose", "skill": "saas-deploy", "reference": "docs/operations/postgis-planning.md + roadmap T05-01", "depends_on": []},
+        {"id": "S06-02", "title": "County/municipality/ETJ + FEMA/watershed/USACE detection", "description": "Implement DetectionBackend against Texas boundary datasets (roadmap T05-03/T05-04).", "agent": "general-purpose", "skill": "saas-api", "reference": "services/gis-engine/ipermit_gis/detection.py + roadmap T05-03,T05-04", "depends_on": ["S06-01", "S04-03"]}
+      ]
+    },
+    {
+      "id": "SAAS-07",
+      "title": "Deploy, scale & hardening",
+      "objective": "Run iPermit as a production SaaS.",
+      "tickets": [
+        {"id": "S07-01", "title": "IaC + managed Postgres/PostGIS + CI/CD deploy", "description": "Terraform modules, hosting, pipeline deploy (roadmap T01-09).", "agent": "general-purpose", "skill": "saas-deploy", "reference": "infrastructure/terraform + roadmap T01-09", "depends_on": ["S01-07"]},
+        {"id": "S07-02", "title": "Transactional email (verify/reset/notify)", "description": "Email sender integration (roadmap-adjacent; open-saas emailSender).", "agent": "general-purpose", "skill": "saas-email", "reference": "open-saas emailSender", "depends_on": ["S01-02"]},
+        {"id": "S07-03", "title": "Observability: logging, metrics, error tracking", "description": "Structured logs, metrics, alerting.", "agent": "general-purpose", "skill": "saas-observability", "reference": "", "depends_on": ["S07-01"]},
+        {"id": "S07-04", "title": "Enterprise SSO (OIDC/SAML)", "description": "Federate into AuthenticatedIdentity without rewrite (ADR-0002).", "agent": "general-purpose", "skill": "saas-auth", "secondary_skill": "security-review", "reference": "ADR-0002", "depends_on": ["S02-01"]}
+      ]
+    },
+    {
+      "id": "SAAS-08",
+      "title": "Constrained AI assistance",
+      "objective": "Add tightly-scoped AI that never overrides deterministic outputs (AGENTS.md AI Strategy; roadmap EPIC-09).",
+      "tickets": [
+        {"id": "S08-01", "title": "AI document extraction (advisory)", "description": "Extract project parameters from PDFs/site plans; outputs reviewable + advisory (roadmap T09-01).", "agent": "general-purpose", "skill": "claude-api", "reference": "docs/roadmap.json T09-01", "depends_on": ["S01-04"]},
+        {"id": "S08-02", "title": "AI proposal-language assistant", "description": "Generate proposal text using deterministic permit outputs as authoritative source (roadmap T09-02).", "agent": "general-purpose", "skill": "claude-api", "reference": "docs/roadmap.json T09-02", "depends_on": ["S02-04"]}
+      ]
+    }
+  ],
+  "conventions": {
+    "every_build_ticket": "Run the code-review skill on the diff before commit; run the verify/run skills to confirm behavior.",
+    "research_first": "Use the Explore agent to locate code and the Plan agent to design before non-trivial tickets.",
+    "security_gated": "Run the security-review skill on any ticket touching auth, tenancy, payments, file upload, or webhooks.",
+    "engine_authority": "AI (SAAS-08) and all UI must treat the deterministic rules engine as the source of truth; never override it."
+  }
+}

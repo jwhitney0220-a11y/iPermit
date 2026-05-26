@@ -30,3 +30,7 @@ node_modules/
 *.tfstate.*
 *.tfvars
 !*.tfvars.example
+
+# Vendored read-only reference checkouts (e.g. open-saas) — re-cloned on demand, not committed.
+# Ignore the clones (subdirectories) but keep the tracked README that documents them.
+.claude/references/*/
