@@ -35,6 +35,23 @@ class Settings(BaseSettings):
         return self.ipermit_env == "local"
 
 
+# Placeholder secret from .env.example — must never sign tokens off local.
+_PLACEHOLDER_SECRET = "CHANGE_ME_LOCAL_ONLY"
+_MIN_SECRET_BYTES = 32
+
+
+def validate_security(settings: Settings) -> None:
+    """Fail fast if a non-local env would run with a weak/default JWT secret."""
+    if settings.is_local:
+        return
+    secret = settings.auth_jwt_secret
+    if secret == _PLACEHOLDER_SECRET or len(secret.encode()) < _MIN_SECRET_BYTES:
+        raise RuntimeError(
+            f"AUTH_JWT_SECRET must be set to a strong value "
+            f"(>= {_MIN_SECRET_BYTES} bytes) outside the local environment."
+        )
+
+
 @lru_cache
 def get_settings() -> Settings:
     """Return the process-wide settings singleton."""

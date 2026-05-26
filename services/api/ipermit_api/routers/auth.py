@@ -11,6 +11,7 @@ from ..auth import (
     AuthenticatedIdentity,
     create_access_token,
     get_current_identity,
+    hash_password,
     verify_password,
 )
 from ..db import get_session
@@ -19,16 +20,19 @@ from ..schemas import IdentityResponse, LoginRequest, TokenResponse
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 
+# A real bcrypt hash to verify against when no user matches, so login takes the
+# same time whether or not the email exists (avoids a user-enumeration oracle).
+_DUMMY_HASH = hash_password("no-such-user-placeholder")
+
 
 @router.post("/login", response_model=TokenResponse)
 def login(body: LoginRequest, session: Session = Depends(get_session)) -> TokenResponse:
     """Exchange email/password for a short-lived bearer token."""
     user = session.scalar(select(User).where(User.email == body.email))
-    if (
-        user is None
-        or not user.is_active
-        or not verify_password(body.password, user.password_hash)
-    ):
+    password_ok = verify_password(
+        body.password, user.password_hash if user else _DUMMY_HASH
+    )
+    if user is None or not user.is_active or not password_ok:
         raise ProblemException(401, "Invalid credentials")
     tenant_ids = tuple(sorted(m.tenant_id for m in user.memberships))
     identity = AuthenticatedIdentity(

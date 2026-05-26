@@ -12,6 +12,7 @@ from fastapi import FastAPI
 
 from .envelope import register_exception_handlers
 from .routers import auth, projects
+from .settings import get_settings, validate_security
 
 API_DESCRIPTION = (
     "iPermit public API — wraps the deterministic rules engine, GIS confirmation,"
@@ -21,6 +22,7 @@ API_DESCRIPTION = (
 
 def create_app() -> FastAPI:
     """Build and configure the FastAPI application."""
+    validate_security(get_settings())
     app = FastAPI(
         title="iPermit API",
         version="0.1.0",
