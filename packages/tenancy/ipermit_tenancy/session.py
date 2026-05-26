@@ -49,20 +49,23 @@ def _install_tenant_filter(session: Session) -> None:
     """Attach a one-time event that scopes every query to the session's tenant.
 
     The handler reads the tenant id stashed in ``session.info`` and adds a
-    ``with_loader_criteria`` for each tenant-owned model. ``include_aliases`` so
+    ``with_loader_criteria`` for each tenant-owned model on every SELECT and on
+    bulk UPDATE/DELETE (the criteria is injected into the WHERE clause, so a bulk
+    write can never touch another tenant's rows). ``include_aliases`` so
     joined/aliased references are scoped too. A missing tenant id is a
     programming error — fail loudly rather than leak.
     """
 
     @event.listens_for(session, "do_orm_execute")
     def _scope(orm_execute_state: Any) -> None:
-        if not orm_execute_state.is_select:
+        state = orm_execute_state
+        if not (state.is_select or state.is_update or state.is_delete):
             return
         tenant_id = session.info.get(_SCOPE_KEY)
         if tenant_id is None:
             raise RuntimeError("tenant-scoped session used without a tenant id")
         for model in TENANT_OWNED_MODELS:
-            orm_execute_state.statement = orm_execute_state.statement.options(
+            state.statement = state.statement.options(
                 _tenant_criteria(model, tenant_id)
             )
 

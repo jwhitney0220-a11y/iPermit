@@ -25,7 +25,7 @@ from ipermit_tenancy import (
     tenant_session,
 )
 from ipermit_tenancy.session import _install_tenant_filter
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, delete, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -219,6 +219,33 @@ def test_scope_without_tenant_id_fails_loudly(
     with pytest.raises(RuntimeError):
         session.scalars(select(Project)).all()
     session.close()
+
+
+def test_bulk_update_delete_are_tenant_scoped(
+    session_factory: sessionmaker[Session],
+) -> None:
+    """Raw ORM bulk UPDATE/DELETE through a scope cannot touch another tenant.
+
+    The app-layer filter injects the tenant criteria into the WHERE clause of
+    bulk writes too, so a cross-tenant bulk statement matches zero rows.
+    """
+    t1 = _make_tenant(session_factory, "T1", "individual")
+    t2 = _make_tenant(session_factory, "T2", "individual")
+    with tenant_session(session_factory, t1) as a:
+        a_id = a.create_project(name="A", created_by_user_id="u1").id
+
+    with tenant_session(session_factory, t2) as b:
+        upd = b.session.execute(
+            update(Project).where(Project.id == a_id).values(name="HACKED")
+        )
+        dele = b.session.execute(delete(Project).where(Project.id == a_id))
+        b.session.commit()
+        assert upd.rowcount == 0
+        assert dele.rowcount == 0
+
+    with tenant_session(session_factory, t1) as a:
+        survived = a.get_project(a_id)
+        assert survived is not None and survived.name == "A"
 
 
 def test_postgres_rls_is_the_db_backstop() -> None:
