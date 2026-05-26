@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 from fastapi.testclient import TestClient
 from ipermit_tenancy import AuditRecord
@@ -146,6 +147,50 @@ def test_get_matrix_after_evaluate(client: TestClient, seeded: dict, login) -> N
     resp = client.get(f"/api/v1/projects/{project_id}/matrix", headers=headers)
     assert resp.status_code == 200
     assert len(resp.json()["data"]["permits"]) == 5
+
+
+@pytest.mark.parametrize(
+    ("fmt", "media"),
+    [
+        ("json", "application/json"),
+        (
+            "xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ),
+        ("pdf", "application/pdf"),
+    ],
+)
+def test_export_matrix(client: TestClient, seeded: dict, login, fmt, media) -> None:
+    token = login(seeded["email_a"])
+    project_id = _create_project(client, token)
+    headers = {"Authorization": f"Bearer {token}"}
+    client.post(
+        f"/api/v1/projects/{project_id}/evaluate",
+        json=_evaluate_request(),
+        headers=headers,
+    )
+    resp = client.get(
+        f"/api/v1/projects/{project_id}/matrix/export?format={fmt}", headers=headers
+    )
+    assert resp.status_code == 200, resp.text
+    assert resp.headers["content-type"].startswith(media)
+    assert "attachment" in resp.headers["content-disposition"]
+    assert resp.content
+
+
+def test_export_rejects_bad_format(client: TestClient, seeded: dict, login) -> None:
+    token = login(seeded["email_a"])
+    project_id = _create_project(client, token)
+    headers = {"Authorization": f"Bearer {token}"}
+    resp = client.get(
+        f"/api/v1/projects/{project_id}/matrix/export?format=docx", headers=headers
+    )
+    assert resp.status_code == 422
+
+
+def test_export_requires_auth(client: TestClient, seeded: dict) -> None:
+    resp = client.get("/api/v1/projects/whatever/matrix/export?format=json")
+    assert resp.status_code == 401
 
 
 def test_audit_chain_links(

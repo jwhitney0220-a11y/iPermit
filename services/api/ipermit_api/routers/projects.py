@@ -11,7 +11,8 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
+from fastapi.responses import Response
 from ipermit_tenancy import Evaluation, Project
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -21,6 +22,7 @@ from ..auth import AuthenticatedIdentity, get_current_identity
 from ..db import apply_tenant_scope, get_session
 from ..envelope import PLATFORM_ADVISORY, Advisory, Envelope, Meta, ProblemException
 from ..evaluate import evaluate_project
+from ..export import EXPORT_FORMATS, export_matrix
 from ..schemas import CreateProjectRequest, EvaluateRequest, ProjectResponse
 
 router = APIRouter(prefix="/api/v1/projects", tags=["projects"])
@@ -159,6 +161,19 @@ def evaluate(
     return _envelope(evaluation.matrix)
 
 
+def _latest_evaluation(session: Session, tenant_id: str, project_id: str) -> Evaluation:
+    """Load the most recent tenant-scoped evaluation, or raise 404."""
+    _load_project(session, tenant_id, project_id)
+    evaluation = session.scalar(
+        select(Evaluation)
+        .where(Evaluation.project_id == project_id, Evaluation.tenant_id == tenant_id)
+        .order_by(Evaluation.created_at.desc())
+    )
+    if evaluation is None:
+        raise ProblemException(404, "No evaluation yet for this project")
+    return evaluation
+
+
 @router.get("/{project_id}/matrix", response_model=Envelope)
 def get_matrix(
     project_id: str,
@@ -168,12 +183,33 @@ def get_matrix(
     """Return the most recent permit matrix for the project."""
     tenant_id = _require_tenant(identity)
     apply_tenant_scope(session, tenant_id)
-    _load_project(session, tenant_id, project_id)
-    evaluation = session.scalar(
-        select(Evaluation)
-        .where(Evaluation.project_id == project_id, Evaluation.tenant_id == tenant_id)
-        .order_by(Evaluation.created_at.desc())
+    return _envelope(_latest_evaluation(session, tenant_id, project_id).matrix)
+
+
+@router.get("/{project_id}/matrix/export")
+def export_matrix_endpoint(
+    project_id: str,
+    format: str = Query("json", pattern="^(json|xlsx|pdf)$"),
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Export the latest permit matrix as a json/xlsx/pdf deliverable (T07-04)."""
+    tenant_id = _require_tenant(identity)
+    apply_tenant_scope(session, tenant_id)
+    if format not in EXPORT_FORMATS:
+        raise ProblemException(422, "Unsupported export format")
+    evaluation = _latest_evaluation(session, tenant_id, project_id)
+    content, media_type, filename = export_matrix(evaluation.matrix, format)
+    append_audit(
+        session,
+        actor=identity.email,
+        action="matrix.exported",
+        subject=evaluation.evaluation_id,
+        payload={"project_id": project_id, "tenant_id": tenant_id, "format": format},
     )
-    if evaluation is None:
-        raise ProblemException(404, "No evaluation yet for this project")
-    return _envelope(evaluation.matrix)
+    session.commit()
+    return Response(
+        content=content,
+        media_type=media_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

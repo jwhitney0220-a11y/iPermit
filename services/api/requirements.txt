@@ -8,3 +8,6 @@ pydantic>=2.6
 pydantic-settings>=2.1
 PyJWT>=2.8
 bcrypt>=4.0
+# Deliverable exports (S02-04): xlsx via openpyxl, pdf via fpdf2 (both pure-pip).
+openpyxl>=3.1
+fpdf2>=2.7
