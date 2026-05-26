@@ -10,6 +10,7 @@ Shared libraries consumed by `apps/` and `services/`.
 | [`regulatory-models/`](./regulatory-models) | Regulatory rule ORM models, citation child table, repository with schema validation, and confidence tier framework. | T00-01 spec → T02-02 / T02-03 |
 | [`rule-definitions/`](./rule-definitions) | Rule object models, loaders, and validators against the rule-object schema. | T00-01 spec → T01-03 |
 | [`benchmark-projects/`](./benchmark-projects) | Benchmark project definitions and loaders for regression testing. | T00-06 spec → T04-02 |
+| [`tenancy/`](./tenancy) | Multi-tenant ORM models (tenant, membership, project, evaluation) and the tenant-aware data path that enforces app-layer isolation; Postgres RLS is the DB backstop. | ADR-0002 → S01-01 |
 
 ## Single source of truth
 

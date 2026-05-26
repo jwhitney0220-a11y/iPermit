@@ -11,6 +11,7 @@ from __future__ import annotations
 # Import model modules so their tables register on Base.metadata.
 import ipermit_jurisdictions.models  # noqa: F401
 import ipermit_regulatory.models  # noqa: F401
+import ipermit_tenancy.models  # noqa: F401
 from alembic import context
 from ipermit_persistence import Base, database_url
 from sqlalchemy import engine_from_config, pool
