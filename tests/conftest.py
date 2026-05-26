@@ -17,6 +17,7 @@ _PACKAGE_ROOTS = (
     "regulatory-models",
     "rule-definitions",
     "benchmark-projects",
+    "tenancy",
     "shared-schemas/python",
 )
 
