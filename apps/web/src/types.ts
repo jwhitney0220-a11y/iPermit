@@ -133,3 +133,10 @@ export interface UsageSummary {
   period_end: string;
   metrics: Record<string, number>;
 }
+
+export interface TeamMember {
+  user_id: string;
+  email: string;
+  is_team_admin: boolean;
+  created_at: string;
+}
