@@ -20,12 +20,17 @@ export const PROJECT_BOOLEANS = [
   'federal_water_permit_or_license',
   'usace_permit_required',
   'work_in_navigable_waters',
+  'municipal_row_use',
+  'fill_placement',
+  'land_use_not_permitted_by_right',
+  'special_use_requested',
 ];
 
 export const PROJECT_NUMBERS = [
   'stream_crossings_count',
   'disturbed_acres',
   'structure_height_ft_agl',
+  'utility_row_crossings_count',
 ];
 
 export const DERIVED_BOOLEANS = ['major_federal_action', 'may_affect_listed_species'];
@@ -35,11 +40,26 @@ export const OVERLAY_BOOLEANS = [
   'waters_of_us_present',
   'navigable_waters_present',
   'fema_floodplain',
+  'floodway',
 ];
+
+const MUNICIPALITY = (id: string, name: string): JurisdictionEntry => ({
+  jurisdiction_id: `us-tx-municipality-${id}`,
+  jurisdiction_level: 'municipality',
+  canonical_name: `City of ${name}`,
+});
 
 export const JURISDICTIONS: JurisdictionEntry[] = [
   { jurisdiction_id: 'us', jurisdiction_level: 'federal', canonical_name: 'United States' },
   { jurisdiction_id: 'us-tx', jurisdiction_level: 'state', canonical_name: 'Texas' },
+  MUNICIPALITY('houston', 'Houston'),
+  MUNICIPALITY('dallas', 'Dallas'),
+  MUNICIPALITY('austin', 'Austin'),
+  MUNICIPALITY('san-antonio', 'San Antonio'),
+  MUNICIPALITY('fort-worth', 'Fort Worth'),
+  MUNICIPALITY('arlington', 'Arlington'),
+  MUNICIPALITY('waco', 'Waco'),
+  MUNICIPALITY('el-paso', 'El Paso'),
 ];
 
 export interface IntakeState {

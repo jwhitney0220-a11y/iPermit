@@ -1,12 +1,173 @@
 [
-  {"jurisdiction_id": "us", "canonical_name": "United States", "aliases": ["US", "USA", "United States of America"], "jurisdiction_type": "federal", "parent_jurisdiction_id": null},
-  {"jurisdiction_id": "us-tx", "canonical_name": "Texas", "aliases": ["TX", "State of Texas"], "jurisdiction_type": "state", "parent_jurisdiction_id": "us"},
-  {"jurisdiction_id": "us-tx-county-harris", "canonical_name": "Harris County, Texas", "aliases": ["Harris County"], "jurisdiction_type": "county", "parent_jurisdiction_id": "us-tx", "fips": "48201"},
-  {"jurisdiction_id": "us-tx-county-travis", "canonical_name": "Travis County, Texas", "aliases": ["Travis County"], "jurisdiction_type": "county", "parent_jurisdiction_id": "us-tx", "fips": "48453"},
-  {"jurisdiction_id": "us-tx-municipality-austin", "canonical_name": "City of Austin, Texas", "aliases": ["Austin", "COA", "City of Austin"], "jurisdiction_type": "municipality", "parent_jurisdiction_id": "us-tx"},
-  {"jurisdiction_id": "us-tx-etj-austin", "canonical_name": "City of Austin Extraterritorial Jurisdiction", "aliases": ["Austin ETJ", "City of Austin ETJ"], "jurisdiction_type": "etj", "parent_jurisdiction_id": "us-tx-municipality-austin"},
-  {"jurisdiction_id": "us-tx-river-authority-lower-colorado-river-authority", "canonical_name": "Lower Colorado River Authority", "aliases": ["LCRA"], "jurisdiction_type": "river_authority", "parent_jurisdiction_id": "us-tx"},
-  {"jurisdiction_id": "us-tx-utility-district-bexar-medina-atascosa-counties-water-control-and-improvement-district-no-1", "canonical_name": "Bexar-Medina-Atascosa Counties Water Control and Improvement District No. 1", "aliases": ["BMA WCID No. 1", "BMA Water", "BMA Water Control and Improvement District No. 1"], "jurisdiction_type": "utility_district", "parent_jurisdiction_id": "us-tx"},
-  {"jurisdiction_id": "us-tx-drainage-district-jefferson-county-drainage-district-no-6", "canonical_name": "Jefferson County Drainage District No. 6", "aliases": ["JCDD6", "DD6"], "jurisdiction_type": "drainage_district", "parent_jurisdiction_id": "us-tx"},
-  {"jurisdiction_id": "us-tx-special-harris-county-flood-control-district", "canonical_name": "Harris County Flood Control District", "aliases": ["HCFCD"], "jurisdiction_type": "special", "parent_jurisdiction_id": "us-tx-county-harris"}
+  {
+    "jurisdiction_id": "us",
+    "canonical_name": "United States",
+    "aliases": [
+      "US",
+      "USA",
+      "United States of America"
+    ],
+    "jurisdiction_type": "federal",
+    "parent_jurisdiction_id": null
+  },
+  {
+    "jurisdiction_id": "us-tx",
+    "canonical_name": "Texas",
+    "aliases": [
+      "TX",
+      "State of Texas"
+    ],
+    "jurisdiction_type": "state",
+    "parent_jurisdiction_id": "us"
+  },
+  {
+    "jurisdiction_id": "us-tx-county-harris",
+    "canonical_name": "Harris County, Texas",
+    "aliases": [
+      "Harris County"
+    ],
+    "jurisdiction_type": "county",
+    "parent_jurisdiction_id": "us-tx",
+    "fips": "48201"
+  },
+  {
+    "jurisdiction_id": "us-tx-county-travis",
+    "canonical_name": "Travis County, Texas",
+    "aliases": [
+      "Travis County"
+    ],
+    "jurisdiction_type": "county",
+    "parent_jurisdiction_id": "us-tx",
+    "fips": "48453"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-austin",
+    "canonical_name": "City of Austin, Texas",
+    "aliases": [
+      "Austin",
+      "COA",
+      "City of Austin"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-etj-austin",
+    "canonical_name": "City of Austin Extraterritorial Jurisdiction",
+    "aliases": [
+      "Austin ETJ",
+      "City of Austin ETJ"
+    ],
+    "jurisdiction_type": "etj",
+    "parent_jurisdiction_id": "us-tx-municipality-austin"
+  },
+  {
+    "jurisdiction_id": "us-tx-river-authority-lower-colorado-river-authority",
+    "canonical_name": "Lower Colorado River Authority",
+    "aliases": [
+      "LCRA"
+    ],
+    "jurisdiction_type": "river_authority",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-utility-district-bexar-medina-atascosa-counties-water-control-and-improvement-district-no-1",
+    "canonical_name": "Bexar-Medina-Atascosa Counties Water Control and Improvement District No. 1",
+    "aliases": [
+      "BMA WCID No. 1",
+      "BMA Water",
+      "BMA Water Control and Improvement District No. 1"
+    ],
+    "jurisdiction_type": "utility_district",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-drainage-district-jefferson-county-drainage-district-no-6",
+    "canonical_name": "Jefferson County Drainage District No. 6",
+    "aliases": [
+      "JCDD6",
+      "DD6"
+    ],
+    "jurisdiction_type": "drainage_district",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-special-harris-county-flood-control-district",
+    "canonical_name": "Harris County Flood Control District",
+    "aliases": [
+      "HCFCD"
+    ],
+    "jurisdiction_type": "special",
+    "parent_jurisdiction_id": "us-tx-county-harris"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-houston",
+    "canonical_name": "City of Houston, Texas",
+    "aliases": [
+      "Houston",
+      "City of Houston"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-dallas",
+    "canonical_name": "City of Dallas, Texas",
+    "aliases": [
+      "Dallas",
+      "City of Dallas"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-san-antonio",
+    "canonical_name": "City of San Antonio, Texas",
+    "aliases": [
+      "San Antonio",
+      "City of San Antonio"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-fort-worth",
+    "canonical_name": "City of Fort Worth, Texas",
+    "aliases": [
+      "Fort Worth",
+      "City of Fort Worth"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-arlington",
+    "canonical_name": "City of Arlington, Texas",
+    "aliases": [
+      "Arlington",
+      "City of Arlington"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-waco",
+    "canonical_name": "City of Waco, Texas",
+    "aliases": [
+      "Waco",
+      "City of Waco"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  },
+  {
+    "jurisdiction_id": "us-tx-municipality-el-paso",
+    "canonical_name": "City of El Paso, Texas",
+    "aliases": [
+      "El Paso",
+      "City of El Paso"
+    ],
+    "jurisdiction_type": "municipality",
+    "parent_jurisdiction_id": "us-tx"
+  }
 ]
