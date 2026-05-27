@@ -83,6 +83,15 @@ export interface Project {
   created_by: string;
 }
 
+export interface EvaluationSummary {
+  evaluation_id: string;
+  evaluation_date: string;
+  inputs_hash: string;
+  ruleset_content_hash: string;
+  permit_count: number;
+  created_at: string;
+}
+
 export interface JurisdictionEntry {
   jurisdiction_id: string;
   jurisdiction_level: string;
