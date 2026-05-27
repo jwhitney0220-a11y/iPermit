@@ -30,6 +30,12 @@ PLATFORM_ROLES = ("consultant_user", "regulatory_analyst", "platform_admin")
 #: Capability flags within the analyst tier (ADR-0002 separation-of-duties).
 ANALYST_CAPABILITIES = ("analyst:draft", "analyst:review", "analyst:publish")
 
+#: Consultant-feedback lifecycle (T08-06). Disposition is analyst-only.
+FEEDBACK_STATUSES = ("open", "confirmed", "rejected")
+_feedback_status_enum = Enum(
+    *FEEDBACK_STATUSES, name="feedback_status", native_enum=False
+)
+
 # native_enum=False renders as VARCHAR + CHECK — portable SQLite <-> PostgreSQL.
 _role_enum = Enum(*PLATFORM_ROLES, name="platform_role", native_enum=False)
 
@@ -179,3 +185,42 @@ class AuditRecord(Base):
     payload: Mapped[dict] = mapped_column(JSON, nullable=False)
     prev_hash: Mapped[str | None] = mapped_column(String(80), nullable=True)
     hash: Mapped[str] = mapped_column(String(80), nullable=False)
+
+
+class Feedback(Base):
+    """Consultant feedback on an evaluation, triaged by analysts (T08-06).
+
+    Tenant-owned: a consultant submits and sees only their own tenant's feedback
+    (RLS + app-layer scope). Disposition (confirm/reject) is analyst-only and
+    platform-wide — it records a verification decision and never auto-changes a
+    rule (AGENTS.md *User Feedback Queue*: no auto-publish, no bypass of analyst
+    review). The feedback RLS policy therefore also admits the analyst path
+    (no tenant GUC set), unlike the standard tenant-owned tables.
+    """
+
+    __tablename__ = "feedback"
+
+    feedback_id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("tenant.tenant_id"), nullable=False, index=True
+    )
+    project_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("project.project_id"), nullable=True
+    )
+    evaluation_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    submitted_by: Mapped[str] = mapped_column(
+        String(36), ForeignKey("app_user.user_id"), nullable=False
+    )
+    category: Mapped[str] = mapped_column(String(60), nullable=False)
+    message: Mapped[str] = mapped_column(String, nullable=False)
+    status: Mapped[str] = mapped_column(
+        _feedback_status_enum, default="open", nullable=False
+    )
+    disposition_note: Mapped[str | None] = mapped_column(String, nullable=True)
+    dispositioned_by: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
+    )
+    dispositioned_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )

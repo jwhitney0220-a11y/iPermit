@@ -99,3 +99,36 @@ class AuditRecordResponse(BaseModel):
     payload: dict[str, Any]
     prev_hash: str | None
     hash: str
+
+
+class SubmitFeedbackRequest(BaseModel):
+    """Consultant feedback on an evaluation/permit (T08-06)."""
+
+    category: str = Field(min_length=1, max_length=60)
+    message: str = Field(min_length=1, max_length=4000)
+    project_id: str | None = None
+    evaluation_id: str | None = None
+
+
+class DispositionRequest(BaseModel):
+    """Analyst disposition of a feedback item (confirm/reject + note)."""
+
+    decision: str = Field(pattern="^(confirmed|rejected)$")
+    note: str | None = Field(default=None, max_length=4000)
+
+
+class FeedbackResponse(BaseModel):
+    """A feedback item with its current disposition state."""
+
+    feedback_id: str
+    tenant_id: str
+    project_id: str | None
+    evaluation_id: str | None
+    submitted_by: str
+    category: str
+    message: str
+    status: str
+    disposition_note: str | None
+    dispositioned_by: str | None
+    created_at: datetime.datetime
+    dispositioned_at: datetime.datetime | None
