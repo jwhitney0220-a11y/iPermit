@@ -11,3 +11,6 @@ bcrypt>=4.0
 # Deliverable exports (S02-04): xlsx via openpyxl, pdf via fpdf2 (both pure-pip).
 openpyxl>=3.1
 fpdf2>=2.7
+# Billing (S03-01, SAAS-03): Stripe checkout + signature-verified webhooks. Tests
+# stub the client and sign payloads with a test secret — CI never hits the API.
+stripe>=8

@@ -33,7 +33,7 @@ def session() -> Session:
 def test_create_all_builds_tenancy_tables(session: Session) -> None:
     expected = {"tenant", "app_user", "membership", "project", "evaluation"}
     assert expected <= set(Base.metadata.tables)
-    assert set(TENANT_OWNED_TABLES) == {"project", "evaluation"}
+    assert set(TENANT_OWNED_TABLES) == {"project", "evaluation", "tenant_billing"}
 
 
 def test_persist_full_graph(session: Session) -> None:
