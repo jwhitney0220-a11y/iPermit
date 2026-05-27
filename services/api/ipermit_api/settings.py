@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     auth_jwt_secret: str = "CHANGE_ME_LOCAL_ONLY"
     auth_jwt_algorithm: str = "HS256"
     auth_token_ttl_minutes: int = 60
+    billing_provider: str = "stub"
+    billing_webhook_secret: str = "CHANGE_ME_LOCAL_ONLY"
 
     @property
     def is_local(self) -> bool:
@@ -40,16 +42,21 @@ _PLACEHOLDER_SECRET = "CHANGE_ME_LOCAL_ONLY"
 _MIN_SECRET_BYTES = 32
 
 
-def validate_security(settings: Settings) -> None:
-    """Fail fast if a non-local env would run with a weak/default JWT secret."""
-    if settings.is_local:
-        return
-    secret = settings.auth_jwt_secret
-    if secret == _PLACEHOLDER_SECRET or len(secret.encode()) < _MIN_SECRET_BYTES:
+def _check_secret(name: str, value: str) -> None:
+    """Raise if a security secret is the placeholder or too short."""
+    if value == _PLACEHOLDER_SECRET or len(value.encode()) < _MIN_SECRET_BYTES:
         raise RuntimeError(
-            f"AUTH_JWT_SECRET must be set to a strong value "
+            f"{name} must be set to a strong value "
             f"(>= {_MIN_SECRET_BYTES} bytes) outside the local environment."
         )
+
+
+def validate_security(settings: Settings) -> None:
+    """Fail fast if a non-local env would run with weak/default secrets."""
+    if settings.is_local:
+        return
+    _check_secret("AUTH_JWT_SECRET", settings.auth_jwt_secret)
+    _check_secret("BILLING_WEBHOOK_SECRET", settings.billing_webhook_secret)
 
 
 @lru_cache

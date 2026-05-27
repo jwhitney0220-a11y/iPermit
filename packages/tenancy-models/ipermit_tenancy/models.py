@@ -36,6 +36,12 @@ _feedback_status_enum = Enum(
     *FEEDBACK_STATUSES, name="feedback_status", native_enum=False
 )
 
+#: Billing subscription states (SAAS-03), mirroring common processor states.
+SUBSCRIPTION_STATUSES = ("active", "trialing", "past_due", "canceled", "incomplete")
+_subscription_status_enum = Enum(
+    *SUBSCRIPTION_STATUSES, name="subscription_status", native_enum=False
+)
+
 # native_enum=False renders as VARCHAR + CHECK — portable SQLite <-> PostgreSQL.
 _role_enum = Enum(*PLATFORM_ROLES, name="platform_role", native_enum=False)
 
@@ -223,4 +229,54 @@ class Feedback(Base):
     )
     dispositioned_at: Mapped[datetime.datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
+    )
+
+
+class Subscription(Base):
+    """A tenant's billing subscription (SAAS-03).
+
+    One row per tenant; absence implies the default ``free`` plan. Updated by the
+    payment-provider webhook (a system path that runs without a tenant GUC), so
+    it carries the same tenant-or-analyst-style RLS policy as ``feedback`` rather
+    than the strict tenant-only policy.
+    """
+
+    __tablename__ = "subscription"
+
+    subscription_id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("tenant.tenant_id"), nullable=False, unique=True
+    )
+    plan: Mapped[str] = mapped_column(String(40), default="free", nullable=False)
+    status: Mapped[str] = mapped_column(
+        _subscription_status_enum, default="active", nullable=False
+    )
+    external_customer_id: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    external_subscription_id: Mapped[str | None] = mapped_column(
+        String(120), nullable=True, unique=True
+    )
+    current_period_end: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+
+class WebhookEvent(Base):
+    """Idempotency ledger for processed payment webhook events (SAAS-03).
+
+    Platform-global (not tenant-scoped): the provider's event id is recorded on
+    first processing so replays are no-ops (ADR-0004 reproducibility / safe retries).
+    """
+
+    __tablename__ = "webhook_event"
+
+    event_id: Mapped[str] = mapped_column(String(200), primary_key=True)
+    event_type: Mapped[str] = mapped_column(String(80), nullable=False)
+    received_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
     )

@@ -117,6 +117,28 @@ class DispositionRequest(BaseModel):
     note: str | None = Field(default=None, max_length=4000)
 
 
+class CheckoutRequest(BaseModel):
+    """Start a checkout for a plan."""
+
+    plan: str = Field(min_length=1, max_length=40)
+
+
+class CheckoutResponse(BaseModel):
+    """A hosted-checkout URL."""
+
+    checkout_url: str
+
+
+class SubscriptionResponse(BaseModel):
+    """A tenant's current subscription + the plan's entitlements."""
+
+    plan: str
+    status: str
+    current_period_end: datetime.datetime | None
+    monthly_evaluations: int | None
+    monthly_exports: int | None
+
+
 class FeedbackResponse(BaseModel):
     """A feedback item with its current disposition state."""
 

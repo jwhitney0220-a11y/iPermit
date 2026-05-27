@@ -25,4 +25,15 @@ def test_non_local_rejects_short_secret() -> None:
 
 
 def test_non_local_accepts_strong_secret() -> None:
-    validate_security(Settings(ipermit_env="production", auth_jwt_secret="x" * 32))
+    validate_security(
+        Settings(
+            ipermit_env="production",
+            auth_jwt_secret="x" * 32,
+            billing_webhook_secret="y" * 32,
+        )
+    )
+
+
+def test_non_local_rejects_default_billing_secret() -> None:
+    with pytest.raises(RuntimeError):
+        validate_security(Settings(ipermit_env="production", auth_jwt_secret="x" * 32))
