@@ -41,6 +41,12 @@ class Settings(BaseSettings):
     stripe_checkout_success_url: str = "http://localhost:5173/billing?status=success"
     stripe_checkout_cancel_url: str = "http://localhost:5173/billing?status=cancel"
 
+    # Object storage for uploaded route files (S04-03). "local" writes to a
+    # filesystem path for dev/CI; an S3 provider slots in behind get_storage().
+    storage_provider: str = "local"
+    storage_local_path: str = "./.local-storage"
+    gis_max_upload_mb: int = 50
+
     @property
     def is_local(self) -> bool:
         """True for the local development environment."""

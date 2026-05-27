@@ -14,3 +14,5 @@ fpdf2>=2.7
 # Billing (S03-01, SAAS-03): Stripe checkout + signature-verified webhooks. Tests
 # stub the client and sign payloads with a test secret — CI never hits the API.
 stripe>=8
+# Route-file uploads (S04-03): multipart form parsing for FastAPI UploadFile.
+python-multipart>=0.0.9

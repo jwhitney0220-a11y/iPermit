@@ -134,6 +134,15 @@ class FeedbackResponse(BaseModel):
     dispositioned_at: datetime.datetime | None
 
 
+class FootprintUploadResponse(BaseModel):
+    """Result of uploading + parsing a route file into a project footprint (S04-03)."""
+
+    footprint_ref: str
+    geometry_type: str
+    bbox: list[float]
+    byte_size: int
+
+
 class CheckoutRequest(BaseModel):
     """Request a Stripe Checkout Session for a paid plan (S03-01).
 
