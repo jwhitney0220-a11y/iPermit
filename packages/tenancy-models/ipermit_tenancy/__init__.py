@@ -7,6 +7,7 @@ from .models import (
     FEEDBACK_STATUSES,
     PLATFORM_ROLES,
     TENANT_OWNED_TABLES,
+    USAGE_METRICS,
     AuditRecord,
     Evaluation,
     Feedback,
@@ -15,6 +16,7 @@ from .models import (
     Project,
     Tenant,
     TenantBilling,
+    UsageRecord,
     User,
 )
 
@@ -25,6 +27,7 @@ __all__ = [
     "FEEDBACK_STATUSES",
     "PLATFORM_ROLES",
     "TENANT_OWNED_TABLES",
+    "USAGE_METRICS",
     "AuditRecord",
     "Evaluation",
     "Feedback",
@@ -33,5 +36,6 @@ __all__ = [
     "Project",
     "Tenant",
     "TenantBilling",
+    "UsageRecord",
     "User",
 ]

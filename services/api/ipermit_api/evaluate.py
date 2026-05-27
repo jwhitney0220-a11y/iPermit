@@ -30,6 +30,7 @@ from sqlalchemy.orm import Session
 
 from .matrix import build_permit_matrix
 from .schemas import EvaluateRequest
+from .usage import record_usage
 
 # The seeded ruleset is still draft (promotion is S05-02); evaluate against it.
 _RULE_STATUSES = ("draft",)
@@ -99,4 +100,5 @@ def evaluate_project(
     )
     session.add(evaluation)
     session.flush()
+    record_usage(session, tenant_id=tenant_id, metric="evaluation")
     return evaluation
