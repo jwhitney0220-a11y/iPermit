@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 from ..audit import append_audit
 from ..auth import AuthenticatedIdentity, get_current_identity
 from ..db import apply_tenant_scope, get_session
+from ..entitlements import require_entitlement
 from ..envelope import PLATFORM_ADVISORY, Advisory, Envelope, Meta, ProblemException
 from ..evaluate import evaluate_project
 from ..export import EXPORT_FORMATS, export_matrix
@@ -254,10 +255,16 @@ def get_evaluation(
 def export_matrix_endpoint(
     project_id: str,
     format: str = Query("json", pattern="^(json|xlsx|pdf)$"),
-    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    identity: AuthenticatedIdentity = Depends(require_entitlement("starter", "pro")),
     session: Session = Depends(get_session),
 ) -> Response:
-    """Export the latest permit matrix as a json/xlsx/pdf deliverable (T07-04)."""
+    """Export the latest permit matrix as a json/xlsx/pdf deliverable (T07-04).
+
+    Gated to starter/pro plans (S03-02): deliverable exports are a premium
+    feature.  The entitlement dependency raises 402 if the tenant's billing
+    row is absent, the plan is 'free', the status is not 'active', or
+    current_period_end has passed.
+    """
     tenant_id = _require_tenant(identity)
     apply_tenant_scope(session, tenant_id)
     if format not in EXPORT_FORMATS:

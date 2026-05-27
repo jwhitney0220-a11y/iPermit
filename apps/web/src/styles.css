@@ -197,3 +197,91 @@ fieldset {
 .advisory--platform {
   font-style: italic;
 }
+
+/* Pricing page (S03-02) */
+
+.pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.pricing__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pricing__card--featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.pricing__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pricing__header h3 {
+  margin: 0;
+}
+
+.pricing__badge {
+  background: var(--accent);
+  color: white;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pricing__price {
+  margin: 0;
+}
+
+.pricing__amount {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pricing__features {
+  margin: 0;
+  padding-left: 1.25rem;
+  flex-grow: 1;
+}
+
+.pricing__features li {
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+}
+
+/* Nav tabs */
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 1.25rem;
+}
+
+.nav-tab {
+  background: none;
+  color: var(--muted);
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-bottom: -2px;
+}
+
+.nav-tab:hover {
+  color: var(--ink);
+}
+
+.nav-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
