@@ -1,0 +1,73 @@
+{
+  "rule_id": "us-tx-municipality-houston-floodplain-development-permit",
+  "version": "1.0.0",
+  "title": "Houston floodplain development permit",
+  "permit_name": "Floodplain Development Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-houston",
+  "source_agency": "City of Houston Public Works",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 3,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "ordinance",
+        "reference": "Chapter 19 - Flood Plain",
+        "url": "https://www.houstontx.gov/council/committees/tti/20180212/chapter19draft.pdf",
+        "retrieved_at": "2026-05-27"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Development Regulations",
+        "url": "https://www.houstontx.gov/planning/DevelopRegs/",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.floodway",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Floodplain Development Permit",
+        "agency": "City of Houston Public Works"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Development inside a Houston special flood hazard area likely needs a floodplain development permit before site work or structure work proceeds."
+  },
+  "known_unknowns": [
+    "This pass relied on city-hosted official materials rather than a current codified chapter webpage."
+  ],
+  "advisories": [
+    "Houston states that it does not have zoning; additional subdivision and development regulation review is recommended."
+  ],
+  "tags": [
+    "floodplain",
+    "municipal",
+    "houston"
+  ],
+  "notes": "Tier 3: official city-hosted materials verify the permit concept, but current codified presentation and implementation details should be confirmed for project-specific filings."
+}

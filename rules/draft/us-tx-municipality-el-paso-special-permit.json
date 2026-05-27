@@ -1,0 +1,63 @@
+{
+  "rule_id": "us-tx-municipality-el-paso-special-permit",
+  "version": "1.0.0",
+  "title": "El Paso special permit",
+  "permit_name": "Special Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-el-paso",
+  "source_agency": "City of El Paso Planning and Inspections Department",
+  "applicable_project_types": [
+    "substation",
+    "utility_corridor",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Planning and Inspections FAQs",
+        "url": "https://www.elpasotexas.gov/planning-and-inspections/faqs-v1/",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.land_use_not_permitted_by_right",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.special_use_requested",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Special Permit",
+        "agency": "City of El Paso Planning and Inspections Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Utility or site uses not allowed by right may require El Paso special-permit review through public hearings and city zoning review."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Ownership proof, site development plan materials, and public-hearing procedures are commonly encountered."
+  ],
+  "tags": [
+    "zoning",
+    "special_use",
+    "el_paso"
+  ],
+  "notes": "Tier 2: official city FAQs describe the special-permit pathway and core application contents; zoning classification details remain project-specific."
+}

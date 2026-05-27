@@ -1,0 +1,63 @@
+{
+  "rule_id": "us-tx-municipality-dallas-specific-use-permit",
+  "version": "1.0.0",
+  "title": "Dallas specific use permit",
+  "permit_name": "Specific Use Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-dallas",
+  "source_agency": "City of Dallas Development Services Department",
+  "applicable_project_types": [
+    "substation",
+    "utility_corridor",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "form",
+        "reference": "Specific Use Permit Information Packet",
+        "url": "https://dallascityhall.com/departments/sustainabledevelopment/buildinginspection/DCH%20documents/pdf/1sup.pdf",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.land_use_not_permitted_by_right",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.special_use_requested",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Specific Use Permit",
+        "agency": "City of Dallas Development Services Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "If a utility or related facility use is not allowed by right in the base zoning district, Dallas commonly uses a specific use permit process."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Public-hearing, notice, and site-plan elements are commonly encountered for discretionary zoning approvals."
+  ],
+  "tags": [
+    "zoning",
+    "special_use",
+    "dallas"
+  ],
+  "notes": "Tier 2: official city permit packet verifies the discretionary permit pathway; zoning interpretation remains project- and district-specific."
+}

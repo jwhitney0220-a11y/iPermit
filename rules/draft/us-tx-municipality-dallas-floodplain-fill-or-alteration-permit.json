@@ -1,0 +1,69 @@
+{
+  "rule_id": "us-tx-municipality-dallas-floodplain-fill-or-alteration-permit",
+  "version": "1.0.0",
+  "title": "Dallas floodplain fill or alteration permit",
+  "permit_name": "Fill Permit or Floodplain Alteration Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-dallas",
+  "source_agency": "City of Dallas Water Utilities",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "form",
+        "reference": "Fill Permit or Floodplain Alteration Permit Application",
+        "url": "https://dallascityhall.com/departments/waterutilities/stormwater-operations/Documents/FillPermitOrFloodplainAlterationPermitApplication%202024R1.pdf",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.fill_placement",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Fill Permit",
+        "agency": "City of Dallas Water Utilities"
+      },
+      {
+        "name": "Floodplain Alteration Permit",
+        "agency": "City of Dallas Water Utilities"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Dallas likely requires a fill permit and/or floodplain alteration permit for development in mapped 100-year floodplain or similar flood-risk areas."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Additional review is recommended if the work also requires FEMA map revision sequencing or federal water permits."
+  ],
+  "tags": [
+    "floodplain",
+    "dallas",
+    "stormwater"
+  ],
+  "notes": "Tier 2: the current city application form directly verifies permit names and trigger context; technical study requirements vary by project."
+}

@@ -1,0 +1,63 @@
+{
+  "rule_id": "us-tx-municipality-arlington-specific-use-permit",
+  "version": "1.0.0",
+  "title": "Arlington specific use permit",
+  "permit_name": "Specific Use Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-arlington",
+  "source_agency": "City of Arlington Planning and Development Services Department",
+  "applicable_project_types": [
+    "substation",
+    "utility_corridor",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "form",
+        "reference": "Zoning Application",
+        "url": "https://www.arlingtontx.gov/files/assets/city/v/7/planning-and-development-services/documents/zoning-unified-development-code/zoning-application.pdf",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.land_use_not_permitted_by_right",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.special_use_requested",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Specific Use Permit",
+        "agency": "City of Arlington Planning and Development Services Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "If the base zoning district does not allow the use by right, Arlington may require a specific use permit approved through zoning review."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Supplemental site-plan, traffic, and tree-preservation materials may be requested with the application."
+  ],
+  "tags": [
+    "zoning",
+    "specific_use",
+    "arlington"
+  ],
+  "notes": "Tier 2: official city zoning application materials verify the specific use permit pathway and associated submittal structure."
+}

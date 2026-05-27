@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-waco-right-of-way-permit",
+  "version": "1.0.0",
+  "title": "Waco right-of-way permit",
+  "permit_name": "Right-of-Way Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-waco",
+  "source_agency": "City of Waco Engineering Services",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Working within the Right-of-Way",
+        "url": "https://www.waco-texas.com/Departments/Engineering/Working-within-the-Right-of-Way",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.municipal_row_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_row_crossings_count",
+        "operator": ">",
+        "value": 0
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Right-of-Way Permit",
+        "agency": "City of Waco Engineering Services"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Concrete or utility work within Waco right-of-way, easements, or city-infrastructure connections likely needs a right-of-way permit."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Building permits do not replace Waco right-of-way permits for concrete or utility work."
+  ],
+  "tags": [
+    "right_of_way",
+    "waco",
+    "utility"
+  ],
+  "notes": "Tier 2: official city engineering guidance clearly states the right-of-way permit requirement for utility and related work."
+}

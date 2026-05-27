@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-dallas-right-of-way-permit",
+  "version": "1.0.0",
+  "title": "Dallas right-of-way permit",
+  "permit_name": "Right-of-Way Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-dallas",
+  "source_agency": "City of Dallas Public Works Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Right-of-Way Management",
+        "url": "https://dallascityhall.com/departments/public-works/Pages/right-of-way-management.aspx",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.municipal_row_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_row_crossings_count",
+        "operator": ">",
+        "value": 0
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Right-of-Way Permit",
+        "agency": "City of Dallas Public Works Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Construction that cuts, breaks, or otherwise damages Dallas public right-of-way likely needs a right-of-way permit."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Technical standards and pavement-repair conditions may add project-specific obligations."
+  ],
+  "tags": [
+    "right_of_way",
+    "dallas",
+    "utility"
+  ],
+  "notes": "Tier 2: official city right-of-way management guidance clearly states the permit requirement, but project-specific conditions can vary."
+}

@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-arlington-right-of-way-permit",
+  "version": "1.0.0",
+  "title": "Arlington right-of-way permit",
+  "permit_name": "Right-of-Way Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-arlington",
+  "source_agency": "City of Arlington Real Estate Services",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "regulation",
+        "reference": "ROW Permitting and Construction Manual",
+        "url": "https://www.arlingtontx.gov/files/assets/city/v/1/strategic-initiatives/documents/real-estate-services/right-of-way-permitting/arlington-row-manual-2026-update.pdf",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.municipal_row_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_row_crossings_count",
+        "operator": ">",
+        "value": 0
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Right-of-Way Permit",
+        "agency": "City of Arlington Real Estate Services"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Construction within Arlington public right-of-way likely requires contractor registration and a right-of-way permit."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Traffic-control and inspection notices may be separate but related Arlington requirements."
+  ],
+  "tags": [
+    "right_of_way",
+    "arlington",
+    "utility"
+  ],
+  "notes": "Tier 2: the current city manual verifies permit and registration expectations for work in the public right-of-way."
+}

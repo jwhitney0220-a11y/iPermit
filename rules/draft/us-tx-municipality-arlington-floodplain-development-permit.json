@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-arlington-floodplain-development-permit",
+  "version": "1.0.0",
+  "title": "Arlington floodplain development permit",
+  "permit_name": "Floodplain Development Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-arlington",
+  "source_agency": "City of Arlington Planning and Development Services Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Floodplains and Construction",
+        "url": "https://www.arlingtontx.gov/Government/Departments/Department-Directory/Stormwater-Management/Floodplain-Administration/Floodplains-and-Construction",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.floodway",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Floodplain Development Permit",
+        "agency": "City of Arlington Planning and Development Services Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Any development within a regulated Arlington flood zone likely needs a city floodplain development permit."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Additional review is recommended where encroachments affect flood storage or conveyance."
+  ],
+  "tags": [
+    "floodplain",
+    "arlington",
+    "municipal"
+  ],
+  "notes": "Tier 2: official city floodplain page clearly states the permit requirement for regulated flood zones."
+}

@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-san-antonio-right-of-way-permit",
+  "version": "1.0.0",
+  "title": "San Antonio right-of-way permit",
+  "permit_name": "Right-of-Way Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-san-antonio",
+  "source_agency": "City of San Antonio Public Works Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Right-of-Way Permits",
+        "url": "https://www.sanantonio.gov/PublicWorks/Services/Right-of-Way-and-Permits",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.municipal_row_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_row_crossings_count",
+        "operator": ">",
+        "value": 0
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Right-of-Way Permit",
+        "agency": "City of San Antonio Public Works Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Utility excavation, boring, or related work in San Antonio public right-of-way likely needs a right-of-way permit."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Point repair, excavation, and traffic-control categories may have different procedural requirements."
+  ],
+  "tags": [
+    "right_of_way",
+    "san_antonio",
+    "utility"
+  ],
+  "notes": "Tier 2: official city permit page verifies the right-of-way process, but the exact permit type varies with the work scope."
+}
