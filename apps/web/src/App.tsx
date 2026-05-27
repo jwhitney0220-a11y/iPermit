@@ -4,13 +4,15 @@ import { Dashboard } from './components/Dashboard';
 import { EvaluationScreen } from './components/EvaluationScreen';
 import { Login } from './components/Login';
 import { PricingPage } from './components/PricingPage';
+import { Team } from './components/Team';
 import type { Identity } from './types';
 
 const TOKEN_KEY = 'ipermit.token';
-type Tab = 'dashboard' | 'evaluation' | 'pricing';
+type Tab = 'dashboard' | 'evaluation' | 'team' | 'pricing';
 const TABS: { key: Tab; label: string }[] = [
   { key: 'dashboard', label: 'Dashboard' },
   { key: 'evaluation', label: 'Evaluation' },
+  { key: 'team', label: 'Team' },
   { key: 'pricing', label: 'Plans & Pricing' },
 ];
 
@@ -75,6 +77,7 @@ export function App() {
           {tab === 'evaluation' && (
             <EvaluationScreen token={token} identity={identity} />
           )}
+          {tab === 'team' && <Team token={token} />}
           {tab === 'pricing' && <PricingPage token={token} />}
         </>
       )}
