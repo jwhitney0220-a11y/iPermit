@@ -285,3 +285,35 @@ fieldset {
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
+
+/* Dashboard (S04-01) */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.stat h3 {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.stat__value {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.project-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
