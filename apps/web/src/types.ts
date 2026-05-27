@@ -126,3 +126,10 @@ export interface BillingStatus {
   status: string;
   current_period_end: string | null;
 }
+
+export interface UsageSummary {
+  tenant_id: string;
+  period_start: string;
+  period_end: string;
+  metrics: Record<string, number>;
+}

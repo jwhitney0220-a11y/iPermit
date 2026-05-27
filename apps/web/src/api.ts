@@ -11,6 +11,7 @@ import type {
   PermitMatrix,
   PlansResponse,
   Project,
+  UsageSummary,
 } from './types';
 
 const BASE = import.meta.env.VITE_API_BASE ?? '';
@@ -122,6 +123,11 @@ export function getPlans(): Promise<PlansResponse> {
 /** Fetch the current tenant's billing status (auth required). */
 export function getBilling(token: string): Promise<BillingStatus> {
   return request<BillingStatus>('/api/v1/billing', { method: 'GET' }, token);
+}
+
+/** Fetch the current tenant's usage summary for the current period (auth). */
+export function getUsage(token: string): Promise<UsageSummary> {
+  return request<UsageSummary>('/api/v1/usage', { method: 'GET' }, token);
 }
 
 /** Start a Stripe Checkout Session for the given plan; returns a redirect URL. */
