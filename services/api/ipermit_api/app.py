@@ -11,7 +11,8 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from .envelope import register_exception_handlers
-from .routers import admin, auth, billing, feedback, projects, team, usage
+<<<<<<< HEAD
+from .routers import admin, auth, billing, feedback, projects, team, uploads, usage
 from .settings import get_settings, validate_security
 
 API_DESCRIPTION = (
@@ -36,6 +37,7 @@ def create_app() -> FastAPI:
     app.include_router(billing.router)
     app.include_router(usage.router)
     app.include_router(team.router)
+    app.include_router(uploads.router)
 
     @app.get("/healthz", tags=["meta"])
     def healthz() -> dict[str, str]:
