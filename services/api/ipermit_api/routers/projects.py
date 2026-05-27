@@ -30,6 +30,7 @@ from ..schemas import (
     EvaluationSummary,
     ProjectResponse,
 )
+from ..usage import record_usage
 
 router = APIRouter(prefix="/api/v1/projects", tags=["projects"])
 
@@ -271,6 +272,7 @@ def export_matrix_endpoint(
         raise ProblemException(422, "Unsupported export format")
     evaluation = _latest_evaluation(session, tenant_id, project_id)
     content, media_type, filename = export_matrix(evaluation.matrix, format)
+    record_usage(session, tenant_id=tenant_id, metric="export")
     append_audit(
         session,
         actor=identity.email,
