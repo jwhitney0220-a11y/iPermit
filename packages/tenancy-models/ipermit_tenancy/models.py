@@ -36,11 +36,21 @@ _feedback_status_enum = Enum(
     *FEEDBACK_STATUSES, name="feedback_status", native_enum=False
 )
 
+#: Billing plans (S03-01). ``free`` is the default entitlement before any paid
+#: subscription; the paid tiers map to server-side Stripe Price IDs in settings.
+BILLING_PLANS = ("free", "starter", "pro")
+_billing_plan_enum = Enum(*BILLING_PLANS, name="billing_plan", native_enum=False)
+
+#: Subscription status, mirroring the Stripe subscription lifecycle (S03-01).
+#: ``none`` is the pre-subscription state; the rest track the Stripe status.
+BILLING_STATUSES = ("none", "active", "past_due", "canceled", "incomplete")
+_billing_status_enum = Enum(*BILLING_STATUSES, name="billing_status", native_enum=False)
+
 # native_enum=False renders as VARCHAR + CHECK — portable SQLite <-> PostgreSQL.
 _role_enum = Enum(*PLATFORM_ROLES, name="platform_role", native_enum=False)
 
 #: Tables that hold tenant-private data and therefore get RLS policies (ADR-0002).
-TENANT_OWNED_TABLES = ("project", "evaluation")
+TENANT_OWNED_TABLES = ("project", "evaluation", "tenant_billing")
 
 
 def _utcnow() -> datetime.datetime:
@@ -223,4 +233,54 @@ class Feedback(Base):
     )
     dispositioned_at: Mapped[datetime.datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
+    )
+
+
+class TenantBilling(Base):
+    """A tenant's Stripe billing state and derived entitlement (S03-01, SAAS-03).
+
+    Exactly one row per tenant (``tenant_id`` unique). The ``plan`` and ``status``
+    are the tenant's *entitlement* and are written ONLY from verified Stripe
+    webhook events (never from a browser/checkout redirect — webhooks are the sole
+    source of truth). Tenant-owned, so it carries RLS like the other tenant tables.
+    """
+
+    __tablename__ = "tenant_billing"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    tenant_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("tenant.tenant_id"), nullable=False, unique=True
+    )
+    stripe_customer_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    stripe_subscription_id: Mapped[str | None] = mapped_column(
+        String(255), nullable=True
+    )
+    plan: Mapped[str] = mapped_column(
+        _billing_plan_enum, default="free", nullable=False
+    )
+    status: Mapped[str] = mapped_column(
+        _billing_status_enum, default="none", nullable=False
+    )
+    current_period_end: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+
+class ProcessedStripeEvent(Base):
+    """Idempotency ledger of handled Stripe webhook events (S03-01).
+
+    Stripe retries webhook deliveries, so each ``event_id`` is recorded once and a
+    redelivery of the same id is a no-op. Platform-global (not tenant-owned): the
+    Stripe event id is unique across the account and the webhook arrives unauth'd.
+    """
+
+    __tablename__ = "processed_stripe_event"
+
+    event_id: Mapped[str] = mapped_column(String(255), primary_key=True)
+    event_type: Mapped[str] = mapped_column(String(120), nullable=False)
+    processed_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
     )

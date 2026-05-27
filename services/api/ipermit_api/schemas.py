@@ -132,3 +132,28 @@ class FeedbackResponse(BaseModel):
     dispositioned_by: str | None
     created_at: datetime.datetime
     dispositioned_at: datetime.datetime | None
+
+
+class CheckoutRequest(BaseModel):
+    """Request a Stripe Checkout Session for a paid plan (S03-01).
+
+    Only the plan name is accepted — the API resolves it to a SERVER-SIDE Stripe
+    Price ID (never a client-supplied amount or price id).
+    """
+
+    plan: str = Field(pattern="^(starter|pro)$")
+
+
+class CheckoutResponse(BaseModel):
+    """The hosted Stripe Checkout URL to redirect the browser to."""
+
+    checkout_url: str
+
+
+class BillingResponse(BaseModel):
+    """The tenant's current plan/status entitlement (read-only, S03-01)."""
+
+    tenant_id: str
+    plan: str
+    status: str
+    current_period_end: datetime.datetime | None
