@@ -100,6 +100,14 @@ def create_project(
         created_by=identity.subject,
     )
     session.add(project)
+    session.flush()
+    append_audit(
+        session,
+        actor=identity.email,
+        action="project.created",
+        subject=project.project_id,
+        payload={"tenant_id": tenant_id, "name": project.name},
+    )
     session.commit()
     return ProjectResponse(
         project_id=project.project_id,

@@ -7,6 +7,7 @@ from ipermit_tenancy import User
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ..audit import append_audit
 from ..auth import (
     AuthenticatedIdentity,
     create_access_token,
@@ -33,7 +34,23 @@ def login(body: LoginRequest, session: Session = Depends(get_session)) -> TokenR
         body.password, user.password_hash if user else _DUMMY_HASH
     )
     if user is None or not user.is_active or not password_ok:
+        append_audit(
+            session,
+            actor=body.email,
+            action="auth.login_failed",
+            subject=body.email,
+            payload={"reason": "invalid_credentials"},
+        )
+        session.commit()
         raise ProblemException(401, "Invalid credentials")
+    append_audit(
+        session,
+        actor=user.email,
+        action="auth.login",
+        subject=user.user_id,
+        payload={"platform_role": user.platform_role},
+    )
+    session.commit()
     tenant_ids = tuple(sorted(m.tenant_id for m in user.memberships))
     identity = AuthenticatedIdentity(
         subject=user.user_id,
