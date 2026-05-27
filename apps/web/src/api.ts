@@ -5,6 +5,7 @@
 import type {
   Envelope,
   EvaluateRequest,
+  EvaluationSummary,
   Identity,
   PermitMatrix,
   Project,
@@ -71,6 +72,29 @@ export function evaluate(
 }
 
 export type ExportFormat = 'json' | 'xlsx' | 'pdf';
+
+export function listEvaluations(
+  token: string,
+  projectId: string,
+): Promise<EvaluationSummary[]> {
+  return request<EvaluationSummary[]>(
+    `/api/v1/projects/${projectId}/evaluations`,
+    { method: 'GET' },
+    token,
+  );
+}
+
+export function getEvaluation(
+  token: string,
+  projectId: string,
+  evaluationId: string,
+): Promise<Envelope<PermitMatrix>> {
+  return request<Envelope<PermitMatrix>>(
+    `/api/v1/projects/${projectId}/evaluations/${evaluationId}`,
+    { method: 'GET' },
+    token,
+  );
+}
 
 export async function exportMatrix(
   token: string,
