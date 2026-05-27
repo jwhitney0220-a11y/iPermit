@@ -51,7 +51,10 @@ _role_enum = Enum(*PLATFORM_ROLES, name="platform_role", native_enum=False)
 
 #: Metered action types (S03-03). ``evaluation`` is the primary billable action;
 #: the enum is append-only — new metrics are additive and never rename old values.
-USAGE_METRICS = ("evaluation",)
+#: ``export`` (S03-04) meters deliverable exports. New values fit the existing
+#: VARCHAR(10) column and are validated at the ORM layer, so no migration is
+#: needed as long as the value length stays <= the longest original ("evaluation").
+USAGE_METRICS = ("evaluation", "export")
 _usage_metric_enum = Enum(*USAGE_METRICS, name="usage_metric", native_enum=False)
 
 #: Tables that hold tenant-private data and therefore get RLS policies (ADR-0002).
