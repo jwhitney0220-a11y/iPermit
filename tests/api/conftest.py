@@ -18,7 +18,7 @@ from ipermit_api.app import create_app
 from ipermit_api.auth import hash_password
 from ipermit_api.db import get_session
 from ipermit_persistence import Base
-from ipermit_tenancy import Membership, Tenant, User
+from ipermit_tenancy import Membership, Tenant, TenantBilling, User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -85,6 +85,21 @@ def client(factory: sessionmaker[Session]) -> Iterator[TestClient]:
     app.dependency_overrides[get_session] = _session
     with TestClient(app) as c:
         yield c
+
+
+@pytest.fixture
+def pro_seeded(
+    factory: sessionmaker[Session], seeded: dict[str, str]
+) -> dict[str, str]:
+    """Extend the standard ``seeded`` fixture with an active pro billing row for tenant A.
+
+    Used by tests that exercise premium-gated routes (S03-02 entitlement).
+    The billing row is seeded directly — no Stripe network, no webhook.
+    """
+    with factory() as s:
+        s.add(TenantBilling(tenant_id=seeded["tenant_a"], plan="pro", status="active"))
+        s.commit()
+    return seeded
 
 
 @pytest.fixture

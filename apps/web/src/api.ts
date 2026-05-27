@@ -3,11 +3,13 @@
 // sends JSON, and surfaces RFC-9457 problem-details as Error messages.
 
 import type {
+  BillingStatus,
   Envelope,
   EvaluateRequest,
   EvaluationSummary,
   Identity,
   PermitMatrix,
+  PlansResponse,
   Project,
 } from './types';
 
@@ -110,5 +112,25 @@ export async function exportMatrix(
   }
   const match = /filename="([^"]+)"/.exec(resp.headers.get('Content-Disposition') ?? '');
   return { blob: await resp.blob(), filename: match?.[1] ?? `permit-matrix.${format}` };
+}
+
+/** Fetch the server-side plan catalog (public — no auth required). */
+export function getPlans(): Promise<PlansResponse> {
+  return request<PlansResponse>('/api/v1/billing/plans', { method: 'GET' });
+}
+
+/** Fetch the current tenant's billing status (auth required). */
+export function getBilling(token: string): Promise<BillingStatus> {
+  return request<BillingStatus>('/api/v1/billing', { method: 'GET' }, token);
+}
+
+/** Start a Stripe Checkout Session for the given plan; returns a redirect URL. */
+export async function startCheckout(token: string, plan: string): Promise<string> {
+  const body = await request<{ checkout_url: string }>(
+    '/api/v1/billing/checkout',
+    { method: 'POST', body: JSON.stringify({ plan }) },
+    token,
+  );
+  return body.checkout_url;
 }
 

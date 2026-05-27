@@ -157,3 +157,20 @@ class BillingResponse(BaseModel):
     plan: str
     status: str
     current_period_end: datetime.datetime | None
+
+
+class PlanEntry(BaseModel):
+    """One entry in the plan catalog (S03-02, GET /billing/plans)."""
+
+    plan: str
+    display_name: str
+    description: str
+    price_monthly_usd: str | None
+    features: list[str]
+    premium: bool
+
+
+class PlansResponse(BaseModel):
+    """The full server-side plan catalog (S03-02)."""
+
+    plans: list[PlanEntry]

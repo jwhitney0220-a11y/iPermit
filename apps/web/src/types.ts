@@ -106,3 +106,23 @@ export interface EvaluateRequest {
   overlays: Record<string, unknown>;
   evaluation_date?: string | null;
 }
+
+export interface PlanEntry {
+  plan: string;
+  display_name: string;
+  description: string;
+  price_monthly_usd: string | null;
+  features: string[];
+  premium: boolean;
+}
+
+export interface PlansResponse {
+  plans: PlanEntry[];
+}
+
+export interface BillingStatus {
+  tenant_id: string;
+  plan: string;
+  status: string;
+  current_period_end: string | null;
+}

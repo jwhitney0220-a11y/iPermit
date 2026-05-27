@@ -27,11 +27,14 @@ from .. import billing as billing_core
 from ..audit import append_audit
 from ..auth import AuthenticatedIdentity, get_current_identity
 from ..db import apply_tenant_scope, get_session
+from ..entitlements import PLAN_CATALOG
 from ..envelope import ProblemException
 from ..schemas import (
     BillingResponse,
     CheckoutRequest,
     CheckoutResponse,
+    PlanEntry,
+    PlansResponse,
 )
 from ..settings import Settings, get_settings
 
@@ -68,6 +71,17 @@ def get_my_billing(
         status=billing.status if billing else "none",
         current_period_end=billing.current_period_end if billing else None,
     )
+
+
+@router.get("/plans", response_model=PlansResponse)
+def get_plans() -> PlansResponse:
+    """Return the server-side plan catalog (public — no auth required).
+
+    The pricing page fetches this so plan metadata is never hard-coded in the
+    client.  This endpoint is intentionally unauthenticated: it exposes only
+    marketing-level plan descriptions, not tenant data.
+    """
+    return PlansResponse(plans=[PlanEntry(**p) for p in PLAN_CATALOG])
 
 
 @router.post("/checkout", response_model=CheckoutResponse)

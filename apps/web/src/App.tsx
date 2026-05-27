@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { me } from './api';
-import { Login } from './components/Login';
 import { EvaluationScreen } from './components/EvaluationScreen';
+import { Login } from './components/Login';
+import { PricingPage } from './components/PricingPage';
 import type { Identity } from './types';
 
 const TOKEN_KEY = 'ipermit.token';
+type Tab = 'evaluation' | 'pricing';
 
 export function App() {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>('evaluation');
 
   useEffect(() => {
     if (!token) {
@@ -49,7 +52,29 @@ export function App() {
       {!token || !identity ? (
         <Login onLogin={handleLogin} />
       ) : (
-        <EvaluationScreen token={token} identity={identity} />
+        <>
+          <nav className="nav-tabs">
+            <button
+              className={`nav-tab${tab === 'evaluation' ? ' nav-tab--active' : ''}`}
+              onClick={() => setTab('evaluation')}
+              type="button"
+            >
+              Evaluation
+            </button>
+            <button
+              className={`nav-tab${tab === 'pricing' ? ' nav-tab--active' : ''}`}
+              onClick={() => setTab('pricing')}
+              type="button"
+            >
+              Plans &amp; Pricing
+            </button>
+          </nav>
+          {tab === 'evaluation' ? (
+            <EvaluationScreen token={token} identity={identity} />
+          ) : (
+            <PricingPage token={token} />
+          )}
+        </>
       )}
     </main>
   );

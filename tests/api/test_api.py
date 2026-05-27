@@ -161,8 +161,10 @@ def test_get_matrix_after_evaluate(client: TestClient, seeded: dict, login) -> N
         ("pdf", "application/pdf"),
     ],
 )
-def test_export_matrix(client: TestClient, seeded: dict, login, fmt, media) -> None:
-    token = login(seeded["email_a"])
+def test_export_matrix(client: TestClient, pro_seeded: dict, login, fmt, media) -> None:
+    # Export is a premium feature (S03-02): requires an active starter/pro plan.
+    # pro_seeded extends seeded with an active pro billing row for tenant A.
+    token = login(pro_seeded["email_a"])
     project_id = _create_project(client, token)
     headers = {"Authorization": f"Bearer {token}"}
     client.post(
@@ -179,8 +181,8 @@ def test_export_matrix(client: TestClient, seeded: dict, login, fmt, media) -> N
     assert resp.content
 
 
-def test_export_rejects_bad_format(client: TestClient, seeded: dict, login) -> None:
-    token = login(seeded["email_a"])
+def test_export_rejects_bad_format(client: TestClient, pro_seeded: dict, login) -> None:
+    token = login(pro_seeded["email_a"])
     project_id = _create_project(client, token)
     headers = {"Authorization": f"Bearer {token}"}
     resp = client.get(
