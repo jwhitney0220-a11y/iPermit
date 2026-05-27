@@ -49,8 +49,13 @@ _billing_status_enum = Enum(*BILLING_STATUSES, name="billing_status", native_enu
 # native_enum=False renders as VARCHAR + CHECK — portable SQLite <-> PostgreSQL.
 _role_enum = Enum(*PLATFORM_ROLES, name="platform_role", native_enum=False)
 
+#: Metered action types (S03-03). ``evaluation`` is the primary billable action;
+#: the enum is append-only — new metrics are additive and never rename old values.
+USAGE_METRICS = ("evaluation",)
+_usage_metric_enum = Enum(*USAGE_METRICS, name="usage_metric", native_enum=False)
+
 #: Tables that hold tenant-private data and therefore get RLS policies (ADR-0002).
-TENANT_OWNED_TABLES = ("project", "evaluation", "tenant_billing")
+TENANT_OWNED_TABLES = ("project", "evaluation", "tenant_billing", "usage_record")
 
 
 def _utcnow() -> datetime.datetime:
@@ -266,6 +271,38 @@ class TenantBilling(Base):
     )
     updated_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+
+class UsageRecord(Base):
+    """One metered-action event for a tenant (S03-03, SAAS-03).
+
+    Append-only: a new row is inserted for every metered action (e.g. each
+    successful project evaluation). Aggregates (counts per period) are derived
+    on read — this keeps the write path trivial, audit-friendly, and easily
+    back-filled if the metering hook ever misses an event. The event-log
+    approach was chosen over a per-period counter because:
+
+    - **Auditability**: every billable event is individually visible with its
+      timestamp, enabling dispute resolution without reconstructing history.
+    - **Simplicity**: no period-management logic; the insert is a single
+      ``session.add``; aggregation is a single SQL GROUP-BY on read.
+    - **Flexibility**: ad-hoc period windows (monthly, rolling-30-day, etc.)
+      are expressible in one query against the raw events.
+
+    Tenant-owned and RLS-protected (ADR-0002) just like ``evaluation``.
+    """
+
+    __tablename__ = "usage_record"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    tenant_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("tenant.tenant_id"), nullable=False, index=True
+    )
+    metric: Mapped[str] = mapped_column(_usage_metric_enum, nullable=False)
+    quantity: Mapped[int] = mapped_column(default=1, nullable=False)
+    occurred_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False, index=True
     )
 
 
