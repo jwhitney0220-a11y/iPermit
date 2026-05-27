@@ -7,6 +7,7 @@ advisory contract (ADR-0003), and the hash-chained audit log (ADR-0004).
 
 from __future__ import annotations
 
+from itertools import pairwise
 from pathlib import Path
 
 import pytest
@@ -207,8 +208,10 @@ def test_audit_chain_links(
         )
     with factory() as s:
         records = list(s.scalars(select(AuditRecord).order_by(AuditRecord.id)))
-    assert len(records) == 2
-    assert all(r.action == "project.evaluated" for r in records)
+    # The full chain spans auth.login + project.created + the two evaluations.
+    evaluated = [r for r in records if r.action == "project.evaluated"]
+    assert len(evaluated) == 2
     assert records[0].prev_hash is None
-    assert records[1].prev_hash == records[0].hash
-    assert records[1].hash != records[0].hash
+    for prev, curr in pairwise(records):
+        assert curr.prev_hash == prev.hash
+        assert curr.hash != prev.hash
