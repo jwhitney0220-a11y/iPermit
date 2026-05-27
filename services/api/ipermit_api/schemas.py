@@ -7,6 +7,7 @@ JSON Schemas (ADR-0003); this module does not redefine them.
 
 from __future__ import annotations
 
+import datetime
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -74,3 +75,14 @@ class EvaluateRequest(BaseModel):
     jurisdictions: list[JurisdictionEntry] = Field(default_factory=list)
     overlays: dict[str, Any] = Field(default_factory=dict)
     evaluation_date: str | None = None
+
+
+class EvaluationSummary(BaseModel):
+    """One row in a project's evaluation history (newest first)."""
+
+    evaluation_id: str
+    evaluation_date: str
+    inputs_hash: str
+    ruleset_content_hash: str
+    permit_count: int
+    created_at: datetime.datetime

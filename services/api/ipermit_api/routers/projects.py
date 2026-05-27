@@ -23,7 +23,12 @@ from ..db import apply_tenant_scope, get_session
 from ..envelope import PLATFORM_ADVISORY, Advisory, Envelope, Meta, ProblemException
 from ..evaluate import evaluate_project
 from ..export import EXPORT_FORMATS, export_matrix
-from ..schemas import CreateProjectRequest, EvaluateRequest, ProjectResponse
+from ..schemas import (
+    CreateProjectRequest,
+    EvaluateRequest,
+    EvaluationSummary,
+    ProjectResponse,
+)
 
 router = APIRouter(prefix="/api/v1/projects", tags=["projects"])
 
@@ -184,6 +189,57 @@ def get_matrix(
     tenant_id = _require_tenant(identity)
     apply_tenant_scope(session, tenant_id)
     return _envelope(_latest_evaluation(session, tenant_id, project_id).matrix)
+
+
+@router.get("/{project_id}/evaluations", response_model=list[EvaluationSummary])
+def list_evaluations(
+    project_id: str,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+) -> list[EvaluationSummary]:
+    """List the project's evaluation history, newest first (S02-03)."""
+    tenant_id = _require_tenant(identity)
+    apply_tenant_scope(session, tenant_id)
+    _load_project(session, tenant_id, project_id)
+    rows = session.scalars(
+        select(Evaluation)
+        .where(Evaluation.project_id == project_id, Evaluation.tenant_id == tenant_id)
+        .order_by(Evaluation.created_at.desc())
+    )
+    return [
+        EvaluationSummary(
+            evaluation_id=e.evaluation_id,
+            evaluation_date=e.evaluation_date,
+            inputs_hash=e.inputs_hash,
+            ruleset_content_hash=e.ruleset_content_hash,
+            permit_count=len(e.matrix["permits"]),
+            created_at=e.created_at,
+        )
+        for e in rows
+    ]
+
+
+@router.get("/{project_id}/evaluations/{evaluation_id}", response_model=Envelope)
+def get_evaluation(
+    project_id: str,
+    evaluation_id: str,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+) -> Envelope:
+    """Return a specific historical evaluation's matrix (S02-03)."""
+    tenant_id = _require_tenant(identity)
+    apply_tenant_scope(session, tenant_id)
+    _load_project(session, tenant_id, project_id)
+    evaluation = session.scalar(
+        select(Evaluation).where(
+            Evaluation.evaluation_id == evaluation_id,
+            Evaluation.project_id == project_id,
+            Evaluation.tenant_id == tenant_id,
+        )
+    )
+    if evaluation is None:
+        raise ProblemException(404, "Evaluation not found")
+    return _envelope(evaluation.matrix)
 
 
 @router.get("/{project_id}/matrix/export")
