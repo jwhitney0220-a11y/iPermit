@@ -24,9 +24,11 @@ from sqlalchemy import DateTime, Enum, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
 
-#: The three platform roles (ADR-0002), hierarchical. Capability flags
-#: (analyst:draft/review/publish) are deferred to S02-01.
+#: The three platform roles (ADR-0002), hierarchical.
 PLATFORM_ROLES = ("consultant_user", "regulatory_analyst", "platform_admin")
+
+#: Capability flags within the analyst tier (ADR-0002 separation-of-duties).
+ANALYST_CAPABILITIES = ("analyst:draft", "analyst:review", "analyst:publish")
 
 # native_enum=False renders as VARCHAR + CHECK — portable SQLite <-> PostgreSQL.
 _role_enum = Enum(*PLATFORM_ROLES, name="platform_role", native_enum=False)
@@ -69,6 +71,10 @@ class User(Base):
     platform_role: Mapped[str] = mapped_column(
         _role_enum, default="consultant_user", nullable=False
     )
+    # Capability flags within the analyst tier (ADR-0002): e.g. analyst:draft,
+    # analyst:review, analyst:publish. A role grant is the capability floor;
+    # these add the per-action grants the SOP separation-of-duties depends on.
+    capabilities: Mapped[list[str]] = mapped_column(JSON, default=list, nullable=False)
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, nullable=False

@@ -86,3 +86,16 @@ class EvaluationSummary(BaseModel):
     ruleset_content_hash: str
     permit_count: int
     created_at: datetime.datetime
+
+
+class AuditRecordResponse(BaseModel):
+    """One append-only audit record (platform-admin read, ADR-0004)."""
+
+    id: int
+    occurred_at: datetime.datetime
+    actor: str
+    action: str
+    subject: str
+    payload: dict[str, Any]
+    prev_hash: str | None
+    hash: str

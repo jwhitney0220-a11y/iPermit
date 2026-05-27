@@ -132,6 +132,7 @@ def get_current_identity(
         platform_role=user.platform_role,
         tenant_ids=tenant_ids,
         tenant_id=primary,
+        capabilities=frozenset(user.capabilities or ()),
     )
 
 
@@ -144,5 +145,22 @@ def require_role(minimum: str):
         if not identity.has_role(minimum):
             raise ProblemException(403, "Insufficient role")
         return identity
+
+    return dependency
+
+
+def require_capability(flag: str):
+    """Dependency factory enforcing an analyst capability flag (ADR-0002).
+
+    A ``platform_admin`` implicitly holds every capability (the role hierarchy is
+    a superset); otherwise the flag must be explicitly granted on the identity.
+    """
+
+    def dependency(
+        identity: AuthenticatedIdentity = Depends(get_current_identity),
+    ) -> AuthenticatedIdentity:
+        if identity.has_role("platform_admin") or flag in identity.capabilities:
+            return identity
+        raise ProblemException(403, f"Missing capability {flag}")
 
     return dependency
