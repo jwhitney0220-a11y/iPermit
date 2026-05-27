@@ -66,21 +66,9 @@ def client(factory: sessionmaker[Session]) -> TestClient:
         yield c
 
 
-def _seed_tenant(
-    factory: sessionmaker[Session],
-    *,
-    plan: str = "free",
-    status: str = "none",
-    current_period_end: datetime.datetime | None = None,
-) -> dict[str, str]:
-    """Seed a tenant+user+project+evaluation; return ids and email."""
-    tenant_id = uuid.uuid4().hex
-    user_id = uuid.uuid4().hex
-    project_id = uuid.uuid4().hex
-    evaluation_id = uuid.uuid4().hex
-    email = f"{uuid.uuid4().hex[:8]}@example.com"
-
-    minimal_matrix = {
+def _minimal_matrix(project_id: str, evaluation_id: str) -> dict:
+    """A schema-shaped permit matrix with no permits (enough to persist)."""
+    return {
         "schema_version": "1.0.0",
         "evaluation_id": evaluation_id,
         "project_id": project_id,
@@ -94,6 +82,22 @@ def _seed_tenant(
             "critical_path_total_days": 0,
         },
     }
+
+
+def _seed_tenant(
+    factory: sessionmaker[Session],
+    *,
+    plan: str = "free",
+    status: str = "none",
+    current_period_end: datetime.datetime | None = None,
+) -> dict[str, str]:
+    """Seed a tenant+user+project+evaluation; return ids and email."""
+    tenant_id = uuid.uuid4().hex
+    user_id = uuid.uuid4().hex
+    project_id = uuid.uuid4().hex
+    evaluation_id = uuid.uuid4().hex
+    email = f"{uuid.uuid4().hex[:8]}@example.com"
+    minimal_matrix = _minimal_matrix(project_id, evaluation_id)
 
     with factory() as s:
         s.add(Tenant(tenant_id=tenant_id, name="Test Tenant"))
