@@ -1,0 +1,69 @@
+{
+  "rule_id": "us-tx-municipality-el-paso-pavement-cut-permit",
+  "version": "1.0.0",
+  "title": "El Paso pavement cut permit",
+  "permit_name": "Pavement Cut Permit and Traffic Control Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-el-paso",
+  "source_agency": "City of El Paso Streets and Maintenance Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Pavement Cut Program Permits and Inspections",
+        "url": "https://www.elpasotexas.gov/streets-and-maintenance/",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.municipal_row_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_row_crossings_count",
+        "operator": ">",
+        "value": 0
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Pavement Cut Permit",
+        "agency": "City of El Paso Streets and Maintenance Department"
+      },
+      {
+        "name": "Traffic Control Permit",
+        "agency": "City of El Paso Streets and Maintenance Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Excavating, boring, coring, or drilling in El Paso city right-of-way likely requires pavement-cut and traffic-control permit approvals."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Work in city right-of-way without the required permit sequence is not recommended."
+  ],
+  "tags": [
+    "right_of_way",
+    "el_paso",
+    "utility"
+  ],
+  "notes": "Tier 2: official city right-of-way operations page clearly verifies the permit sequence for pavement-cut activity."
+}

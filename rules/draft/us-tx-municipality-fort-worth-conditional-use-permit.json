@@ -1,0 +1,63 @@
+{
+  "rule_id": "us-tx-municipality-fort-worth-conditional-use-permit",
+  "version": "1.0.0",
+  "title": "Fort Worth conditional use permit overlay",
+  "permit_name": "Conditional Use Permit Overlay",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-fort-worth",
+  "source_agency": "City of Fort Worth Development Services Department",
+  "applicable_project_types": [
+    "substation",
+    "utility_corridor",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "form",
+        "reference": "Zoning Change Application",
+        "url": "https://www.fortworthtexas.gov/files/assets/public/v/6/development-services/documents/resources-applications-forms-videos/z/zoning-change-application.pdf",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.land_use_not_permitted_by_right",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.special_use_requested",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Conditional Use Permit Overlay",
+        "agency": "City of Fort Worth Development Services Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "If the project seeks a conditional use overlay for a utility or related facility, Fort Worth zoning approval is commonly encountered."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Public hearings, site plans, and zoning-case procedures are commonly part of this pathway."
+  ],
+  "tags": [
+    "zoning",
+    "conditional_use",
+    "fort_worth"
+  ],
+  "notes": "Tier 2: official zoning application materials verify the conditional use overlay pathway; district-level interpretation remains project-specific."
+}

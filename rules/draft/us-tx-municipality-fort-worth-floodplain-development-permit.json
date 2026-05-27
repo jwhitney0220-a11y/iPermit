@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-fort-worth-floodplain-development-permit",
+  "version": "1.0.0",
+  "title": "Fort Worth floodplain development permit",
+  "permit_name": "Floodplain Development Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-fort-worth",
+  "source_agency": "City of Fort Worth Transportation and Public Works Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Stormwater Review",
+        "url": "https://www.fortworthtexas.gov/departments/tpw/stormwater/review",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.floodway",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Floodplain Development Permit",
+        "agency": "City of Fort Worth Transportation and Public Works Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Development in Fort Worth floodplain areas likely requires a floodplain development permit before related building or site approvals."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "City review times and map-revision sequencing can become material for complex floodplain work."
+  ],
+  "tags": [
+    "floodplain",
+    "fort_worth",
+    "stormwater"
+  ],
+  "notes": "Tier 2: official city stormwater review page verifies the local permit pathway; project-specific study needs vary."
+}

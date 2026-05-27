@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-austin-floodplain-development-permit",
+  "version": "1.0.0",
+  "title": "Austin floodplain development permit",
+  "permit_name": "Floodplain Development Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-austin",
+  "source_agency": "City of Austin Watershed Protection Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Floodplain Regulations",
+        "url": "https://www.austintexas.gov/watershed-protection/floodplain-regulations",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.floodway",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Floodplain Development Permit",
+        "agency": "City of Austin Watershed Protection Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Development in Austin flood hazard areas likely requires floodplain permit review and, in some cases, FEMA map-revision sequencing before approval."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Additional review is recommended where the project modifies mapped flood elevations or channel geometry."
+  ],
+  "tags": [
+    "floodplain",
+    "austin",
+    "watershed"
+  ],
+  "notes": "Tier 2: official city floodplain regulations page verifies local review and permit sequencing; project details drive technical submittals."
+}

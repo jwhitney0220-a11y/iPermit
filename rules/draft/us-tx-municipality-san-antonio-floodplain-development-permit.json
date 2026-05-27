@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-san-antonio-floodplain-development-permit",
+  "version": "1.0.0",
+  "title": "San Antonio floodplain development permit",
+  "permit_name": "Flood Plain Development Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-san-antonio",
+  "source_agency": "City of San Antonio Development Services Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Development Services Frequently Asked Questions",
+        "url": "https://www.sanantonio.gov/DSD/Resources/FAQs",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.floodway",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Flood Plain Development Permit",
+        "agency": "City of San Antonio Development Services Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Development within San Antonio's regulatory 100-year FEMA floodplain likely requires a flood plain development permit."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Restrictions and permit conditions can be added to align the project with floodplain standards."
+  ],
+  "tags": [
+    "floodplain",
+    "san_antonio",
+    "municipal"
+  ],
+  "notes": "Tier 2: official city guidance directly states the permit trigger; technical floodplain review remains project-specific."
+}

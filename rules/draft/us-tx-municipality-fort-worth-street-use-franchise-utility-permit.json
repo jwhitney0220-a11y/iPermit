@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-fort-worth-street-use-franchise-utility-permit",
+  "version": "1.0.0",
+  "title": "Fort Worth street use franchise utility permit",
+  "permit_name": "Street Use Franchise Utility Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-fort-worth",
+  "source_agency": "City of Fort Worth Transportation and Public Works Department",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "form",
+        "reference": "Street Use Permit Application for Utility Construction",
+        "url": "https://www.fortworthtexas.gov/files/assets/public/v/1/tpw/documents/row-team/01-cfw-street-use-permit-application-for-utility-construction.pdf",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.municipal_row_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_row_crossings_count",
+        "operator": ">",
+        "value": 0
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Street Use Franchise Utility Permit",
+        "agency": "City of Fort Worth Transportation and Public Works Department"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Utility construction in Fort Worth rights-of-way or easements likely needs a street use franchise utility permit."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Traffic control, inspection scheduling, and contractor registration may be separate but related steps."
+  ],
+  "tags": [
+    "right_of_way",
+    "fort_worth",
+    "utility"
+  ],
+  "notes": "Tier 2: the official application form clearly verifies this permit type for utility construction in city rights-of-way."
+}

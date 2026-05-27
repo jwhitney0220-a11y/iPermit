@@ -1,0 +1,65 @@
+{
+  "rule_id": "us-tx-municipality-waco-floodplain-development-permit",
+  "version": "1.0.0",
+  "title": "Waco floodplain development permit",
+  "permit_name": "Floodplain Development Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-waco",
+  "source_agency": "City of Waco Engineering Services",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 2,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "website",
+        "reference": "Watershed",
+        "url": "https://www.waco-texas.com/Departments/Engineering/Watershed",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "geometry.fema_floodplain",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "geometry.floodway",
+        "operator": "=",
+        "value": true
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Floodplain Development Permit",
+        "agency": "City of Waco Engineering Services"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Development in Waco floodplain areas likely requires a floodplain development permit and compliance with city flood-protection rules."
+  },
+  "known_unknowns": [],
+  "advisories": [
+    "Floodplain and stormwater requirements may both be relevant for linear utility work near creeks or channels."
+  ],
+  "tags": [
+    "floodplain",
+    "waco",
+    "stormwater"
+  ],
+  "notes": "Tier 2: official city watershed guidance verifies the local permit pathway and key floodplain standards."
+}

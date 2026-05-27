@@ -1,0 +1,73 @@
+{
+  "rule_id": "us-tx-municipality-houston-street-cut-permit",
+  "version": "1.0.0",
+  "title": "Houston street cut permit",
+  "permit_name": "Street Cut / Excavation Permit",
+  "jurisdiction_level": "municipality",
+  "jurisdiction_id": "us-tx-municipality-houston",
+  "source_agency": "City of Houston Public Works",
+  "applicable_project_types": [
+    "transmission_line",
+    "substation",
+    "utility_corridor",
+    "roadside_utility",
+    "linear_general"
+  ],
+  "confidence_tier": 3,
+  "provenance": {
+    "source_citations": [
+      {
+        "citation_type": "agency_guidance",
+        "reference": "Mobility, Street Cut and Excavation Permits Presentation",
+        "url": "https://www.houstontx.gov/council/committees/tti/20211007/Mobility%20Permits%20Presentation.pdf",
+        "retrieved_at": "2026-05-27"
+      },
+      {
+        "citation_type": "website",
+        "reference": "Development Regulations",
+        "url": "https://www.houstontx.gov/planning/DevelopRegs/",
+        "retrieved_at": "2026-05-27"
+      }
+    ],
+    "last_verified": "2026-05-27",
+    "reviewer": ""
+  },
+  "status": "draft",
+  "triggers": {
+    "any": [
+      {
+        "field": "project.municipal_row_use",
+        "operator": "=",
+        "value": true
+      },
+      {
+        "field": "project.utility_row_crossings_count",
+        "operator": ">",
+        "value": 0
+      }
+    ]
+  },
+  "outputs": {
+    "permits": [
+      {
+        "name": "Street Cut / Excavation Permit",
+        "agency": "City of Houston Public Works"
+      }
+    ]
+  },
+  "explanations": {
+    "trigger_explanation": "Excavation, boring, or pavement cutting in Houston public right-of-way likely needs a street cut or excavation permit."
+  },
+  "known_unknowns": [
+    "This pass did not locate a single current codified street-cut ordinance webpage; city-hosted permit guidance was used."
+  ],
+  "advisories": [
+    "Additional review is recommended if the work also affects lane closures, traffic control, or Texas Department of Transportation right-of-way."
+  ],
+  "tags": [
+    "right_of_way",
+    "utility",
+    "houston"
+  ],
+  "notes": "Tier 3: city-hosted guidance clearly describes the permit trigger, but project-specific submittal mechanics should be confirmed in the live permitting portal."
+}
