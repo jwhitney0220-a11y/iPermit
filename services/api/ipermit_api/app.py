@@ -11,7 +11,6 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from .envelope import register_exception_handlers
-<<<<<<< HEAD
 from .routers import admin, auth, billing, feedback, projects, team, uploads, usage
 from .settings import get_settings, validate_security
 

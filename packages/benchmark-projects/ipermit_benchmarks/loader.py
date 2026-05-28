@@ -47,12 +47,12 @@ def repo_root(start: Path | None = None) -> Path:
 def load_schema(root: Path | None = None) -> dict[str, Any]:
     """Load the canonical benchmark-project JSON Schema."""
     root = root or repo_root()
-    return json.loads((root / _SCHEMA_RELPATH).read_text())
+    return json.loads((root / _SCHEMA_RELPATH).read_text(encoding="utf-8"))
 
 
 def _parse_file(path: Path) -> dict[str, Any]:
     """Parse a single .yaml/.yml/.json benchmark file into a dict."""
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     data = (
         yaml.safe_load(text) if path.suffix in (".yaml", ".yml") else json.loads(text)
     )

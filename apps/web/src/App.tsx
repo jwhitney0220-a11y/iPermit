@@ -22,6 +22,12 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>('dashboard');
 
+  function handleLogout() {
+    localStorage.removeItem(TOKEN_KEY);
+    setToken(null);
+    setIdentity(null);
+  }
+
   useEffect(() => {
     if (!token) {
       setIdentity(null);
@@ -30,19 +36,12 @@ export function App() {
     me(token)
       .then(setIdentity)
       .catch(() => handleLogout());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   function handleLogin(newToken: string) {
     localStorage.setItem(TOKEN_KEY, newToken);
     setError(null);
     setToken(newToken);
-  }
-
-  function handleLogout() {
-    localStorage.removeItem(TOKEN_KEY);
-    setToken(null);
-    setIdentity(null);
   }
 
   return (
@@ -60,27 +59,46 @@ export function App() {
       {!token || !identity ? (
         <Login onLogin={handleLogin} />
       ) : (
-        <>
-          <nav className="nav-tabs">
-            {TABS.map((t) => (
-              <button
-                key={t.key}
-                className={`nav-tab${tab === t.key ? ' nav-tab--active' : ''}`}
-                onClick={() => setTab(t.key)}
-                type="button"
-              >
-                {t.label}
-              </button>
-            ))}
-          </nav>
-          {tab === 'dashboard' && <Dashboard token={token} email={identity.email} />}
-          {tab === 'evaluation' && (
-            <EvaluationScreen token={token} identity={identity} />
-          )}
-          {tab === 'team' && <Team token={token} />}
-          {tab === 'pricing' && <PricingPage token={token} />}
-        </>
+        <AuthenticatedApp
+          identity={identity}
+          tab={tab}
+          token={token}
+          onTabChange={setTab}
+        />
       )}
     </main>
+  );
+}
+
+function AuthenticatedApp({
+  identity,
+  tab,
+  token,
+  onTabChange,
+}: {
+  identity: Identity;
+  tab: Tab;
+  token: string;
+  onTabChange: (tab: Tab) => void;
+}) {
+  return (
+    <>
+      <nav className="nav-tabs">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            className={`nav-tab${tab === t.key ? ' nav-tab--active' : ''}`}
+            onClick={() => onTabChange(t.key)}
+            type="button"
+          >
+            {t.label}
+          </button>
+        ))}
+      </nav>
+      {tab === 'dashboard' && <Dashboard token={token} email={identity.email} />}
+      {tab === 'evaluation' && <EvaluationScreen token={token} identity={identity} />}
+      {tab === 'team' && <Team token={token} />}
+      {tab === 'pricing' && <PricingPage token={token} />}
+    </>
   );
 }
