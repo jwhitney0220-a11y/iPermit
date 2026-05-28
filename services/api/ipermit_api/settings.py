@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     )
 
     ipermit_env: str = "local"
+    # Root logging level applied at startup (S07-03). One of:
+    # debug | info | warning | error.
+    ipermit_log_level: str = "info"
     database_url: str = _LOCAL_DB
     auth_jwt_secret: str = "CHANGE_ME_LOCAL_ONLY"
     auth_jwt_algorithm: str = "HS256"
