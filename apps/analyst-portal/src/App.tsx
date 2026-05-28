@@ -4,10 +4,11 @@ import { AuditLog } from './components/AuditLog';
 import { FeedbackQueue } from './components/FeedbackQueue';
 import { Login } from './components/Login';
 import { Publications } from './components/Publications';
+import { QaDashboard } from './components/QaDashboard';
 import type { Identity } from './types';
 
 const TOKEN_KEY = 'ipermit.analyst.token';
-type Tab = 'feedback' | 'publications' | 'audit';
+type Tab = 'feedback' | 'publications' | 'qa' | 'audit';
 
 export function App() {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
@@ -87,6 +88,9 @@ function PortalBody({
         >
           Publications
         </button>
+        <button className={tabClass(tab, 'qa')} onClick={() => onTabChange('qa')}>
+          Rule Health
+        </button>
         {identity.platform_role === 'platform_admin' && (
           <button className={tabClass(tab, 'audit')} onClick={() => onTabChange('audit')}>
             Audit Log
@@ -95,6 +99,7 @@ function PortalBody({
       </nav>
       {tab === 'feedback' && <FeedbackQueue token={token} />}
       {tab === 'publications' && <Publications token={token} />}
+      {tab === 'qa' && <QaDashboard token={token} />}
       {tab === 'audit' && identity.platform_role === 'platform_admin' && (
         <AuditLog token={token} />
       )}

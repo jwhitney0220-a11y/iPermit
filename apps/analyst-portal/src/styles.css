@@ -159,3 +159,9 @@ code {
   font-size: 0.9rem;
   box-sizing: border-box;
 }
+
+.qa-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.qa-stat ul { list-style: none; margin: 0; padding: 0; }
+.qa-stat li { display: flex; gap: 0.6rem; padding: 0.2rem 0; }
+.qa-table { width: 100%; border-collapse: collapse; }
+.qa-table th, .qa-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
