@@ -1,14 +1,16 @@
 /**
  * Root ESLint config for the iPermit monorepo (T01-02 / T01-12).
  *
- * This is a TEMPLATE / base config. The TypeScript/React apps under apps/*
- * (apps/web, apps/analyst-portal) are expected to EXTEND this config rather
- * than redefine these rules, e.g.:
+ * This is a dependency-free base config. The TypeScript/React apps under apps/*
+ * (apps/web, apps/analyst-portal) own parser/plugin dependencies and EXTEND
+ * this config for shared rules, e.g.:
  *
  *   // apps/web/.eslintrc.cjs
  *   module.exports = {
  *     root: true,
  *     extends: ['../../.eslintrc.cjs'],
+ *     parser: '@typescript-eslint/parser',
+ *     plugins: ['@typescript-eslint'],
  *     parserOptions: { project: ['./tsconfig.json'] },
  *   };
  *
@@ -23,7 +25,6 @@ module.exports = {
   // Apps that extend this set their own `root: true` and point `extends` here.
   root: false,
 
-  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
@@ -35,13 +36,6 @@ module.exports = {
     es2022: true,
     node: true,
   },
-
-  plugins: ['@typescript-eslint'],
-
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
 
   rules: {
     // The 60-line function rule — mirrors scripts/checks/check_function_length.py.

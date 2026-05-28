@@ -11,6 +11,8 @@ import type {
   PermitMatrix,
   PlansResponse,
   Project,
+  TeamMember,
+  UsageSummary,
 } from './types';
 
 const BASE = import.meta.env.VITE_API_BASE ?? '';
@@ -122,6 +124,51 @@ export function getPlans(): Promise<PlansResponse> {
 /** Fetch the current tenant's billing status (auth required). */
 export function getBilling(token: string): Promise<BillingStatus> {
   return request<BillingStatus>('/api/v1/billing', { method: 'GET' }, token);
+}
+
+/** Fetch the current tenant's usage summary for the current period (auth). */
+export function getUsage(token: string): Promise<UsageSummary> {
+  return request<UsageSummary>('/api/v1/usage', { method: 'GET' }, token);
+}
+
+/** List the caller tenant's team members (auth). */
+export function listMembers(token: string): Promise<TeamMember[]> {
+  return request<TeamMember[]>('/api/v1/team/members', { method: 'GET' }, token);
+}
+
+/** Add an existing user to the tenant by email (team admin). */
+export function addMember(
+  token: string,
+  email: string,
+  isTeamAdmin = false,
+): Promise<TeamMember> {
+  return request<TeamMember>(
+    '/api/v1/team/members',
+    { method: 'POST', body: JSON.stringify({ email, is_team_admin: isTeamAdmin }) },
+    token,
+  );
+}
+
+/** Toggle a member's tenant-local admin flag (team admin). */
+export function updateMember(
+  token: string,
+  userId: string,
+  isTeamAdmin: boolean,
+): Promise<TeamMember> {
+  return request<TeamMember>(
+    `/api/v1/team/members/${userId}`,
+    { method: 'PATCH', body: JSON.stringify({ is_team_admin: isTeamAdmin }) },
+    token,
+  );
+}
+
+/** Remove a member from the tenant (team admin). */
+export function removeMember(token: string, userId: string): Promise<unknown> {
+  return request<unknown>(
+    `/api/v1/team/members/${userId}`,
+    { method: 'DELETE' },
+    token,
+  );
 }
 
 /** Start a Stripe Checkout Session for the given plan; returns a redirect URL. */

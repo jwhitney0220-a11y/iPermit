@@ -134,6 +134,37 @@ class FeedbackResponse(BaseModel):
     dispositioned_at: datetime.datetime | None
 
 
+class TeamMemberResponse(BaseModel):
+    """One member of a tenant (S04-02)."""
+
+    user_id: str
+    email: str
+    is_team_admin: bool
+    created_at: datetime.datetime
+
+
+class AddMemberRequest(BaseModel):
+    """Add an existing user to the caller's tenant by email (S04-02)."""
+
+    email: str = Field(min_length=3, max_length=320)
+    is_team_admin: bool = False
+
+
+class UpdateMemberRequest(BaseModel):
+    """Change a member's tenant-local admin flag (S04-02)."""
+
+    is_team_admin: bool
+
+
+class FootprintUploadResponse(BaseModel):
+    """Result of uploading + parsing a route file into a project footprint (S04-03)."""
+
+    footprint_ref: str
+    geometry_type: str
+    bbox: list[float]
+    byte_size: int
+
+
 class CheckoutRequest(BaseModel):
     """Request a Stripe Checkout Session for a paid plan (S03-01).
 
