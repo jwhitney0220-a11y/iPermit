@@ -57,6 +57,21 @@ _role_enum = Enum(*PLATFORM_ROLES, name="platform_role", native_enum=False)
 USAGE_METRICS = ("evaluation", "export")
 _usage_metric_enum = Enum(*USAGE_METRICS, name="usage_metric", native_enum=False)
 
+#: Rule-publication workflow states (S05-02 / T08-04). A proposal is created in
+#: ``proposed`` and ends in ``approved`` (the promotion is in force), ``rejected``,
+#: or ``rolled_back`` (an approved promotion reversed).
+PUBLICATION_STATUSES = ("proposed", "approved", "rejected", "rolled_back")
+_publication_status_enum = Enum(
+    *PUBLICATION_STATUSES, name="publication_status", native_enum=False
+)
+
+#: Target rule statuses a publication can promote to (matches the rule-object
+#: schema's lifecycle: draft is the source, archived/effective are the targets).
+PUBLICATION_TARGETS = ("effective", "archived")
+_publication_target_enum = Enum(
+    *PUBLICATION_TARGETS, name="publication_target", native_enum=False
+)
+
 #: Tables that hold tenant-private data and therefore get RLS policies (ADR-0002).
 TENANT_OWNED_TABLES = ("project", "evaluation", "tenant_billing", "usage_record")
 
@@ -324,3 +339,35 @@ class ProcessedStripeEvent(Base):
     processed_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, nullable=False
     )
+
+
+class RulePublication(Base):
+    """Governance trail for promoting a rule between lifecycle statuses (S05-02).
+
+    Records the proposal and its decision — the audit log (ADR-0004) captures
+    the *event* of each transition, while this table captures the *case* (who
+    proposed what, who decided, when, why). Platform-global (no tenant scope):
+    rules are global per ADR-0002. Separation-of-duties (proposer ≠ approver)
+    is enforced at the router layer; the lifecycle invariants are enforced here
+    by ``status``/``target_status`` constraints + indexed lookups by ``rule_id``.
+    """
+
+    __tablename__ = "rule_publication"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    rule_id: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
+    rule_version: Mapped[str] = mapped_column(String(20), nullable=False)
+    target_status: Mapped[str] = mapped_column(_publication_target_enum, nullable=False)
+    status: Mapped[str] = mapped_column(
+        _publication_status_enum, default="proposed", nullable=False
+    )
+    proposed_by: Mapped[str] = mapped_column(String(320), nullable=False)
+    proposed_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
+    )
+    reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    decided_by: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    decided_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    decision_note: Mapped[str | None] = mapped_column(String, nullable=True)

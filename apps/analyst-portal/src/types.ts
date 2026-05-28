@@ -21,6 +21,20 @@ export interface FeedbackItem {
   dispositioned_at: string | null;
 }
 
+export interface Publication {
+  id: number;
+  rule_id: string;
+  rule_version: string;
+  target_status: string;
+  status: string;
+  proposed_by: string;
+  proposed_at: string;
+  reason: string | null;
+  decided_by: string | null;
+  decided_at: string | null;
+  decision_note: string | null;
+}
+
 export interface AuditRecord {
   id: number;
   occurred_at: string;
