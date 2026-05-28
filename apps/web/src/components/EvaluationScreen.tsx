@@ -3,6 +3,7 @@ import { ApiError, createProject, evaluate, listProjects } from '../api';
 import type { IntakeState } from '../fields';
 import { buildRequest } from '../intake';
 import type { Envelope, Identity, PermitMatrix, Project } from '../types';
+import { FootprintUpload } from './FootprintUpload';
 import { HistoryPanel } from './HistoryPanel';
 import { IntakeForm } from './IntakeForm';
 import { PermitMatrixView } from './PermitMatrix';
@@ -27,6 +28,7 @@ export function EvaluationScreen({
         onNameChange={state.setNewName}
         onProjectChange={state.setProjectId}
       />
+      <FootprintUpload token={token} projectId={state.projectId} />
       <section className="card">
         <h2>Intake</h2>
         <IntakeForm busy={state.busy} onEvaluate={state.runEvaluation} />
