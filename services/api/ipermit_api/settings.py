@@ -73,6 +73,17 @@ class Settings(BaseSettings):
             return [item.strip() for item in value.split(",") if item.strip()]
         return value
 
+    # Email (S07-02). "local" captures messages in process memory so tests
+    # assert on subject/body without SMTP. Any other value with no provider
+    # wired triggers a fail-fast sender so non-local deploys do not silently
+    # drop mail. ``invitation_ttl_minutes`` bounds how long an emailed invite
+    # link is valid before the invitee must request a fresh one.
+    email_provider: str = "local"
+    email_from_address: str = "noreply@ipermit.local"
+    invitation_ttl_minutes: int = 60 * 24 * 7  # 7 days
+    # The frontend acceptance URL — token is appended as a query string.
+    invitation_accept_url: str = "http://localhost:5173/accept-invitation"
+
     @property
     def is_local(self) -> bool:
         """True for the local development environment."""

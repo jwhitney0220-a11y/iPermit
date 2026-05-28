@@ -17,6 +17,7 @@ from .routers import (
     auth,
     billing,
     feedback,
+    invitations,
     projects,
     publications,
     qa,
@@ -51,6 +52,7 @@ def create_app() -> FastAPI:
     app.include_router(billing.router)
     app.include_router(usage.router)
     app.include_router(team.router)
+    app.include_router(invitations.router)
     app.include_router(uploads.router)
     app.include_router(publications.router)
     app.include_router(qa.router)
