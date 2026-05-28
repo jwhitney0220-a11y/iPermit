@@ -23,14 +23,32 @@ from .narrative import (
     NARRATIVE_SYSTEM_PROMPT,
     summarize_matrix,
 )
+from .suggest import (
+    DEFAULT_SUGGEST_MAX_TOKENS,
+    MAX_DESCRIPTION_CHARS,
+    SUGGEST_SCHEMA,
+    SUGGEST_SYSTEM_PROMPT,
+    IntakeSuggestion,
+    SuggestionParseError,
+    parse_suggestion,
+    suggest_intake,
+)
 
 __all__ = [
     "AI_ADVISORY",
     "DEFAULT_NARRATIVE_MAX_TOKENS",
+    "DEFAULT_SUGGEST_MAX_TOKENS",
+    "MAX_DESCRIPTION_CHARS",
     "NARRATIVE_SYSTEM_PROMPT",
+    "SUGGEST_SCHEMA",
+    "SUGGEST_SYSTEM_PROMPT",
     "AIClient",
     "AnthropicClient",
+    "IntakeSuggestion",
     "NarrativeResult",
     "StubAIClient",
+    "SuggestionParseError",
+    "parse_suggestion",
+    "suggest_intake",
     "summarize_matrix",
 ]
