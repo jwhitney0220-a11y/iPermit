@@ -15,6 +15,7 @@ from .middleware import install_middleware
 from .observability import configure_logging, install_observability
 from .routers import (
     admin,
+    ai,
     auth,
     billing,
     feedback,
@@ -60,6 +61,7 @@ def create_app() -> FastAPI:
     app.include_router(publications.router)
     app.include_router(qa.router)
     app.include_router(sources.router)
+    app.include_router(ai.router)
 
     @app.get("/healthz", tags=["meta"])
     def healthz() -> dict[str, str]:

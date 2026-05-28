@@ -262,3 +262,11 @@ class PublicationResponse(BaseModel):
     decided_by: str | None
     decided_at: datetime.datetime | None
     decision_note: str | None
+
+
+class NarrativeData(BaseModel):
+    """Constrained AI advisory narrative for a permit matrix (S08-01)."""
+
+    evaluation_id: str
+    narrative: str
+    model: str
