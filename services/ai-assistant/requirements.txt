@@ -1,0 +1,6 @@
+# Runtime dependencies for the constrained AI assistance service (SAAS-08).
+#
+# Production lazy-imports anthropic inside ipermit_ai.client.AnthropicClient;
+# CI tests use the stub, so this dep is only required at runtime in non-local
+# environments that actually call the Claude API.
+anthropic>=0.40

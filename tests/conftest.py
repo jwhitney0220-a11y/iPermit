@@ -28,6 +28,7 @@ _OTHER_ROOTS = (
     ("rules-engine", "services"),
     ("gis-engine", "services"),
     ("api", "services"),
+    ("ai-assistant", "services"),
 )
 
 for _rel in _PACKAGE_ROOTS:

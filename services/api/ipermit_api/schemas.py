@@ -205,3 +205,11 @@ class PlansResponse(BaseModel):
     """The full server-side plan catalog (S03-02)."""
 
     plans: list[PlanEntry]
+
+
+class NarrativeData(BaseModel):
+    """Constrained AI advisory narrative for a permit matrix (S08-01)."""
+
+    evaluation_id: str
+    narrative: str
+    model: str

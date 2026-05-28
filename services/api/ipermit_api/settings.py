@@ -47,6 +47,16 @@ class Settings(BaseSettings):
     storage_local_path: str = "./.local-storage"
     gis_max_upload_mb: int = 50
 
+    # Constrained AI assistance (SAAS-08). Day-one client is the stub (no
+    # network); ``AI_PROVIDER=anthropic`` + an ``AI_API_KEY`` flips to the
+    # Claude API path. ``AI_FEATURES_ENABLED`` is the global gate every
+    # AI route checks first, so the surface ships dark in environments that
+    # have not opted in.
+    ai_provider: str = "stub"
+    ai_api_key: str = ""
+    ai_model_id: str = "claude-haiku-4-5-20251001"
+    ai_features_enabled: bool = False
+
     @property
     def is_local(self) -> bool:
         """True for the local development environment."""
