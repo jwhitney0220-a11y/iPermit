@@ -19,6 +19,7 @@ from .routers import (
     auth,
     billing,
     feedback,
+    intake,
     invitations,
     projects,
     publications,
@@ -62,6 +63,7 @@ def create_app() -> FastAPI:
     app.include_router(qa.router)
     app.include_router(sources.router)
     app.include_router(ai.router)
+    app.include_router(intake.router)
 
     @app.get("/healthz", tags=["meta"])
     def healthz() -> dict[str, str]:
