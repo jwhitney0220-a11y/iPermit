@@ -348,3 +348,32 @@ fieldset {
   width: auto;
   margin-top: 0;
 }
+
+/* AI advisory panel (SAAS-08) */
+.ai-panel {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+}
+.ai-panel__header { display: flex; align-items: center; justify-content: space-between; }
+.ai-panel__header h3 { margin: 0; font-size: 0.95rem; }
+.ai-panel textarea { width: 100%; margin: 0.5rem 0; font-family: inherit; }
+.ai-panel__body p { margin: 0.4rem 0; }
+.ai-panel__advisories,
+.ai-panel__notes {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+  color: #475569;
+}
+.ai-panel__suggestion table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
+.ai-panel__suggestion th, .ai-panel__suggestion td {
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+}
+.ai-panel__suggestion th { width: 40%; color: #475569; }

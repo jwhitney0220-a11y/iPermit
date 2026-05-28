@@ -147,3 +147,23 @@ export interface FootprintUpload {
   bbox: number[];
   byte_size: number;
 }
+
+// Constrained AI advisory surface (SAAS-08).
+export interface NarrativeData {
+  evaluation_id: string;
+  narrative: string;
+  model: string;
+}
+
+export interface IntakeSuggestion {
+  project_type: string | null;
+  linear: boolean | null;
+  estimated_acres: number | null;
+  county_hint: string | null;
+  stream_crossings: boolean | null;
+  wetlands_present: boolean | null;
+  federal_nexus: boolean | null;
+  row_type: string | null;
+  advisory_notes: string[];
+  model: string;
+}
