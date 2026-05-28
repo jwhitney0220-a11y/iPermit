@@ -1,4 +1,4 @@
-import type { AuditRecord, FeedbackItem, Identity } from './types';
+import type { AuditRecord, FeedbackItem, Identity, QASummary } from './types';
 
 const BASE = import.meta.env.VITE_API_BASE ?? '';
 
@@ -59,4 +59,8 @@ export function dispositionFeedback(
 
 export function listAudit(token: string): Promise<AuditRecord[]> {
   return request<AuditRecord[]>('/api/v1/audit?limit=100', { method: 'GET' }, token);
+}
+
+export function getQASummary(token: string): Promise<QASummary> {
+  return request<QASummary>('/api/v1/qa/summary', { method: 'GET' }, token);
 }

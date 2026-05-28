@@ -31,3 +31,27 @@ export interface AuditRecord {
   prev_hash: string | null;
   hash: string;
 }
+
+export interface QATierCounts {
+  tier_1: number;
+  tier_2: number;
+  tier_3: number;
+  unassigned: number;
+}
+
+export interface PublicationGate {
+  rule_id: string;
+  provenance_present: boolean;
+  reviewer_present: boolean;
+  confidence_tier_assigned: boolean;
+  advisory_language_present: boolean;
+  all_pass: boolean;
+}
+
+export interface QASummary {
+  tier_counts: QATierCounts;
+  pending_review_rule_ids: string[];
+  publication_gate_count: number;
+  failing_publication_gates: PublicationGate[];
+  unresolved_unknown_count: number;
+}

@@ -101,6 +101,36 @@ class AuditRecordResponse(BaseModel):
     hash: str
 
 
+class QATierCountsResponse(BaseModel):
+    """Rule inventory counts by confidence tier (S05-02)."""
+
+    tier_1: int
+    tier_2: int
+    tier_3: int
+    unassigned: int
+
+
+class PublicationGateResponse(BaseModel):
+    """Publication checklist state for one rule (S05-02 / T00-09)."""
+
+    rule_id: str
+    provenance_present: bool
+    reviewer_present: bool
+    confidence_tier_assigned: bool
+    advisory_language_present: bool
+    all_pass: bool
+
+
+class QASummaryResponse(BaseModel):
+    """Analyst QA summary over the current rule snapshot (S05-02)."""
+
+    tier_counts: QATierCountsResponse
+    pending_review_rule_ids: list[str]
+    publication_gate_count: int
+    failing_publication_gates: list[PublicationGateResponse]
+    unresolved_unknown_count: int
+
+
 class SubmitFeedbackRequest(BaseModel):
     """Consultant feedback on an evaluation/permit (T08-06)."""
 
