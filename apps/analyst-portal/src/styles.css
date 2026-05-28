@@ -165,3 +165,20 @@ code {
 .qa-stat li { display: flex; gap: 0.6rem; padding: 0.2rem 0; }
 .qa-table { width: 100%; border-collapse: collapse; }
 .qa-table th, .qa-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+
+/* Source/citation health (S05-04) */
+.filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #1e293b;
+  border: 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.pill--active { background: #2563eb; color: white; }
+.health { padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.8rem; }
+.health--ok { background: #d1fae5; color: #065f46; }
+.health--stale { background: #fef3c7; color: #92400e; }
+.health--missing_url { background: #fee2e2; color: #991b1b; }

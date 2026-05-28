@@ -1,4 +1,11 @@
-import type { AuditRecord, FeedbackItem, Identity, Publication, QaReport } from './types';
+import type {
+  AuditRecord,
+  FeedbackItem,
+  Identity,
+  Publication,
+  QaReport,
+  SourcesReport,
+} from './types';
 
 const BASE = import.meta.env.VITE_API_BASE ?? '';
 
@@ -80,4 +87,8 @@ export function decidePublication(
 
 export function getQaReport(token: string): Promise<QaReport> {
   return request<QaReport>('/api/v1/qa/report', { method: 'GET' }, token);
+}
+
+export function getSourcesReport(token: string): Promise<SourcesReport> {
+  return request<SourcesReport>('/api/v1/qa/sources', { method: 'GET' }, token);
 }
