@@ -33,6 +33,13 @@ class Settings(BaseSettings):
     auth_jwt_secret: str = "CHANGE_ME_LOCAL_ONLY"
     auth_jwt_algorithm: str = "HS256"
     auth_token_ttl_minutes: int = 60
+    # OIDC SSO (S07-04). When the issuer + audience are set, an inbound bearer
+    # token whose ``iss`` matches is verified against the IdP's JWKS (RS256)
+    # and mapped to an existing iPermit user by email. Day-one verifier
+    # (HS256/password) keeps working as the unchanged fallback.
+    auth_oidc_issuer_url: str = ""
+    auth_oidc_audience: str = ""
+    auth_oidc_jwks_uri: str = ""
 
     # Stripe billing (S03-01, SAAS-03). Secrets are env-sourced; the placeholder
     # test defaults are inert (test keys, never a live secret) and are rejected
