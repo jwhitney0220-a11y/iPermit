@@ -1,0 +1,45 @@
+# Trim the build context for the API image (S07-05).
+# Keep this aligned with services/api/Dockerfile's COPY directives — anything
+# the runtime stage needs MUST NOT be ignored here.
+
+# Python caches and editor cruft
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.tox
+.venv
+venv
+
+# Local dev artefacts
+.env
+.env.*
+!.env.example
+.coverage
+htmlcov
+*.db
+*.sqlite
+.local-storage
+
+# Frontend builds — the API image doesn't ship them
+apps/*/node_modules
+apps/*/dist
+apps/*/.vite
+
+# IaC + git metadata
+.git
+.gitignore
+infrastructure/terraform/.terraform
+infrastructure/terraform/*.tfstate*
+
+# Docs + dev container
+docs/
+.devcontainer/
+.github/
+
+# Tooling
+tools/
+templates/

@@ -1,0 +1,54 @@
+# Local integration stack for iPermit (S07-05, SAAS-07).
+#
+# Brings up the API container against a real Postgres + PostGIS so a developer
+# can exercise migrations, RLS, and the upload path without standing up cloud
+# infrastructure. Test/CI still uses the in-process SQLite engine via the
+# TestClient fixtures; this compose is the "does it actually run" smoke loop.
+#
+#   docker compose up --build
+#   docker compose run --rm api alembic upgrade head
+#
+# Staging/production swap the postgres service for a managed database
+# (T01-09 module), not this compose file.
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: ipermit
+      POSTGRES_PASSWORD: local-only-password
+      POSTGRES_DB: ipermit
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ipermit -d ipermit"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    environment:
+      IPERMIT_ENV: local
+      IPERMIT_LOG_LEVEL: info
+      DATABASE_URL: postgresql+psycopg2://ipermit:local-only-password@postgres:5432/ipermit
+      AUTH_JWT_SECRET: local-only-${RANDOM:-changeme}-padding-to-32-bytes-x
+      API_CORS_ALLOWED_ORIGINS: "http://localhost:5173,http://127.0.0.1:5173"
+      API_TRUSTED_HOSTS: "*"
+      EMAIL_PROVIDER: local
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    # Run migrations once on startup, then hand off to uvicorn.
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn ipermit_api.app:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  postgres-data:

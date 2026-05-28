@@ -58,6 +58,20 @@ variable "storage_versioning_enabled" {
   default     = true
 }
 
+# --- Backend service hosting (S07-05) ----------------------------------------
+
+variable "api_image" {
+  description = "Container image for the API service (ECR/GAR repo URI + tag) — built from services/api/Dockerfile."
+  type        = string
+  default     = "ipermit/api:dev"
+}
+
+variable "api_desired_count" {
+  description = "Number of concurrent API instances behind the load-balancer."
+  type        = number
+  default     = 2
+}
+
 # --- Tagging ------------------------------------------------------------------
 
 variable "common_tags" {
