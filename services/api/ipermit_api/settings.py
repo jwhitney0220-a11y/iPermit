@@ -10,7 +10,9 @@ secret manager (``AUTH_JWT_SECRET_REF``).
 from __future__ import annotations
 
 from functools import lru_cache
+from typing import Any
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _LOCAL_DB = "sqlite+pysqlite:///./ipermit.db"
@@ -47,6 +49,30 @@ class Settings(BaseSettings):
     storage_local_path: str = "./.local-storage"
     gis_max_upload_mb: int = 50
 
+    # Production-hardening middleware (S07-01). Comma-separated lists in the
+    # env; pydantic-settings splits via the validators below. Both default to
+    # ``["*"]`` for zero-config local dev, and both are forbidden from being
+    # wildcards/empty outside ``local`` by ``validate_security``.
+    api_cors_allowed_origins: list[str] = ["*"]
+    api_trusted_hosts: list[str] = ["*"]
+    # Per-client-IP login rate limit. A simple fixed-window counter that
+    # protects the password-grant endpoint against credential stuffing without
+    # standing up Redis for the first slice. Staging/production swap in a
+    # shared-state limiter behind the same ``RateLimiter`` seam.
+    auth_login_rate_per_minute: int = 10
+
+    @field_validator("api_cors_allowed_origins", "api_trusted_hosts", mode="before")
+    @classmethod
+    def _split_csv(cls, value: Any) -> Any:
+        """Accept comma-separated env strings for list-valued settings.
+
+        Operators set ``API_CORS_ALLOWED_ORIGINS=https://a,https://b`` in IaC;
+        pydantic-settings' default tries JSON-decode first, which would fail.
+        """
+        if isinstance(value, str):
+            return [item.strip() for item in value.split(",") if item.strip()]
+        return value
+
     @property
     def is_local(self) -> bool:
         """True for the local development environment."""
@@ -82,6 +108,22 @@ def validate_security(settings: Settings) -> None:
         raise RuntimeError(
             "STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET must be set outside the "
             "local environment (never the inert placeholder defaults)."
+        )
+    # S07-01: wildcard origins are unsafe with credentialed requests; force an
+    # explicit allow-list outside local. Trusted hosts default to ``["*"]`` for
+    # local; a non-local deploy must enumerate its public hostnames.
+    if (
+        "*" in settings.api_cors_allowed_origins
+        or not settings.api_cors_allowed_origins
+    ):
+        raise RuntimeError(
+            "API_CORS_ALLOWED_ORIGINS must be a non-empty, non-wildcard list "
+            "outside the local environment (credentialed CORS forbids '*')."
+        )
+    if "*" in settings.api_trusted_hosts:
+        raise RuntimeError(
+            "API_TRUSTED_HOSTS must enumerate exact hostnames outside the local "
+            "environment ('*' disables the Host-header check)."
         )
 
 

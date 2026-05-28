@@ -24,20 +24,23 @@ def test_non_local_rejects_short_secret() -> None:
         validate_security(Settings(ipermit_env="staging", auth_jwt_secret="too-short"))
 
 
-def _prod_settings(**overrides: str) -> Settings:
+def _prod_settings(**overrides: object) -> Settings:
     """Production settings with a strong JWT secret + real Stripe keys.
 
     The Stripe defaults are inert placeholders rejected outside local, so a
-    valid non-local config must override them (S03-01).
+    valid non-local config must override them (S03-01); likewise wildcard
+    CORS / trusted-hosts are rejected outside local (S07-01).
     """
-    base = {
+    base: dict[str, object] = {
         "ipermit_env": "production",
         "auth_jwt_secret": "x" * 32,
         "stripe_secret_key": "sk_live_real",
         "stripe_webhook_secret": "whsec_real",
+        "api_cors_allowed_origins": ["https://app.example.com"],
+        "api_trusted_hosts": ["app.example.com"],
     }
     base.update(overrides)
-    return Settings(**base)
+    return Settings(**base)  # type: ignore[arg-type]
 
 
 def test_non_local_accepts_strong_secret() -> None:
