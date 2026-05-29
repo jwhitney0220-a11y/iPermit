@@ -49,6 +49,17 @@ module "storage" {
   tags               = local.tags
 }
 
+# --- Backend service hosting (API container) — S07-05 ------------------------
+module "service_hosting" {
+  source = "./modules/service-hosting"
+
+  name_prefix    = local.name_prefix
+  region         = var.region
+  image          = var.api_image
+  desired_count  = var.api_desired_count
+  readiness_path = "/readyz"
+  tags           = local.tags
+}
+
 # --- Future modules (placeholders, intentionally not yet scaffolded) ---------
-# module "service_hosting" { source = "./modules/service-hosting" ... }
 # module "cicd"            { source = "./modules/cicd" ... }
