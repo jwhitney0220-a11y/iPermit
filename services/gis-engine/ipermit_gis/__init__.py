@@ -60,6 +60,11 @@ from .ingest import (
     parse_kmz,
     parse_shapefile,
 )
+from .local_detection import (
+    LocalDetectionBackend,
+    build_default_texas_backend,
+    get_detection_backend,
+)
 from .store import GeometryStore
 
 __all__ = [
@@ -74,13 +79,16 @@ __all__ = [
     "GeometryError",
     "GeometryStore",
     "JurisdictionOverride",
+    "LocalDetectionBackend",
     "OverlayOverride",
     "OverrideLogEntry",
     "ProjectFootprint",
     "SpatialDetection",
     "bbox",
+    "build_default_texas_backend",
     "confirm_detection",
     "from_geojson",
+    "get_detection_backend",
     "load_valid",
     "normalize_footprint",
     "parse_kml",
