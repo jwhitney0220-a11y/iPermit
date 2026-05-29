@@ -65,6 +65,7 @@ from .local_detection import (
     build_default_texas_backend,
     get_detection_backend,
 )
+from .postgis import JurisdictionGeometry, PostGISGeometryStore
 from .store import GeometryStore
 
 __all__ = [
@@ -78,10 +79,12 @@ __all__ = [
     "EngineInputs",
     "GeometryError",
     "GeometryStore",
+    "JurisdictionGeometry",
     "JurisdictionOverride",
     "LocalDetectionBackend",
     "OverlayOverride",
     "OverrideLogEntry",
+    "PostGISGeometryStore",
     "ProjectFootprint",
     "SpatialDetection",
     "bbox",

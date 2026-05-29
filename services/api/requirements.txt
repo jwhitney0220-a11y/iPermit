@@ -20,3 +20,7 @@ fpdf2>=2.7
 stripe>=8
 # Route-file uploads (S04-03): multipart form parsing for FastAPI UploadFile.
 python-multipart>=0.0.9
+# PostGIS-backed jurisdiction geometry store (S06-01): GeoAlchemy2 binds the
+# Geometry column + ST_Intersects to SQLAlchemy. The Postgres-only table is
+# created by an Alembic migration; SQLite test runs never touch it.
+geoalchemy2>=0.14
