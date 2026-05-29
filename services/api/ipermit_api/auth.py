@@ -24,6 +24,7 @@ from sqlalchemy.orm import Session
 
 from .db import get_session
 from .envelope import ProblemException
+from .oidc import OidcVerifier, http_jwks_resolver
 from .settings import Settings, get_settings
 
 #: Role hierarchy rank (ADR-0002): higher rank is a superset of lower capability.
@@ -101,6 +102,54 @@ def _decode(token: str, settings: Settings) -> dict:
         raise ProblemException(401, "Invalid or expired token") from exc
 
 
+_OIDC_VERIFIER: OidcVerifier | None = None
+
+
+def _is_oidc_token(token: str, settings: Settings) -> bool:
+    """Heuristic: an unverified peek at the token's ``iss`` selects the path.
+
+    Only used to *route* — the OIDC verifier still validates signature,
+    expiry, and the registered claims before any iPermit identity is returned.
+    """
+    if not settings.auth_oidc_issuer_url:
+        return False
+    try:
+        unverified = jwt.decode(token, options={"verify_signature": False})
+    except jwt.PyJWTError:
+        return False
+    return unverified.get("iss") == settings.auth_oidc_issuer_url
+
+
+def get_oidc_verifier(settings: Settings | None = None) -> OidcVerifier:
+    """Lazily construct the singleton :class:`OidcVerifier` from settings."""
+    global _OIDC_VERIFIER  # noqa: PLW0603 — module-level lazy singleton
+    settings = settings or get_settings()
+    if _OIDC_VERIFIER is None:
+        if not (settings.auth_oidc_issuer_url and settings.auth_oidc_jwks_uri):
+            raise ProblemException(401, "OIDC verifier not configured")
+        _OIDC_VERIFIER = OidcVerifier(
+            issuer=settings.auth_oidc_issuer_url,
+            audience=settings.auth_oidc_audience,
+            resolver=http_jwks_resolver(settings.auth_oidc_jwks_uri),
+        )
+    return _OIDC_VERIFIER
+
+
+def set_oidc_verifier(verifier: OidcVerifier | None) -> None:
+    """Override the cached OIDC verifier (tests inject a fake JWKS resolver)."""
+    global _OIDC_VERIFIER  # noqa: PLW0603 — module-level lazy singleton
+    _OIDC_VERIFIER = verifier
+
+
+def _resolve_via_oidc(token: str, session: Session) -> User:
+    """Validate an OIDC ID token and resolve it to an iPermit user by email."""
+    claims = get_oidc_verifier().verify(token)
+    user = session.scalar(select(User).where(User.email == claims.email))
+    if user is None or not user.is_active:
+        raise ProblemException(401, "OIDC user not provisioned in iPermit")
+    return user
+
+
 def _bearer_token(request: Request) -> str:
     """Extract the bearer token from the Authorization header, or raise 401."""
     header = request.headers.get("Authorization", "")
@@ -117,15 +166,16 @@ def get_current_identity(
 
     Re-loads the user and tenant memberships from the database so a deactivated
     user or revoked membership cannot ride a still-valid token (ADR-0002:
-    the database decides what you may do).
+    the database decides what you may do). Two verifier paths share this
+    seam: the day-one HS256 password issuer and the OIDC RS256 verifier
+    (S07-04). Routing is based on the unverified ``iss`` claim; signature
+    validation happens inside each verifier.
     """
-    claims = _decode(_bearer_token(request), get_settings())
-    user = session.scalar(select(User).where(User.user_id == claims.get("sub")))
-    if user is None or not user.is_active:
-        raise ProblemException(401, "Unknown or inactive user")
+    settings = get_settings()
+    token = _bearer_token(request)
+    user = _resolve_user(token, settings, session)
     tenant_ids = tuple(sorted(m.tenant_id for m in user.memberships))
-    primary = claims.get("tid") if claims.get("tid") in tenant_ids else None
-    primary = primary or (tenant_ids[0] if tenant_ids else None)
+    primary = _select_tenant(token, settings, tenant_ids)
     return AuthenticatedIdentity(
         subject=user.user_id,
         email=user.email,
@@ -134,6 +184,28 @@ def get_current_identity(
         tenant_id=primary,
         capabilities=frozenset(user.capabilities or ()),
     )
+
+
+def _resolve_user(token: str, settings: Settings, session: Session) -> User:
+    """Return the iPermit user for *token*, routing OIDC vs HS256 by issuer."""
+    if _is_oidc_token(token, settings):
+        return _resolve_via_oidc(token, session)
+    claims = _decode(token, settings)
+    user = session.scalar(select(User).where(User.user_id == claims.get("sub")))
+    if user is None or not user.is_active:
+        raise ProblemException(401, "Unknown or inactive user")
+    return user
+
+
+def _select_tenant(
+    token: str, settings: Settings, tenant_ids: tuple[str, ...]
+) -> str | None:
+    """Pick the primary tenant: explicit ``tid`` claim (HS256) or first id."""
+    if _is_oidc_token(token, settings):
+        return tenant_ids[0] if tenant_ids else None
+    claims = _decode(token, settings)
+    primary = claims.get("tid") if claims.get("tid") in tenant_ids else None
+    return primary or (tenant_ids[0] if tenant_ids else None)
 
 
 def require_role(minimum: str):
