@@ -35,6 +35,22 @@ export interface Publication {
   decision_note: string | null;
 }
 
+export interface StaleRule {
+  rule_id: string;
+  rule_version: string;
+  status: string;
+  last_verified: string | null;
+  days_since_verified: number | null;
+}
+
+export interface QaReport {
+  generated_at: string;
+  total_rules: number;
+  by_status: Record<string, number>;
+  by_tier: Record<string, number>;
+  stale_rules: StaleRule[];
+}
+
 export interface AuditRecord {
   id: number;
   occurred_at: string;
