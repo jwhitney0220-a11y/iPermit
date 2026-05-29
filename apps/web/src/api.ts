@@ -9,6 +9,8 @@ import type {
   EvaluationSummary,
   FootprintUpload,
   Identity,
+  IntakeSuggestion,
+  NarrativeData,
   PermitMatrix,
   PlansResponse,
   Project,
@@ -202,5 +204,31 @@ export async function startCheckout(token: string, plan: string): Promise<string
     token,
   );
   return body.checkout_url;
+}
+
+// --- Constrained AI assistance (SAAS-08) --------------------------------------
+
+/** Render the latest matrix as an advisory narrative (S08-01, premium). */
+export function requestNarrative(
+  token: string,
+  projectId: string,
+): Promise<Envelope<NarrativeData>> {
+  return request<Envelope<NarrativeData>>(
+    `/api/v1/projects/${projectId}/narrative`,
+    { method: 'POST' },
+    token,
+  );
+}
+
+/** Ask the AI to extract intake fields from a free-form description (S08-02). */
+export function requestIntakeSuggestion(
+  token: string,
+  description: string,
+): Promise<Envelope<IntakeSuggestion>> {
+  return request<Envelope<IntakeSuggestion>>(
+    '/api/v1/intake/suggest',
+    { method: 'POST', body: JSON.stringify({ description }) },
+    token,
+  );
 }
 

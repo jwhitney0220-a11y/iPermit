@@ -3,6 +3,7 @@ import { ApiError, createProject, evaluate, listProjects } from '../api';
 import type { IntakeState } from '../fields';
 import { buildRequest } from '../intake';
 import type { Envelope, Identity, PermitMatrix, Project } from '../types';
+import { IntakeAssistPanel, MatrixNarrativeButton } from './AIPanel';
 import { FootprintUpload } from './FootprintUpload';
 import { HistoryPanel } from './HistoryPanel';
 import { IntakeForm } from './IntakeForm';
@@ -31,6 +32,7 @@ export function EvaluationScreen({
       <FootprintUpload token={token} projectId={state.projectId} />
       <section className="card">
         <h2>Intake</h2>
+        <IntakeAssistPanel token={token} />
         <IntakeForm busy={state.busy} onEvaluate={state.runEvaluation} />
       </section>
       <EvaluationResults
@@ -160,7 +162,12 @@ function EvaluationResults({
         onView={onView}
       />
       {error && <p className="error">{error}</p>}
-      {result && <PermitMatrixView envelope={result} token={token} />}
+      {result && (
+        <>
+          <PermitMatrixView envelope={result} token={token} />
+          <MatrixNarrativeButton token={token} projectId={projectId} />
+        </>
+      )}
     </>
   );
 }

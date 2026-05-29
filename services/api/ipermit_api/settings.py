@@ -94,6 +94,16 @@ class Settings(BaseSettings):
     # The frontend acceptance URL — token is appended as a query string.
     invitation_accept_url: str = "http://localhost:5173/accept-invitation"
 
+    # Constrained AI assistance (SAAS-08). Day-one client is the stub (no
+    # network); ``AI_PROVIDER=anthropic`` + an ``AI_API_KEY`` flips to the
+    # Claude API path. ``AI_FEATURES_ENABLED`` is the global gate every
+    # AI route checks first, so the surface ships dark in environments that
+    # have not opted in.
+    ai_provider: str = "stub"
+    ai_api_key: str = ""
+    ai_model_id: str = "claude-haiku-4-5-20251001"
+    ai_features_enabled: bool = False
+
     @property
     def is_local(self) -> bool:
         """True for the local development environment."""

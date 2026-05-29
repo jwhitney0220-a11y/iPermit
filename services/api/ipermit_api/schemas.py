@@ -262,3 +262,32 @@ class PublicationResponse(BaseModel):
     decided_by: str | None
     decided_at: datetime.datetime | None
     decision_note: str | None
+
+
+class NarrativeData(BaseModel):
+    """Constrained AI advisory narrative for a permit matrix (S08-01)."""
+
+    evaluation_id: str
+    narrative: str
+    model: str
+
+
+class IntakeSuggestRequest(BaseModel):
+    """Free-form project description for AI intake suggestion (S08-02)."""
+
+    description: str = Field(min_length=1, max_length=4000)
+
+
+class IntakeSuggestData(BaseModel):
+    """Advisory intake fields proposed by the AI (S08-02; consultant confirms each)."""
+
+    project_type: str | None
+    linear: bool | None
+    estimated_acres: float | None
+    county_hint: str | None
+    stream_crossings: bool | None
+    wetlands_present: bool | None
+    federal_nexus: bool | None
+    row_type: str | None
+    advisory_notes: list[str]
+    model: str
