@@ -371,3 +371,43 @@ class RulePublication(Base):
         DateTime(timezone=True), nullable=True
     )
     decision_note: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
+class Invitation(Base):
+    """A pending team invitation to an unregistered email (S07-02).
+
+    Created when a team admin invites an email that has no ``User`` row yet. The
+    server stores only ``token_hash`` (sha256 over the high-entropy token sent in
+    the email) — the raw token is delivered by the email channel and exists in
+    the database only as a one-way digest, so a database read alone cannot
+    impersonate the invitee. ``consumed_at`` is set when the invitee accepts;
+    re-using a consumed or expired invitation is rejected at the router.
+
+    Tenant-owned (every row carries ``tenant_id``) but deliberately NOT in
+    ``TENANT_OWNED_TABLES`` for RLS — invitation acceptance happens *before* a
+    bearer token exists, so the route runs without an ``app.current_tenant_id``
+    GUC. Isolation is enforced at the application layer when the invitation is
+    looked up by ``token_hash`` (a unique, unguessable index).
+    """
+
+    __tablename__ = "invitation"
+
+    invitation_id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("tenant.tenant_id"), nullable=False, index=True
+    )
+    email: Mapped[str] = mapped_column(String(320), nullable=False, index=True)
+    token_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+    invited_by: Mapped[str] = mapped_column(
+        String(36), ForeignKey("app_user.user_id"), nullable=False
+    )
+    is_team_admin: Mapped[bool] = mapped_column(default=False, nullable=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
+    )
+    expires_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
+    consumed_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )

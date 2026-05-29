@@ -165,6 +165,32 @@ class FootprintUploadResponse(BaseModel):
     byte_size: int
 
 
+class InvitationResponse(BaseModel):
+    """Issued team invitation (S07-02). The raw token never appears here."""
+
+    invitation_id: str
+    email: str
+    is_team_admin: bool
+    expires_at: datetime.datetime
+
+
+class InvitationPreviewResponse(BaseModel):
+    """Public preview of an in-flight invitation (S07-02)."""
+
+    email: str
+    tenant_id: str
+    tenant_name: str
+    expires_at: datetime.datetime
+
+
+class AcceptInvitationRequest(BaseModel):
+    """Complete registration against a single-use invitation token (S07-02)."""
+
+    token: str = Field(min_length=16, max_length=200)
+    password: str = Field(min_length=8, max_length=72)
+    full_name: str | None = Field(default=None, max_length=200)
+
+
 class CheckoutRequest(BaseModel):
     """Request a Stripe Checkout Session for a paid plan (S03-01).
 
