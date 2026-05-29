@@ -1,4 +1,4 @@
-import type { AuditRecord, FeedbackItem, Identity } from './types';
+import type { AuditRecord, FeedbackItem, Identity, Publication } from './types';
 
 const BASE = import.meta.env.VITE_API_BASE ?? '';
 
@@ -59,4 +59,21 @@ export function dispositionFeedback(
 
 export function listAudit(token: string): Promise<AuditRecord[]> {
   return request<AuditRecord[]>('/api/v1/audit?limit=100', { method: 'GET' }, token);
+}
+
+export function listPublications(token: string): Promise<Publication[]> {
+  return request<Publication[]>('/api/v1/rules/publications', { method: 'GET' }, token);
+}
+
+export function decidePublication(
+  token: string,
+  id: number,
+  decision: 'approve' | 'reject' | 'rollback',
+  note: string,
+): Promise<Publication> {
+  return request<Publication>(
+    `/api/v1/rules/publications/${id}/${decision}`,
+    { method: 'POST', body: JSON.stringify({ note }) },
+    token,
+  );
 }

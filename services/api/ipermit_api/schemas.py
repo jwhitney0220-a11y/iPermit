@@ -205,3 +205,34 @@ class PlansResponse(BaseModel):
     """The full server-side plan catalog (S03-02)."""
 
     plans: list[PlanEntry]
+
+
+class ProposePublicationRequest(BaseModel):
+    """Open a rule-publication proposal (S05-02)."""
+
+    rule_id: str = Field(min_length=1, max_length=120)
+    rule_version: str = Field(pattern=r"^\d+\.\d+\.\d+$")
+    target_status: str = Field(pattern="^(effective|archived)$")
+    reason: str | None = Field(default=None, max_length=4000)
+
+
+class PublicationDecisionRequest(BaseModel):
+    """Approver/rejecter/rollback note (S05-02)."""
+
+    note: str | None = Field(default=None, max_length=4000)
+
+
+class PublicationResponse(BaseModel):
+    """One rule-publication record."""
+
+    id: int
+    rule_id: str
+    rule_version: str
+    target_status: str
+    status: str
+    proposed_by: str
+    proposed_at: datetime.datetime
+    reason: str | None
+    decided_by: str | None
+    decided_at: datetime.datetime | None
+    decision_note: str | None

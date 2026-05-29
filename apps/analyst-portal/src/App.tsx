@@ -3,10 +3,11 @@ import { me } from './api';
 import { AuditLog } from './components/AuditLog';
 import { FeedbackQueue } from './components/FeedbackQueue';
 import { Login } from './components/Login';
+import { Publications } from './components/Publications';
 import type { Identity } from './types';
 
 const TOKEN_KEY = 'ipermit.analyst.token';
-type Tab = 'feedback' | 'audit';
+type Tab = 'feedback' | 'publications' | 'audit';
 
 export function App() {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
@@ -80,6 +81,12 @@ function PortalBody({
         <button className={tabClass(tab, 'feedback')} onClick={() => onTabChange('feedback')}>
           Feedback Queue
         </button>
+        <button
+          className={tabClass(tab, 'publications')}
+          onClick={() => onTabChange('publications')}
+        >
+          Publications
+        </button>
         {identity.platform_role === 'platform_admin' && (
           <button className={tabClass(tab, 'audit')} onClick={() => onTabChange('audit')}>
             Audit Log
@@ -87,6 +94,7 @@ function PortalBody({
         )}
       </nav>
       {tab === 'feedback' && <FeedbackQueue token={token} />}
+      {tab === 'publications' && <Publications token={token} />}
       {tab === 'audit' && identity.platform_role === 'platform_admin' && (
         <AuditLog token={token} />
       )}
