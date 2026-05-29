@@ -6,7 +6,11 @@ fastapi>=0.110
 uvicorn[standard]>=0.27
 pydantic>=2.6
 pydantic-settings>=2.1
-PyJWT>=2.8
+# PyJWT[crypto] pulls in `cryptography` for RSA / JWKS verification — needed
+# by the OIDC verifier path (S07-04). Without the extra the import would only
+# fail at first use; CI also collects `tests/api/test_oidc.py`, which imports
+# `cryptography` directly to mint test keys.
+PyJWT[crypto]>=2.8
 bcrypt>=4.0
 # Deliverable exports (S02-04): xlsx via openpyxl, pdf via fpdf2 (both pure-pip).
 openpyxl>=3.1
