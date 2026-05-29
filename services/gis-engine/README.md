@@ -45,22 +45,21 @@ and **ADR-0001** (PostgreSQL 16 + PostGIS, managed in staging/prod;
   so this swap is a drop-in: callers (detection, T05-03/T05-04) depend on the
   interface, not on the storage backend.
 
-The GeoAlchemy2 path is **documented here but intentionally not wired into the
-package**, so the test/CI path stays DB-free. A sketch of the production model:
+The GeoAlchemy2 path is **wired in `ipermit_gis.postgis`** (S06-01) on a
+separate `MetaData`, so the shared `Base.metadata.create_all` used by SQLite
+tests does not see the `Geometry` column. The production model and store:
 
 ```python
-# Production only (NOT imported by tests):
-from geoalchemy2 import Geometry
-from sqlalchemy.orm import Mapped, mapped_column
-from ipermit_persistence.base import Base
+from ipermit_gis import JurisdictionGeometry, PostGISGeometryStore
 
-class JurisdictionGeometry(Base):
-    __tablename__ = "jurisdiction_geometry"
-    # geometry_ref (jurisdiction-naming.md §9) points at this row's id.
-    id: Mapped[str] = mapped_column(primary_key=True)
-    geom: Mapped[object] = mapped_column(Geometry("GEOMETRY", srid=4326))
-    # CREATE INDEX ... USING GIST (geom);  -> ST_Intersects(geom, :target)
+store = PostGISGeometryStore(session)        # SQLAlchemy Session
+store.add("juris-abc", shapely_polygon)       # ST_GeomFromText(wkt, 4326)
+store.intersecting(footprint)                 # ST_Intersects against GiST
 ```
+
+Table + GiST index creation is owned by the Postgres-only Alembic migration
+`migrations/versions/e5b9a2c61a47_jurisdiction_geometry_postgis.py`, which
+is a no-op on SQLite.
 
 ## CRS handling (explicit, no silent reprojection)
 
@@ -86,9 +85,11 @@ independently (a record may exist before its geometry).
 - `pyshp` (`shapefile`, >=2.3) — shapefile reading (pure Python).
 - stdlib `zipfile` + `xml.etree` — KMZ/KML.
 
-No `geopandas` / `fiona` / `gdal` (those need system GDAL). These are in
-`requirements-dev.txt`; the production PostGIS path additionally needs
-`geoalchemy2` and a PostGIS-enabled database (not a test dependency).
+No `geopandas` / `fiona` / `gdal` (those need system GDAL). `shapely`/`pyshp`
+are in `requirements-dev.txt`; the PostGIS path adds `geoalchemy2` (S06-01),
+which ships in `services/api/requirements.txt` so it is installed in CI and
+production — the live PostGIS database is only required at runtime, never at
+test time.
 
 ## Deferred (clean seams, not implemented here)
 
