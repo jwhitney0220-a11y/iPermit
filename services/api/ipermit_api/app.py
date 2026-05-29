@@ -11,6 +11,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from .envelope import register_exception_handlers
+from .middleware import install_middleware
 from .routers import (
     admin,
     auth,
@@ -34,12 +35,14 @@ API_DESCRIPTION = (
 
 def create_app() -> FastAPI:
     """Build and configure the FastAPI application."""
-    validate_security(get_settings())
+    settings = get_settings()
+    validate_security(settings)
     app = FastAPI(
         title="iPermit API",
         version="0.1.0",
         description=API_DESCRIPTION,
     )
+    install_middleware(app, settings)
     register_exception_handlers(app)
     app.include_router(auth.router)
     app.include_router(projects.router)
