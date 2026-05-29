@@ -51,6 +51,25 @@ export interface QaReport {
   stale_rules: StaleRule[];
 }
 
+export interface CitationHealth {
+  rule_id: string;
+  rule_version: string;
+  rule_status: string;
+  citation_type: string;
+  reference: string;
+  url: string | null;
+  rule_last_verified: string | null;
+  days_since_verified: number | null;
+  health: 'ok' | 'stale' | 'missing_url';
+}
+
+export interface SourcesReport {
+  generated_at: string;
+  total_citations: number;
+  health_counts: Record<string, number>;
+  citations: CitationHealth[];
+}
+
 export interface AuditRecord {
   id: number;
   occurred_at: string;
