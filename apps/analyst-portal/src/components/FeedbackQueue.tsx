@@ -6,6 +6,7 @@ export function FeedbackQueue({ token }: { token: string }) {
   const [items, setItems] = useState<FeedbackItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [notes, setNotes] = useState<Record<string, string>>({});
 
   function refresh() {
     listFeedbackQueue(token)
@@ -19,14 +20,22 @@ export function FeedbackQueue({ token }: { token: string }) {
     setBusy(id);
     setError(null);
     try {
-      const note = `Marked ${decision} from analyst portal`;
-      await dispositionFeedback(token, id, decision, note);
+      await dispositionFeedback(token, id, decision, notes[id] ?? '');
+      setNotes((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
       refresh();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Disposition failed');
     } finally {
       setBusy(null);
     }
+  }
+
+  function setNote(id: string, value: string) {
+    setNotes((prev) => ({ ...prev, [id]: value }));
   }
 
   return (
@@ -40,6 +49,8 @@ export function FeedbackQueue({ token }: { token: string }) {
             key={item.feedback_id}
             busy={busy === item.feedback_id}
             item={item}
+            note={notes[item.feedback_id] ?? ''}
+            onNoteChange={(v) => setNote(item.feedback_id, v)}
             onDisposition={disposition}
           />
         ))}
@@ -60,10 +71,14 @@ function SectionHeader({ title, count }: { title: string; count: number }) {
 function FeedbackRow({
   busy,
   item,
+  note,
+  onNoteChange,
   onDisposition,
 }: {
   busy: boolean;
   item: FeedbackItem;
+  note: string;
+  onNoteChange: (value: string) => void;
   onDisposition: (id: string, decision: 'confirmed' | 'rejected') => void;
 }) {
   return (
@@ -74,12 +89,24 @@ function FeedbackRow({
         <p className="muted">
           Tenant {item.tenant_id} submitted by {item.submitted_by}
         </p>
+        <textarea
+          className="queue__note"
+          placeholder="Disposition note (optional, recorded on the audit log)"
+          value={note}
+          onChange={(e) => onNoteChange(e.target.value)}
+        />
       </div>
       <div className="queue__actions">
-        <button disabled={busy} onClick={() => onDisposition(item.feedback_id, 'confirmed')}>
+        <button
+          disabled={busy}
+          onClick={() => onDisposition(item.feedback_id, 'confirmed')}
+        >
           Confirm
         </button>
-        <button disabled={busy} onClick={() => onDisposition(item.feedback_id, 'rejected')}>
+        <button
+          disabled={busy}
+          onClick={() => onDisposition(item.feedback_id, 'rejected')}
+        >
           Reject
         </button>
       </div>

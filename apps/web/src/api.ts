@@ -7,6 +7,7 @@ import type {
   Envelope,
   EvaluateRequest,
   EvaluationSummary,
+  FootprintUpload,
   Identity,
   PermitMatrix,
   PlansResponse,
@@ -169,6 +170,28 @@ export function removeMember(token: string, userId: string): Promise<unknown> {
     { method: 'DELETE' },
     token,
   );
+}
+
+/** Upload a route file (KML/KMZ/zip shapefile) and return its footprint summary. */
+export async function uploadFootprint(
+  token: string,
+  projectId: string,
+  file: File,
+): Promise<FootprintUpload> {
+  const form = new FormData();
+  form.append('file', file, file.name);
+  const resp = await fetch(`${BASE}/api/v1/projects/${projectId}/footprint`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+  });
+  const text = await resp.text();
+  const body = text ? JSON.parse(text) : null;
+  if (!resp.ok) {
+    const detail = body?.detail || body?.title || resp.statusText;
+    throw new ApiError(resp.status, detail);
+  }
+  return body as FootprintUpload;
 }
 
 /** Start a Stripe Checkout Session for the given plan; returns a redirect URL. */

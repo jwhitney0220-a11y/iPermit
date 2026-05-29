@@ -146,3 +146,16 @@ code {
     grid-template-columns: 1fr;
   }
 }
+
+.queue__note {
+  display: block;
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}

@@ -140,3 +140,10 @@ export interface TeamMember {
   is_team_admin: boolean;
   created_at: string;
 }
+
+export interface FootprintUpload {
+  footprint_ref: string;
+  geometry_type: string;
+  bbox: number[];
+  byte_size: number;
+}
