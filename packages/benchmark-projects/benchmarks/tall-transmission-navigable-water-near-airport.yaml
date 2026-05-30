@@ -1,0 +1,130 @@
+# Design-time benchmark (T04-02) accompanying
+# docs/specs/rule-audits/federal-tpwd-txdot-first-slice.md.
+#
+# Exercises the federal slate corners that the seeded benchmarks do not yet
+# cover: USACE Section 10 (navigable waters), USACE Section 408 (modification
+# of a federally authorized civil-works project), and FAA Form 7460-1 notice
+# (structures > 200 ft AGL or within an airport notice surface).
+#
+# Marked as a placeholder ruleset binding so the regression suite SKIPS this
+# entry until the rule snapshot has been formally republished with the
+# federal-TPWD-TxDOT first slice. After the human analyst promotes those
+# rules to rules/published/, replace content_hash with the live snapshot
+# hash and confirm expected_outputs by running the engine.
+benchmark_id: tall-transmission-navigable-water-near-airport
+benchmark_version: 0.1.0
+category: federal_nexus
+description: >-
+  Tall (250 ft) federally permitted transmission crossing of a navigable river
+  that runs along a USACE-managed levee within an airport notice surface.
+  Locks in §10, §408, and FAA 7460-1 coverage alongside the federal-water and
+  federal-process pathways.
+project_inputs:
+  project_type: transmission_line
+  state: TX
+  counties:
+    - Dallas County
+  linear: true
+  length_miles: 3.2
+  stream_crossings_count: 1
+  has_wetlands: true
+  federal_nexus: true
+  txdot_involvement: false
+  applicable_jurisdiction_ids:
+    - us
+    - us-tx
+  engine_context:
+    project:
+      federal_nexus: true
+      dredge_or_fill_in_waters: true
+      stream_crossings_count: 1
+      work_in_navigable_waters: true
+      alters_usace_civil_works_project: true
+      structure_height_ft_agl: 250
+      federal_water_permit_or_license: true
+      usace_permit_required: true
+      stormwater_discharge_to_surface_water: true
+      disturbed_acres: 4
+      txdot_right_of_way_involved: false
+      public_land: false
+      utility_installation: true
+    geometry:
+      wetlands_present: true
+      waters_of_us_present: true
+      navigable_waters_present: true
+      intersects_usace_civil_works_project: true
+      state_parks_or_wildlife_land_intersects: false
+    derived:
+      major_federal_action: true
+      may_affect_listed_species: true
+      near_airport_notice_surface: true
+      tpwd_rare_species_overlap: false
+ruleset_version:
+  content_hash: placeholder:federal-tpwd-txdot-first-slice
+  snapshot_label: first-slice-pending-publish
+evaluation_date: "2026-05-29"
+expected_outputs:
+  permits:
+    - name: Department of the Army Permit under Clean Water Act Section 404
+      agency: United States Army Corps of Engineers
+      rule_id: us-tx-usace-section-404-da-permit
+    - name: Department of the Army Permit under Rivers and Harbors Act Section 10
+      agency: United States Army Corps of Engineers
+      rule_id: us-tx-usace-section-10-da-permit
+    - name: Section 408 Permission
+      agency: United States Army Corps of Engineers
+      rule_id: us-tx-usace-section-408-permission
+    - name: National Environmental Policy Act Environmental Review
+      agency: Lead federal agency
+      rule_id: us-tx-nepa-federal-environmental-review
+    - name: Endangered Species Act Section 7 Consultation
+      agency: United States Fish and Wildlife Service
+      rule_id: us-tx-usfws-esa-section-7-consultation
+    - name: FAA Notice of Proposed Construction or Alteration
+      agency: Federal Aviation Administration
+      rule_id: us-tx-faa-form-7460-1-obstruction-review
+expected_confidence:
+  - permit_name: Department of the Army Permit under Clean Water Act Section 404
+    tier: 1
+  - permit_name: Department of the Army Permit under Rivers and Harbors Act Section 10
+    tier: 1
+  - permit_name: Section 408 Permission
+    tier: 1
+  - permit_name: National Environmental Policy Act Environmental Review
+    tier: 1
+  - permit_name: Endangered Species Act Section 7 Consultation
+    tier: 1
+  - permit_name: FAA Notice of Proposed Construction or Alteration
+    tier: 1
+expected_explanations:
+  - permit_name: Department of the Army Permit under Rivers and Harbors Act Section 10
+    trigger_summary: Work in a navigable water of the United States triggers Section 10 authorization.
+    expected_rule_id: us-tx-usace-section-10-da-permit
+    expected_jurisdiction_levels: [federal]
+  - permit_name: Section 408 Permission
+    trigger_summary: Altering or occupying a federally authorized USACE civil-works project requires Section 408 permission.
+    expected_rule_id: us-tx-usace-section-408-permission
+    expected_jurisdiction_levels: [federal]
+  - permit_name: FAA Notice of Proposed Construction or Alteration
+    trigger_summary: Structures over 200 ft AGL or within an airport notice surface trigger 14 CFR Part 77 notice.
+    expected_rule_id: us-tx-faa-form-7460-1-obstruction-review
+    expected_jurisdiction_levels: [federal]
+expected_known_unknowns:
+  - Whether a specific waterbody is a navigable water of the United States should be confirmed with the district office.
+  - The same action may also require separate Section 404 or Section 10 authorization.
+  - Notice can be required below 200 feet depending on airport proximity and obstruction surfaces.
+expected_advisories:
+  - Advisory only; not a legal determination. Professional review and agency confirmation are required before submission.
+provenance:
+  author: iPermit engineering (rule-audit first slice)
+  created_at: "2026-05-29"
+  reviewer_notes: >-
+    Design-time benchmark accompanying the federal-TPWD-TxDOT publish audit.
+    Expected outputs reflect the seeded drafts' triggers as of the audit; the
+    real ruleset_version.content_hash should be substituted after the human
+    analyst republishes the first slice.
+immutable: true
+notes: >-
+  Placeholder ruleset binding; promote to the live snapshot hash after the
+  human analyst republishes the first slice.
+tags: [audit, federal-nexus, section-10, section-408, faa-7460, placeholder]
